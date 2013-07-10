@@ -26,7 +26,7 @@ import org.komusubi.feeder.sns.twitter.TweetMessage;
 /**
  * @author jun.ozeki
  */
-public class TweetMessageProvidier implements Provider<Message> {
+public class TweetMessageProvider implements Provider<Message> {
 
     /**
      * @see javax.inject.Provider#get()

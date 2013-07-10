@@ -31,6 +31,7 @@ import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
+import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvider;
 import org.komusubi.feeder.web.scheduler.QuartzModule;
 
 import com.google.inject.AbstractModule;
@@ -97,6 +98,7 @@ public class Bootstrap extends GuiceServletContextListener {
             bind(WeatherTopicScraper.class);
             bind(WeatherAnnouncementScraper.class);
             bind(WeatherTitleScraper.class);
+            bind(TweetMessageProvider.class);
             bind(HtmlScraper.class);
             bind(Site.class).to(WeatherTopicSite.class);
         }
