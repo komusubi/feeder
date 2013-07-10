@@ -20,7 +20,7 @@ package org.komusubi.feeder.web.scheduler.job;
 
 import org.komusubi.feeder.aggregator.topic.WeatherTopics;
 import org.komusubi.feeder.model.Topics;
-import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvidier;
+import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvider;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -44,7 +44,7 @@ public class TopicWatcher implements Job {
      * default constructor for quartz library.
      */
     public TopicWatcher() {
-        this(new WeatherTopics(new TweetMessageProvidier()));
+        this(new WeatherTopics(new TweetMessageProvider()));
     }
 
     /**

@@ -26,7 +26,7 @@ import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
-import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvidier;
+import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvider;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -47,7 +47,7 @@ public class TopicSpeaker implements Job {
      */
     public TopicSpeaker() {
         // default implement is twitter4j.
-        this(new Twitter4j(), new WeatherTopics(new TweetMessageProvidier()));
+        this(new Twitter4j(), new WeatherTopics(new TweetMessageProvider()));
     }
 
     /**
