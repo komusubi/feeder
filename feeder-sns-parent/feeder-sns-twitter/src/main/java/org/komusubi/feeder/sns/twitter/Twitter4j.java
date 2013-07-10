@@ -154,7 +154,7 @@ public class Twitter4j implements SocialNetwork {
                 HistoryPage page = new HistoryPage();
                 try {
 //                    ResponseList<Status> list = twitter.getHomeTimeline(new Paging(number));
-                    ResponseHistory<Status> list = twitter.getHomeTimeline(new Paging(number));
+                    ResponseHistory<Status> list = (ResponseHistory<Status>) twitter.getHomeTimeline(new Paging(number));
                     for (Status status: list) {
                         Message message = new TweetMessage();
                         message.append(status.getText());

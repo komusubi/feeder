@@ -64,7 +64,7 @@ public class WeatherAggregator implements Aggregator {
     @Override
     public Topics aggregate() {
         
-        WeatherTopics topics = new WeatherTopics();
+        WeatherTopics topics = new WeatherTopics(null);
         for (Announcement announce: announceScraper) {
 //            topics.add()
         }

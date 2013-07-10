@@ -79,7 +79,7 @@ public class WeatherTopicsTest {
         when(titleScraper.iterator()).thenReturn(((List<Title>) args[0]).iterator());
         when(announceScraper.scrape()).thenReturn((List<Announcement>) args[1]);
         when(topicScraper.iterator()).thenReturn(((List<WeatherTopic>) args[2]).iterator());
-        WeatherTopics target = new WeatherTopics(topicScraper, titleScraper, announceScraper);
+        WeatherTopics target = new WeatherTopics(topicScraper, titleScraper, announceScraper, null);
         String expected = "タイトルです。\nご確認下さい。\nこの情報は当日のものです。";
         // exercise
         Message actual = target.message();
