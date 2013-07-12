@@ -39,7 +39,6 @@ public class Speaker {
      * 
      * @param socialNetwork
      */
-    @Inject
     public Speaker(SocialNetwork socialNetwork) {
         this(socialNetwork, socialNetwork.history());
     }
