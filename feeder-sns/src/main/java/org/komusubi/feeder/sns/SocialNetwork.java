@@ -36,7 +36,7 @@ public interface SocialNetwork {
      * 
      * @param topics
      */
-    void post(Topics topics);
+    void post(Topics<? extends Topic> topics);
     
     /**
      * @param message

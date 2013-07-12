@@ -115,7 +115,7 @@ public class Twitter4j implements SocialNetwork {
     }
 
     @Override
-    public void post(Topics topics) {
+    public void post(Topics<? extends Topic> topics) {
         tweet(topics.message());
     }
 
@@ -125,6 +125,7 @@ public class Twitter4j implements SocialNetwork {
      */
     public void tweet(Message message) {
        try {
+           // TODO dose need a max tweet count ?
            for (StatusUpdate status: chunkStatus(message)) {
                Status result = twitter.updateStatus(status);
                Thread.sleep(1000); // wait 1 second.
