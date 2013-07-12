@@ -25,8 +25,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Provider;
+
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -37,6 +38,7 @@ import org.komusubi.feeder.aggregator.scraper.WeatherTopicScraper;
 import org.komusubi.feeder.aggregator.topic.WeatherTopic.WeatherStatus;
 import org.komusubi.feeder.aggregator.topic.WeatherTopics.Announcement;
 import org.komusubi.feeder.aggregator.topic.WeatherTopics.Title;
+import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Region;
 import org.mockito.Mock;
@@ -79,7 +81,7 @@ public class WeatherTopicsTest {
         when(titleScraper.iterator()).thenReturn(((List<Title>) args[0]).iterator());
         when(announceScraper.scrape()).thenReturn((List<Announcement>) args[1]);
         when(topicScraper.iterator()).thenReturn(((List<WeatherTopic>) args[2]).iterator());
-        WeatherTopics target = new WeatherTopics(topicScraper, titleScraper, announceScraper, null);
+        WeatherTopics target = new WeatherTopics(topicScraper, titleScraper, announceScraper, new DummyProvider());
         String expected = "タイトルです。\nご確認下さい。\nこの情報は当日のものです。";
         // exercise
         Message actual = target.message();
@@ -87,8 +89,12 @@ public class WeatherTopicsTest {
         assertThat(actual.text(), is(expected));
     }
     
-    @Test
-    public void dummy() {
+    private static class DummyProvider implements Provider<Message> {
+
+        @Override
+        public Message get() {
+            return new FeederMessage();
+        }
         
     }
 
