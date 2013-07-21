@@ -19,9 +19,8 @@
 package org.komusubi.feeder.aggregator.topic;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -212,26 +211,27 @@ public class WeatherTopics extends Topics<Topic> {
             message.append(title)
                     .append("\n");
         }
-        message.addAll(titleScraper.scrape());
+        boolean topicFound = false;
         for (Topic topic: topicScraper) {
             message.addAll(topic.message());
+            topicFound = true;
         }
+        if (topicFound)
+            message.append("\n");
         message.addAll(announceScraper.scrape());
         
-        // check duprecate scraper
-        List<AbstractWeatherScraper> scrapers = new ArrayList<AbstractWeatherScraper>();
-        for (AbstractWeatherScraper scraper: new AbstractWeatherScraper[]{announceScraper, titleScraper, topicScraper}) {
-            if (scrapers.contains(scraper)) {
-                continue;
-            } else {
-                // append tag label
-                Tags tags = scraper.site().tags();
-                for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) { 
-                    message.append(it.next().label());
-                    if (it.hasNext())
-                        message.append(" ");
-                }
-                scrapers.add(scraper);
+        // check duplicate tag
+        Tags exists = new Tags();
+        for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, topicScraper)) {
+            Tags tags = scraper.site().tags();
+            for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
+                Tag tag = it.next();
+                if (exists.contains(tag))
+                    continue;
+                message.append(tag.label());
+                if (it.hasNext())
+                    message.append(" ");
+                exists.add(tag);
             }
         }
         return message;

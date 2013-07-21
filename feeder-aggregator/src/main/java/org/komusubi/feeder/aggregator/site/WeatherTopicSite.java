@@ -32,6 +32,7 @@ import org.komusubi.feeder.util.ResourceBundleMessage;
 public class WeatherTopicSite implements Site {
 
     private static final ResourceBundleMessage BUNDLE_MESSAGE = new ResourceBundleMessage(WeatherTopicSite.class);
+    private static final String URL_RESOURCE_KEY = "site.url";
     private URL siteUrl;
     private Tags tags;
 
@@ -39,7 +40,7 @@ public class WeatherTopicSite implements Site {
      * create new instance.
      */
     public WeatherTopicSite() {
-        this("site.url", new Tags());
+        this(URL_RESOURCE_KEY, new Tags());
     }
 
     /**
@@ -72,6 +73,15 @@ public class WeatherTopicSite implements Site {
     public WeatherTopicSite(URL url, Tags tags) {
         this.siteUrl = url;
         this.tags = tags;
+    }
+    
+
+    /**
+     * create new instance.
+     * @param tags
+     */
+    public WeatherTopicSite(Tags tags) {
+       this(URL_RESOURCE_KEY, tags); 
     }
 
     @Override

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Provider;
@@ -35,12 +36,15 @@ import org.junit.runner.RunWith;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTopicScraper;
+import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.aggregator.topic.WeatherTopic.WeatherStatus;
 import org.komusubi.feeder.aggregator.topic.WeatherTopics.Announcement;
 import org.komusubi.feeder.aggregator.topic.WeatherTopics.Title;
 import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Region;
+import org.komusubi.feeder.model.Tag;
+import org.komusubi.feeder.model.Tags;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -78,11 +82,25 @@ public class WeatherTopicsTest {
     @Theory
     public void Titleはリターンコードを追加する(List<?>[] args) {
         // setup
+        Tags tags = new Tags();
+        tags.add(new Tag() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public String label() {
+                return "#weather";
+            }
+            
+        });
         when(titleScraper.iterator()).thenReturn(((List<Title>) args[0]).iterator());
+        when(titleScraper.site()).thenReturn(new WeatherTopicSite(tags));
         when(announceScraper.scrape()).thenReturn((List<Announcement>) args[1]);
+        when(announceScraper.site()).thenReturn(new WeatherTopicSite(tags));
         when(topicScraper.iterator()).thenReturn(((List<WeatherTopic>) args[2]).iterator());
+        when(topicScraper.site()).thenReturn(new WeatherTopicSite(tags));
         WeatherTopics target = new WeatherTopics(topicScraper, titleScraper, announceScraper, new DummyProvider());
-        String expected = "タイトルです。\nご確認下さい。\nこの情報は当日のものです。";
+        String expected = "タイトルです。\nご確認下さい。\n関東: 平常通り運航します。\nこの情報は当日のものです。#weather";
         // exercise
         Message actual = target.message();
         // verify

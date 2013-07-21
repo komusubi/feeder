@@ -81,4 +81,12 @@ public class FeederMessage extends ArrayList<Script> implements Message {
     public FeederMessage append(String line) {
         return append(new ScriptLine(line));
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("FeederMessage [text()=").append(text()).append("]");
+        return builder.toString();
+    }
+    
 }
