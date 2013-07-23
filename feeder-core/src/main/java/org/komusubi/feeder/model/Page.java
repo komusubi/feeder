@@ -18,26 +18,19 @@
  */
 package org.komusubi.feeder.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.Serializable;
 
 /**
  * @author jun.ozeki
  */
-public class Page<T> extends ArrayList<T> {
+public interface Page<T> extends Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    public Page() {
-        super();
-    }
-
-    public Page(Collection<? extends T> c) {
-        super(c);
-    }
-
-    public Page(int initialCapacity) {
-        super(initialCapacity);
-    }
+    Topics<? extends Topic> topics();
     
+//    Topics<? extends Topic> next();
+    
+//    Topics<? extends Topic> previous();
+    
+//    Topics<? extends Topic> indexOf(int index);
+
 }

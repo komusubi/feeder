@@ -19,12 +19,14 @@
 package org.komusubi.feeder.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author jun.ozeki
  */
 public interface Topic extends Serializable {
 
+    Date createdAt();
     Message message();
     
 }

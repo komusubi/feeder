@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import org.komusubi.feeder.aggregator.topic.WeatherTopics;
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
@@ -40,7 +41,7 @@ public class TopicSpeaker implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(TopicSpeaker.class);
     private Speaker speaker;
-    private Topics topics;
+    private Topics<? extends Topic> topics;
 
     /**
      * carete new instance.
@@ -74,11 +75,13 @@ public class TopicSpeaker implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("つぶやき処理開始");
-        Message message = topics.message();
-        if (message.size() <= 0) 
-            return;
-        Message msg = speaker.extract(message);
-        speaker.talk(msg);
+        for (Topic t: topics) {
+            Message message = t.message();
+            if (message.size() <= 0) 
+                continue;
+            Message msg = speaker.extract(message);
+            speaker.talk(msg);
+        }
     }
 
 }

@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
-import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 
@@ -33,7 +32,7 @@ import org.komusubi.feeder.model.Topics;
 public class Speaker {
 
     private SocialNetwork socialNetwork;
-    private History<Message> history;
+    private History<Topic> history;
 
     /**
      * 
@@ -48,7 +47,7 @@ public class Speaker {
      * @param socialNetwork
      */
     @Inject
-    public Speaker(SocialNetwork socialNetwork, History<Message> history) {
+    public Speaker(SocialNetwork socialNetwork, History<Topic> history) {
         this.socialNetwork = socialNetwork;
         this.history = history;
     }
@@ -65,7 +64,7 @@ public class Speaker {
      * talk to friends.
      * @param topics
      */
-    public void talk(Topics topics) {
+    public void talk(Topics<? extends Topic> topics) {
         socialNetwork.post(topics);
     }
     
@@ -81,19 +80,20 @@ public class Speaker {
      * 
      * @return
      */
-    public Page<Message> page(int number) {
-        return history.page(number);
-    }
+//    public Page<Topic> page(int number) {
+//        return history.page(number);
+//    }
 
     /**
      * @param message
      * @return
      */
+    // FIXME is this method necessary ? it decide use to FeederMessage or TweetMessage.
     public Message extract(Message message) {
         Message extracted = new FeederMessage();
         for (Script script: message) {
-            if (history.exists(script))
-                continue;
+//            if (history.exists(script))
+//                continue;
             extracted.append(script);
         }
         return extracted;

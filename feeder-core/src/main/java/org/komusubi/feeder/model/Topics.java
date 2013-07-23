@@ -24,7 +24,7 @@ import java.util.Collection;
 /**
  * @author jun.ozeki
  */
-public abstract class Topics<T extends Topic> extends ArrayList<Topic> implements Topic {
+public abstract class Topics<T extends Topic> extends ArrayList<Topic> /* implements Topic */ {
 
     private static final long serialVersionUID = 1L;
 

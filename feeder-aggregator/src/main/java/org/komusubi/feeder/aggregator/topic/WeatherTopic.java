@@ -19,6 +19,7 @@
 package org.komusubi.feeder.aggregator.topic;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
@@ -95,7 +96,7 @@ public class WeatherTopic implements Topic {
             return status;
         }
     }
-    
+
     private static final long serialVersionUID = 1L;
     private Region region;
     private WeatherStatus status;
@@ -150,6 +151,7 @@ public class WeatherTopic implements Topic {
      */
     @Override
     public Message message() {
+        // FIXME change how to instantiate by message provider 
         Message message = new FeederMessage();
         message.add(this.toScript());
         return message;
@@ -184,7 +186,7 @@ public class WeatherTopic implements Topic {
                     return null;
                 return line().substring(begin, end);
             }
-            
+
             @Override
             public String codePointSubstring(int begin) {
                 if (line() == null)
@@ -192,6 +194,14 @@ public class WeatherTopic implements Topic {
                 return codePointSubstring(begin, line().length());
             }
         };
+    }
+
+    /**
+     * @see org.komusubi.feeder.model.Topic#createdAt()
+     */
+    @Override
+    public Date createdAt() {
+        return null;
     }
 
     /**

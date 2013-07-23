@@ -204,6 +204,7 @@ public class WeatherTopics extends Topics<Topic> {
     /**
      * @see org.komusubi.feeder.model.Message#text()
      */
+    /*
     @Override
     public Message message() {
         Message message = messageProvider.get();
@@ -236,7 +237,8 @@ public class WeatherTopics extends Topics<Topic> {
         }
         return message;
     }
-
+    */
+   
     /**
      * @see java.lang.Object#toString()
      */

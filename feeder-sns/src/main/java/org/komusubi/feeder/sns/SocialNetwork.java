@@ -51,6 +51,6 @@ public interface SocialNetwork {
     
     Message newMessage();
     
-    History<Message> history();
+    History<Topic> history();
 
 }

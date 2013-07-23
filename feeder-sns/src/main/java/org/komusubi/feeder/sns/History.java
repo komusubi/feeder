@@ -18,7 +18,6 @@
  */
 package org.komusubi.feeder.sns;
 
-import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Page;
 
 /**
@@ -27,16 +26,13 @@ import org.komusubi.feeder.model.Page;
 public interface History<T> {
 
     /**
-     * @param script
+     * @param index
      * @return
      */
-    boolean exists(Script script);
+    Page<T> indexOf(int index);
 
-    /**
-     * @param number
-     * @return
-     */
-    Page<T> page(int number);
-
+    Page<T> next();
+    
+    Page<T> previous();
     
 }
