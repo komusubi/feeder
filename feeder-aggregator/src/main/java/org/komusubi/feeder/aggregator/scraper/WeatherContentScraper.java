@@ -177,9 +177,6 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
 
     }
 
-    private static final String ATTR_VALUE = "weather_info_txtBox mgt20";
-    private static final String ATTR_NAME = "class";
-
     /**
      * create new instance.
      */
@@ -272,7 +269,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
     protected NodeFilter filter() {
         return new AndFilter(
                         new NodeClassFilter(Div.class),
-                        new HasAttributeFilter(ATTR_NAME, ATTR_VALUE));
+                        new HasAttributeFilter(ATTR_NAME_CLASS, ATTR_VALUE_WEATHER_BOX));
     }
 
     /**

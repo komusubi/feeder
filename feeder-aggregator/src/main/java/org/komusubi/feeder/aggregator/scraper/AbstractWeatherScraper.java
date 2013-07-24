@@ -28,6 +28,8 @@ public class AbstractWeatherScraper {
 
     private WeatherTopicSite site;
     private HtmlScraper scraper;
+    protected static final String ATTR_VALUE_WEATHER_BOX = "weather_info_txtBox mgt20";
+    protected static final String ATTR_NAME_CLASS = "class";
 
     /**
      * create new instance.

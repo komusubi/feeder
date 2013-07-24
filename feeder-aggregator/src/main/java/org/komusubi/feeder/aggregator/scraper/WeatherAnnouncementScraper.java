@@ -99,7 +99,6 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
         
     }
 
-    private static final String ATTR_NAME = "class";
     private static final String ATTR_VALUE = "mgt10";
 
     /**
@@ -168,7 +167,7 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
     protected NodeFilter filter() {
         return new AndFilter(
                         new NodeClassFilter(ParagraphTag.class),
-                        new HasAttributeFilter(ATTR_NAME, ATTR_VALUE));
+                        new HasAttributeFilter(ATTR_NAME_CLASS, ATTR_VALUE));
     }
 
     /**
