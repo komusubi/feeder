@@ -149,13 +149,10 @@ public class WeatherTopic implements Topic, Iterable<Script> {
             message.append(title)
                     .append("\n");
         }
-        boolean topicFound = false;
         for (Content content: contentScraper) {
-            message.add(content);
-            topicFound = true;
+            message.append(content)
+                   .append("\n"); 
         }
-        if (topicFound)
-            message.append("\n");
         message.addAll(announceScraper.scrape());
         
         // check duplicate tag
