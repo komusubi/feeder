@@ -26,6 +26,7 @@ import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.aggregator.topic.WeatherTopic;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.sns.History;
@@ -93,16 +94,16 @@ public class Bootstrap extends GuiceServletContextListener {
 
         @Override
         protected void configure() {
-//    public Speaker(SocialNetwork socialNetwork, History<Message> history) {
-            bind(SocialNetwork.class).to(Twitter4j.class);
-            bind(History.class).toInstance(new Twitter4j().history());
-            bind(Speaker.class);
+//            bind(History.class).toInstance(new Twitter4j().history());
+//            bind(SocialNetwork.class).to(Twitter4j.class);
+//            bind(Speaker.class);
             bind(WeatherContentScraper.class);
             bind(WeatherAnnouncementScraper.class);
             bind(WeatherTitleScraper.class);
             bind(Message.class).toProvider(TweetMessageProvider.class);
             bind(HtmlScraper.class);
             bind(Site.class).to(WeatherTopicSite.class);
+            bind(WeatherTopic.class);
         }
         
     }

@@ -89,6 +89,14 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
                 return null;
             return codePointSubstring(begin, information.length());
         }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Announcement [information=").append(information).append("]");
+            return builder.toString();
+        }
+        
     }
 
     private static final String ATTR_NAME = "class";

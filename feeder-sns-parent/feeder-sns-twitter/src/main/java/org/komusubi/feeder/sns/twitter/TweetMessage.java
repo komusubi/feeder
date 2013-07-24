@@ -53,15 +53,15 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         }
 
         @Override
-        public String line() {
-            return line;
-        }
-
-        @Override
         public int codePointCount() {
             if (line == null)
                 return 0;
             return line.codePointCount(0, line.length());
+        }
+
+        @Override
+        public String codePointSubstring(int begin) {
+            throw new UnsupportedOperationException("not implemented.");
         }
 
         @Override
@@ -70,8 +70,15 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         }
 
         @Override
-        public String codePointSubstring(int begin) {
-            throw new UnsupportedOperationException("not implemented.");
+        public String line() {
+            return line;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("TweetScript [line=").append(line).append("]");
+            return builder.toString();
         }
 
     }
@@ -84,18 +91,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      */
     public TweetMessage() {
 
-    }
-
-    /**
-     * @see org.komusubi.feeder.model.Message#text()
-     */
-    @Override
-    public String text() {
-        StringBuilder builder = new StringBuilder();
-        for (Script script: this) {
-           builder.append(script.line()); 
-        }
-        return builder.toString();
     }
 
     /**
@@ -131,6 +126,25 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             append(new TweetScript(line));
         }
         return this;
+    }
+
+    /**
+     * @see org.komusubi.feeder.model.Message#text()
+     */
+    @Override
+    public String text() {
+        StringBuilder builder = new StringBuilder();
+        for (Script script: this) {
+           builder.append(script.line()); 
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TweetMessage [text()=").append(text()).append("]");
+        return builder.toString();
     }
 
 }

@@ -168,9 +168,16 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
             return codePointSubstring(begin, line().length());
         }
 
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Content [region=").append(region).append(", status=").append(status).append("]");
+            return builder.toString();
+        }
+
     }
 
-    private static final String ATTR_VALUE = "weather_info_txtBox";
+    private static final String ATTR_VALUE = "weather_info_txtBox mgt20";
     private static final String ATTR_NAME = "class";
 
     /**
