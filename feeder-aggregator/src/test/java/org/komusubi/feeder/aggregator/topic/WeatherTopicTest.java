@@ -18,31 +18,31 @@
  */
 package org.komusubi.feeder.aggregator.topic;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Provider;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Status;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
-import org.komusubi.feeder.aggregator.scraper.WeatherTopicScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherTopic.WeatherStatus;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics.Announcement;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics.Title;
-import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Region;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
+import org.komusubi.feeder.spi.FeederMessageProvider;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -50,11 +50,11 @@ import org.mockito.MockitoAnnotations;
  * @author jun.ozeki
  */
 @RunWith(Theories.class)
-public class WeatherTopicsTest {
+public class WeatherTopicTest {
 
     @Mock private WeatherTitleScraper titleScraper;
     @Mock private WeatherAnnouncementScraper announceScraper;
-    @Mock private WeatherTopicScraper topicScraper;
+    @Mock private WeatherContentScraper topicScraper;
 
     @DataPoints
     public static List<?>[][] messageDataPoint() {
@@ -63,11 +63,11 @@ public class WeatherTopicsTest {
         titles.add(new Title("ご確認下さい。"));
         ArrayList<Announcement> announces = new ArrayList<Announcement>();
         announces.add(new Announcement("この情報は当日のものです。"));
-        ArrayList<WeatherTopic> topicList = new ArrayList<WeatherTopic>();
-        topicList.add(new WeatherTopic(new Region("関東"), new WeatherStatus("平常通り運航します。")));
+        ArrayList<Content> contents = new ArrayList<Content>();
+        contents.add(new Content(new Region("関東"), new Status("平常通り運航します。")));
         
         return new List<?>[][] {
-                        {titles, announces, topicList}
+                        {titles, announces, contents}
         };
     }
     
@@ -78,7 +78,6 @@ public class WeatherTopicsTest {
 
     @SuppressWarnings("unchecked")
     @Theory
-    @Ignore
     public void Titleはリターンコードを追加する(List<?>[] args) {
         // setup
         Tags tags = new Tags();
@@ -96,23 +95,14 @@ public class WeatherTopicsTest {
         when(titleScraper.site()).thenReturn(new WeatherTopicSite(tags));
         when(announceScraper.scrape()).thenReturn((List<Announcement>) args[1]);
         when(announceScraper.site()).thenReturn(new WeatherTopicSite(tags));
-        when(topicScraper.iterator()).thenReturn(((List<WeatherTopic>) args[2]).iterator());
+        when(topicScraper.iterator()).thenReturn(((List<Content>) args[2]).iterator());
         when(topicScraper.site()).thenReturn(new WeatherTopicSite(tags));
-        WeatherTopics target = new WeatherTopics(topicScraper, titleScraper, announceScraper, new DummyProvider());
+        WeatherTopic target = new WeatherTopic(topicScraper, titleScraper, announceScraper, new FeederMessageProvider());
         String expected = "タイトルです。\nご確認下さい。\n関東: 平常通り運航します。\nこの情報は当日のものです。#weather";
         // exercise
-//        Message actual = target.message();
+        Message actual = target.message();
         // verify
-//        assertThat(actual.text(), is(expected));
+        assertThat(actual.text(), is(expected));
     }
     
-    private static class DummyProvider implements Provider<Message> {
-
-        @Override
-        public Message get() {
-            return new FeederMessage();
-        }
-        
-    }
-
 }
