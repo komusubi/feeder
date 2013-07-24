@@ -41,7 +41,7 @@ import org.junit.experimental.theories.Theory;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherTopic.WeatherStatus;
+import org.komusubi.feeder.aggregator.topic.WeatherScript.WeatherStatus;
 import org.komusubi.feeder.model.Region;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -50,7 +50,7 @@ import org.mockito.MockitoAnnotations;
  * @author jun.ozeki
  */
 @RunWith(Theories.class)
-public class WeatherTopicScraperTest {
+public class WeatherContentScraperTest {
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
     @Mock private HtmlScraper scraper; 
@@ -64,7 +64,7 @@ public class WeatherTopicScraperTest {
     @Test
     public void スクレイプ処理引数の例外検証() {
         // setup
-        WeatherTopicScraper target = new WeatherTopicScraper();
+        WeatherContentScraper target = new WeatherContentScraper();
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("argument MUST be Region.class or WeatherStatus.class");
         // exercise
@@ -76,9 +76,9 @@ public class WeatherTopicScraperTest {
         // setup
         String url = "http://localhost";
         WeatherTopicSite site = new WeatherTopicSite(new URL(url));
-        NodeFilter filter = new WeatherTopicScraper().filter();
+        NodeFilter filter = new WeatherContentScraper().filter();
         when(scraper.scrape(url, filter)).thenReturn(null);
-        WeatherTopicScraper target = new WeatherTopicScraper(site, scraper);
+        WeatherContentScraper target = new WeatherContentScraper(site, scraper);
         // exercise
         NodeList actual = target.scrape(clazz);
         // verify
@@ -90,12 +90,12 @@ public class WeatherTopicScraperTest {
         // setup
         URL url = new URL("http://localhost");
         WeatherTopicSite site = new WeatherTopicSite(url);
-        final NodeFilter filter = new WeatherTopicScraper().filter();
+        final NodeFilter filter = new WeatherContentScraper().filter();
         // build html node list
         TableHeader header = new TableHeader(); 
         NodeList returnNode = new NodeList(header);
         when(scraper.scrapeMatchNodes(url, filter, TableHeader.class)).thenReturn(returnNode);
-        WeatherTopicScraper target = new WeatherTopicScraper(site, scraper) {
+        WeatherContentScraper target = new WeatherContentScraper(site, scraper) {
             @Override
             protected NodeFilter filter() {
                 return filter;
@@ -113,12 +113,12 @@ public class WeatherTopicScraperTest {
                 // setup
         URL url = new URL("http://localhost");
         WeatherTopicSite site = new WeatherTopicSite(url);
-        final NodeFilter filter = new WeatherTopicScraper().filter();
+        final NodeFilter filter = new WeatherContentScraper().filter();
         // build html node list
         TableColumn column = new TableColumn();
         NodeList returnNode = new NodeList(column);
         when(scraper.scrapeMatchNodes(url, filter, TableColumn.class)).thenReturn(returnNode);
-        WeatherTopicScraper target = new WeatherTopicScraper(site, scraper) {
+        WeatherContentScraper target = new WeatherContentScraper(site, scraper) {
             @Override
             protected NodeFilter filter() {
                 return filter;
@@ -136,14 +136,14 @@ public class WeatherTopicScraperTest {
         // setup
         URL url = new URL("http://localhost");
         WeatherTopicSite site = new WeatherTopicSite(url);
-        final NodeFilter filter = new WeatherTopicScraper().filter();
+        final NodeFilter filter = new WeatherContentScraper().filter();
         NodeList returnNode = new NodeList();
         returnNode.add(new TextNode("value1\nvalue2"));
         returnNode.add(new TextNode("value3\nvalue4\n"));
         String expected1 = "value1 value2"; 
         String expected2 = "value3 value4";
         when(scraper.scrapeMatchNodes(url, filter, TableColumn.class)).thenReturn(returnNode);
-        WeatherTopicScraper target = new WeatherTopicScraper(site, scraper) {
+        WeatherContentScraper target = new WeatherContentScraper(site, scraper) {
             @Override
             protected NodeFilter filter() {
                 return filter;
