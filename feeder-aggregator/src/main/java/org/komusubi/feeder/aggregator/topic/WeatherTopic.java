@@ -29,6 +29,7 @@ import org.komusubi.feeder.aggregator.scraper.AbstractWeatherScraper;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
@@ -107,6 +108,7 @@ public class WeatherTopic implements Topic, Iterable<Script> {
         this.message = provider.get();
     }
 
+    // exclude any scraper, does NOT need to compare.
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -156,14 +158,10 @@ public class WeatherTopic implements Topic, Iterable<Script> {
                     .append("\n");
         }
         boolean topicFound = false;
-        for (Script script: contentScraper) {
-            message.add(script);
+        for (Content content: contentScraper) {
+            message.add(content);
             topicFound = true;
         }
-//        for (Topic topic: topicScraper) {
-//            message.addAll(topic.message());
-//            topicFound = true;
-//        }
         if (topicFound)
             message.append("\n");
         message.addAll(announceScraper.scrape());
