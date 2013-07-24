@@ -141,14 +141,6 @@ public class WeatherTopic implements Topic, Iterable<Script> {
     }
 
     /**
-     * append item.
-     * @param script
-     */
-    public void add(Script script) {
-        message.add(script);
-    }
-
-    /**
      * @see org.komusubi.feeder.model.Topic#message()
      */
     @Override
