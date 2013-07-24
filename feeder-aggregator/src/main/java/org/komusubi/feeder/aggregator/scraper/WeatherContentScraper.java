@@ -34,14 +34,16 @@ import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableHeader;
 import org.htmlparser.util.NodeList;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.aggregator.topic.WeatherScript;
+import org.komusubi.feeder.aggregator.topic.WeatherScript.WeatherStatus;
 import org.komusubi.feeder.aggregator.topic.WeatherTopic;
-import org.komusubi.feeder.aggregator.topic.WeatherTopic.WeatherStatus;
+import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Region;
 
 /**
  * @author jun.ozeki
  */
-public class WeatherTopicScraper extends AbstractWeatherScraper implements Iterable<WeatherTopic> {
+public class WeatherContentScraper extends AbstractWeatherScraper implements Iterable<Script> {
 
     private static final String ATTR_VALUE = "weather_info_txtBox";
     private static final String ATTR_NAME = "class";
@@ -49,7 +51,7 @@ public class WeatherTopicScraper extends AbstractWeatherScraper implements Itera
     /**
      * create new instance.
      */
-    public WeatherTopicScraper() {
+    public WeatherContentScraper() {
         
     }
 
@@ -57,7 +59,7 @@ public class WeatherTopicScraper extends AbstractWeatherScraper implements Itera
      * create new instance.
      * @param site
      */
-    public WeatherTopicScraper(WeatherTopicSite site) {
+    public WeatherContentScraper(WeatherTopicSite site) {
         this(site, new HtmlScraper());
     }
 
@@ -65,7 +67,7 @@ public class WeatherTopicScraper extends AbstractWeatherScraper implements Itera
      * create new instance.
      * @param scraper
      */
-    public WeatherTopicScraper(HtmlScraper scraper) {
+    public WeatherContentScraper(HtmlScraper scraper) {
         this(new WeatherTopicSite(), scraper);
     }
 
@@ -75,7 +77,7 @@ public class WeatherTopicScraper extends AbstractWeatherScraper implements Itera
      * @param scraper
      */
     @Inject
-    public WeatherTopicScraper(WeatherTopicSite site, HtmlScraper scraper) {
+    public WeatherContentScraper(WeatherTopicSite site, HtmlScraper scraper) {
         super(site, scraper);
     }
 
@@ -158,14 +160,14 @@ public class WeatherTopicScraper extends AbstractWeatherScraper implements Itera
      * @see java.lang.Iterable#iterator()
      */
     @Override
-    public Iterator<WeatherTopic> iterator() {
-        List<WeatherTopic> list = new ArrayList<WeatherTopic>();
+    public Iterator<Script> iterator() {
+        WeatherTopic topic = new WeatherTopic();
         for (int i = 0; i < size(); i++) {
             Region region = scrapeRegion().get(i);
             WeatherStatus status = scrapeWeatherStatus().get(i);
-            list.add(new WeatherTopic(region, status));
+            topic.add(new WeatherScript(region, status));
         }
-        return list.iterator();
+        return topic.iterator();
     }
 
 }
