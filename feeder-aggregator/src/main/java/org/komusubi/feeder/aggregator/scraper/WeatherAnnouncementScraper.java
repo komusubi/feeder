@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -37,6 +38,8 @@ import org.komusubi.feeder.aggregator.AggregatorException;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.model.Message.Script;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
@@ -99,6 +102,7 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
         
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherAnnouncementScraper.class);
     private static final String ATTR_VALUE = "mgt10";
 
     /**
@@ -150,13 +154,15 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
     public List<Announcement> scrape() {
         NodeList nodes = scrape(filter());
         List<Announcement> announces = new ArrayList<Announcement>();
-        try {
-            for (NodeIterator it = nodes.elements(); it.hasMoreNodes();) {
-                announces.add(new Announcement(it.nextNode().getText()));
-            }
-        } catch (ParserException e) {
-            throw new AggregatorException(e);
-        }
+//        try {
+            announces.add(new Announcement(nodes.asString()));
+            logger.debug("asString: {}", nodes.asString());
+//            for (NodeIterator it = nodes.elements(); it.hasMoreNodes(); ) {
+//                announces.add(new Announcement(it.nextNode().getText()));
+//            }
+//        } catch (ParserException e) {
+//            throw new AggregatorException(e);
+//        }
         return announces;
     }
 

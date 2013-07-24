@@ -20,6 +20,7 @@ package org.komusubi.feeder.aggregator.scraper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,6 +39,8 @@ import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Region;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
@@ -177,6 +180,10 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
 
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherContentScraper.class);
+    // simple instance cache (for scrape same the instance)
+    private HashMap<Class<?>, NodeList> cache = new HashMap<Class<?>, NodeList>();
+
     /**
      * create new instance.
      */
@@ -245,6 +252,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
         return statuses;
     }
 
+    
     /**
      * scrape html.
      * @return
@@ -259,7 +267,15 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
         } else if (clazz.isAssignableFrom(Status.class)) {
             filterTagClass = TableColumn.class;
         }
-        return scraper().scrapeMatchNodes(site().url(), filter(), filterTagClass);
+        NodeList node;
+        if (cache.containsKey(clazz)) {
+            node = cache.get(clazz);
+            logger.debug("hit internal cache: {}", clazz.getName());
+        } else {
+            node = scraper().scrapeMatchNodes(site().url(), filter(), filterTagClass);
+            cache.put(clazz, node);
+        }
+        return node;
     }
 
     /**
@@ -294,6 +310,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
             Region region = scrapeRegion().get(i);
             Status status = scrapeWeatherStatus().get(i);
             list.add(new Content(region, status));
+            logger.debug("region: {}, status: {}", region, status);
         }
         return list.iterator();
     }

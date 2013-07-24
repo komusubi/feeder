@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Tag;
 import org.htmlparser.Text;
@@ -43,6 +44,8 @@ import org.komusubi.feeder.aggregator.AggregatorException;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.model.Message.Script;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
@@ -142,6 +145,8 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
         }
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherTitleScraper.class);
+
     /**
      * create new instance.
      */
@@ -213,7 +218,9 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
         try {
             nodes.visitAllNodesWith(new WeatherTitleVisitor(visited));
             for (NodeIterator it = visited.elements(); it.hasMoreNodes(); ) {
-                titles.add(new Title(it.nextNode().getText()));
+                Node n = it.nextNode();
+                titles.add(new Title(n.getText()));
+                logger.debug("title: {}", n.getText());
             }
         } catch (ParserException e) {
             throw new AggregatorException(e);
