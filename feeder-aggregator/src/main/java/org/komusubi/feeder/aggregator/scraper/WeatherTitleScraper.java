@@ -34,6 +34,7 @@ import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.Div;
+import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.ParagraphTag;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeIterator;
@@ -115,6 +116,7 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
     public static class WeatherTitleVisitor extends NodeVisitor {
         private NodeList visited;
         private boolean startTable;
+        private boolean linkParseToggle = false;
 
         /**
          * create new instance.
@@ -126,6 +128,10 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
 
         @Override
         public void visitStringNode(Text text) {
+            if (linkParseToggle) {
+                linkParseToggle = !linkParseToggle;
+                return;
+            }
             if (!startTable && !"\n".equals(text.toPlainTextString())) {
                 Text textNode;
                 if (text.getText().startsWith("\n")) {
@@ -142,6 +148,11 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
         public void visitTag(Tag tag) {
             if (tag instanceof TableTag)
                 startTable = true;
+            if (!startTable && (tag instanceof LinkTag)) {
+               LinkTag link = (LinkTag) tag;
+               visited.add(new TextNode(link.getLink()));
+               linkParseToggle = true;
+            }
         }
     }
 
@@ -219,6 +230,13 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
             nodes.visitAllNodesWith(new WeatherTitleVisitor(visited));
             for (NodeIterator it = visited.elements(); it.hasMoreNodes(); ) {
                 Node n = it.nextNode();
+                if (n instanceof LinkTag) {
+                   logger.debug("bingo!! : {}", n);
+                   logger.debug("bingo!! : {}", n.getText());
+                   logger.debug("bingo!! : {}", n.toHtml(true));
+                   logger.debug("bingo!! : {}", n.toHtml(false));
+                   logger.debug("bingo!! : {}", n.toPlainTextString());
+                }
                 titles.add(new Title(n.getText()));
                 logger.debug("title: {}", n.getText());
             }
