@@ -20,14 +20,11 @@ package org.komusubi.feeder.web.scheduler.job;
 
 import javax.inject.Inject;
 
-import org.komusubi.feeder.aggregator.topic.WeatherTopics;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
-import org.komusubi.feeder.sns.twitter.Twitter4j;
-import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvider;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -48,7 +45,7 @@ public class TopicSpeaker implements Job {
      */
     public TopicSpeaker() {
         // default implement is twitter4j.
-        this(new Twitter4j(), new WeatherTopics(new TweetMessageProvider()));
+//        this(new Twitter4j(), new Topics(new TweetMessageProvider()));
     }
 
     /**

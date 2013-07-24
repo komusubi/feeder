@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.aggregator.scraper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,13 +34,62 @@ import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.komusubi.feeder.aggregator.AggregatorException;
+import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics.Announcement;
+import org.komusubi.feeder.model.Message.Script;
 
 /**
  * @author jun.ozeki
  */
 public class WeatherAnnouncementScraper extends AbstractWeatherScraper implements Iterable<Announcement> {
+    /**
+     * weather announcement.
+     * @author jun.ozeki
+     */
+    public static class Announcement implements Script, Serializable {
+
+        private static final long serialVersionUID = 1L;
+        private String information;
+
+        /**
+         * create new instance.
+         * @param information
+         */
+        public Announcement(String information) {
+            this.information = information;
+        }
+
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#line()
+         */
+        @Override
+        public String line() {
+            return information;
+        }
+        
+        @Override
+        public int codePointCount() {
+            if (information == null)
+                return 0;
+            return information.codePointCount(0, information.length());
+        }
+
+        @Override
+        public String codePointSubstring(int begin, int end) {
+            // FIXME code point substring
+            if (information == null)
+                return null;
+            return information.substring(begin, end);
+        }
+
+        @Override
+        public String codePointSubstring(int begin) {
+            // FIXME code point substring
+            if (information == null)
+                return null;
+            return codePointSubstring(begin, information.length());
+        }
+    }
 
     private static final String ATTR_NAME = "class";
     private static final String ATTR_VALUE = "mgt10";

@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
-import org.komusubi.feeder.aggregator.topic.WeatherTopics;
+import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.Speaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +24,13 @@ public class Jal5971Resource {
     @Context UriInfo uriInfo;
     @Context Request request;
     private Speaker talker;
-    private WeatherTopics topics;
+    private Topics topics;
 
     /**
      * Default constructor.
      */
     @Inject
-    public Jal5971Resource(Speaker talker, WeatherTopics topics) {
+    public Jal5971Resource(Speaker talker, Topics topics) {
         this.talker = talker;
         this.topics = topics;
     }

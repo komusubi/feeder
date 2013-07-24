@@ -40,8 +40,8 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Status;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherScript.WeatherStatus;
 import org.komusubi.feeder.model.Region;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -54,7 +54,7 @@ public class WeatherContentScraperTest {
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
     @Mock private HtmlScraper scraper; 
-    @DataPoints public static Class<?>[] VALUES = new Class<?>[]{ Region.class, WeatherStatus.class };
+    @DataPoints public static Class<?>[] VALUES = new Class<?>[]{ Region.class, Status.class };
     
     @Before
     public void before() {
@@ -125,7 +125,7 @@ public class WeatherContentScraperTest {
             }
         };
         // exercise
-        NodeList actual = target.scrape(WeatherStatus.class);
+        NodeList actual = target.scrape(Status.class);
         // verify
         verify(scraper).scrapeMatchNodes(url, filter, TableColumn.class);
         assertThat(actual, is(returnNode));
@@ -150,7 +150,7 @@ public class WeatherContentScraperTest {
             }
         };
         // exercise
-        List<WeatherStatus> actual = target.scrapeWeatherStatus();
+        List<Status> actual = target.scrapeWeatherStatus();
         // verify
         assertThat(actual.get(0).value(), is(expected1));
         assertThat(actual.get(1).value(), is(expected2));

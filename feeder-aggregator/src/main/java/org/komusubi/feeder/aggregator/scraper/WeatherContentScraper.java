@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.aggregator.scraper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,26 +34,150 @@ import org.htmlparser.tags.Div;
 import org.htmlparser.tags.TableColumn;
 import org.htmlparser.tags.TableHeader;
 import org.htmlparser.util.NodeList;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherScript;
-import org.komusubi.feeder.aggregator.topic.WeatherScript.WeatherStatus;
-import org.komusubi.feeder.aggregator.topic.WeatherTopic;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Region;
 
 /**
  * @author jun.ozeki
  */
-public class WeatherContentScraper extends AbstractWeatherScraper implements Iterable<Script> {
+public class WeatherContentScraper extends AbstractWeatherScraper implements Iterable<Content> {
+    /**
+     * weather status.
+     * @author jun.ozeki
+     */
+    public static class Status implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private String status;
+
+        /**
+         * @param status
+         */
+        public Status(String status) {
+            this.status = status;
+        }
+
+        /**
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            Status other = (Status) obj;
+            if (status == null) {
+                if (other.status != null)
+                    return false;
+            } else if (!status.equals(other.status))
+                return false;
+            return true;
+        }
+
+        /**
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((status == null) ? 0 : status.hashCode());
+            return result;
+        }
+
+        /**
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("WeatherStatus [status=").append(status).append("]");
+            return builder.toString();
+        }
+
+        /**
+         * 
+         * @return
+         */
+        public String value() {
+            return status;
+        }
+    }
+
+    /**
+     * @author jun.ozeki
+     */
+    public static class Content implements Script {
+
+        private static final long serialVersionUID = 1L;
+        private Region region;
+        private Status status;
+
+        /**
+         * create new instance.
+         * @param region
+         * @param status
+         */
+        public Content(Region region, Status status) {
+            this.region = region;
+            this.status = status;
+        }
+
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#line()
+         */
+        @Override
+        public String line() {
+            if (region == null || status == null)
+                return "";
+            return region.name() + ": " + status.value();
+        }
+
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#codePointCount()
+         */
+        @Override
+        public int codePointCount() {
+            if (line() == null)
+                return 0;
+            return line().codePointCount(0, line().length());
+        }
+
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#codePointSubstring(int, int)
+         */
+        @Override
+        public String codePointSubstring(int begin, int end) {
+            // FIXME code point substring.
+            if (line() == null)
+                return null;
+            return line().substring(begin, end);
+        }
+
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#codePointSubstring(int)
+         */
+        @Override
+        public String codePointSubstring(int begin) {
+            if (line() == null)
+                return null;
+            return codePointSubstring(begin, line().length());
+        }
+
+    }
 
     private static final String ATTR_VALUE = "weather_info_txtBox";
     private static final String ATTR_NAME = "class";
-    
+
     /**
      * create new instance.
      */
     public WeatherContentScraper() {
-        
+
     }
 
     /**
@@ -99,9 +224,9 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
      * scrape for WeatherStatus.
      * @return
      */
-    public List<WeatherStatus> scrapeWeatherStatus() {
-        NodeList nodes = scrape(WeatherStatus.class);
-        List<WeatherStatus> statuses = new ArrayList<WeatherStatus>();
+    public List<Status> scrapeWeatherStatus() {
+        NodeList nodes = scrape(Status.class);
+        List<Status> statuses = new ArrayList<Status>();
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.elementAt(i);
             String[] values = node.toPlainTextString().split("\n");
@@ -111,7 +236,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
                 if (values.length > j + 1)
                     builder.append(" ");
             }
-            statuses.add(new WeatherStatus(builder.toString()));
+            statuses.add(new Status(builder.toString()));
         }
         return statuses;
     }
@@ -121,21 +246,20 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
      * @return
      */
     public NodeList scrape(Class<?> clazz) {
-        if (!clazz.isAssignableFrom(Region.class) && !clazz.isAssignableFrom(WeatherStatus.class))
+        if (!clazz.isAssignableFrom(Region.class) && !clazz.isAssignableFrom(Status.class))
             throw new IllegalArgumentException("argument MUST be Region.class or WeatherStatus.class");
 
         Class<?> filterTagClass = null;
         if (clazz.isAssignableFrom(Region.class)) {
             filterTagClass = TableHeader.class;
-        } else if (clazz.isAssignableFrom(WeatherStatus.class)) {
+        } else if (clazz.isAssignableFrom(Status.class)) {
             filterTagClass = TableColumn.class;
         }
         return scraper().scrapeMatchNodes(site().url(), filter(), filterTagClass);
     }
 
-  
     /**
-     * WeatherTopics filter for html scraper. 
+     * WeatherTopics filter for html scraper.
      * @return
      */
     protected NodeFilter filter() {
@@ -160,14 +284,14 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
      * @see java.lang.Iterable#iterator()
      */
     @Override
-    public Iterator<Script> iterator() {
-        WeatherTopic topic = new WeatherTopic();
+    public Iterator<Content> iterator() {
+        List<Content> list = new ArrayList<Content>();
         for (int i = 0; i < size(); i++) {
             Region region = scrapeRegion().get(i);
-            WeatherStatus status = scrapeWeatherStatus().get(i);
-            topic.add(new WeatherScript(region, status));
+            Status status = scrapeWeatherStatus().get(i);
+            list.add(new Content(region, status));
         }
-        return topic.iterator();
+        return list.iterator();
     }
 
 }

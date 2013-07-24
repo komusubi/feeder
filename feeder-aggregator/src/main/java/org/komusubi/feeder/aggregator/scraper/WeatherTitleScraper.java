@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.aggregator.scraper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,13 +40,64 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.NodeVisitor;
 import org.komusubi.feeder.aggregator.AggregatorException;
+import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics.Title;
+import org.komusubi.feeder.model.Message.Script;
 
 /**
  * @author jun.ozeki
  */
 public class WeatherTitleScraper extends AbstractWeatherScraper implements Iterable<Title> {
+    /**
+     * weather title.
+     * @author jun.ozeki
+     */
+    public static class Title implements Script, Serializable {
+
+        private static final long serialVersionUID = 1L;
+        private String title;
+
+        /**
+         * create new instance.
+         */
+        public Title(String title) {
+            this.title = title;
+        }
+
+       /**
+         * @see org.komusubi.feeder.model.Message.Script#line()
+         */
+        @Override
+        public String line() {
+            return title;
+        }
+
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#codePointLength()
+         */
+        @Override
+        public int codePointCount() {
+            if (title == null)
+                return 0;
+            return title.codePointCount(0, title.length());
+        }
+
+        @Override
+        public String codePointSubstring(int begin, int end) {
+            if (title == null)
+                return null;
+            return title.substring(begin, end);
+        }
+
+        @Override
+        public String codePointSubstring(int begin) {
+            if (title == null)
+                return null;
+            return codePointSubstring(begin, title.length());
+        }
+       
+    } 
+    
     private static final String ATTR_NAME = "class";
     private static final String ATTR_VALUE = "weather_info_txtBox";
 
