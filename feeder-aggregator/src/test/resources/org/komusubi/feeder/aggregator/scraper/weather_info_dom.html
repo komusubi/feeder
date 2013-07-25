@@ -14,452 +14,347 @@
 <script type="text/javascript" src="/common_rn/js/insiteSearchInput.js"></script>
 <!-- /[共通スクリプト] -->
 <style type="text/css">
-<!-- /* =========== flightSelectFormBlockA01 =========== */
-div.flightSelectFormBlockA01 {
-	border: 1px solid #9a9a9a;
-}
-
-div.flightSelectFormBlockA01 h2 {
-	padding: 5px;
-	background-color: #c9caca;
-	border: 1px solid #ffffff;
-}
-
-div.flightSelectFormBlockA01 h2 img.icon {
-	vertical-align: top;
-}
-
-div.flightSelectFormBlockA01 table.selectionBlock {
-	background-color: #ffffff;
-	border-collapse: separate;
-	border-bottom: 1px solid #FFFFFF;
-}
-
-div.flightSelectFormBlockA01 table.selectionBlock td {
-	padding: 15px 20px;
-	vertical-align: top;
-	border-right: 1px solid #939393;
-	border-left: 1px solid #edeeee;
-	border-top-width: 0;
-	border-bottom-width: 0;
-	border-top-style: solid;
-	border-bottom-style: solid;
-}
-
-div.flightSelectFormBlockA01 table.selectionBlock td.pseudo-firsrtChild
-	{
-	border-left: none;
-}
-
-div.flightSelectFormBlockA01 table.selectionBlock td.pseudo-lastChild {
-	border-right: none;
-}
+<!--
+/* =========== flightSelectFormBlockA01 =========== */
+div.flightSelectFormBlockA01{border: 1px solid #9a9a9a;}
+div.flightSelectFormBlockA01 h2{padding: 5px;background-color: #c9caca;border: 1px solid #ffffff;}
+div.flightSelectFormBlockA01 h2 img.icon{vertical-align:top;}
+div.flightSelectFormBlockA01 table.selectionBlock{background-color: #ffffff;border-collapse: separate;border-bottom: 1px solid #FFFFFF;}
+div.flightSelectFormBlockA01 table.selectionBlock td{padding:15px 20px;vertical-align: top;border-right: 1px solid #939393;border-left: 1px solid #edeeee;border-top-width: 0;border-bottom-width: 0;border-top-style: solid;border-bottom-style: solid;}
+div.flightSelectFormBlockA01 table.selectionBlock td.pseudo-firsrtChild{border-left: none;}
+div.flightSelectFormBlockA01 table.selectionBlock td.pseudo-lastChild{border-right: none;}
 /* inner table */
-div.flightSelectFormBlockA01 th {
-	padding: 0 0 3px 0;
-	font-weight: normal;
-	text-align: left;
-}
+div.flightSelectFormBlockA01 th{padding: 0 0 3px 0;font-weight: normal;text-align: left;}
 /* selectionDay */
-div.flightSelectFormBlockA01 table.selectionDay {
-	font-size: 100%;
-}
-
-div.flightSelectFormBlockA01 table.selectionDay td {
-	padding: 0 0 4px 0;
-	border: none;
-	vertical-align: middle;
-	white-space: nowrap;
-}
-
-div.flightSelectFormBlockA01 table.selectionDay select {
-	margin: 0 3px 0 0;
-}
-
-div.flightSelectFormBlockA01 table.selectionDay img.iconCalendar {
-	margin: -1px 3px 0 0;
-	vertical-align: middle;
-}
+div.flightSelectFormBlockA01 table.selectionDay{font-size: 100%;}
+div.flightSelectFormBlockA01 table.selectionDay td{padding: 0 0 4px 0;border: none;vertical-align: middle;white-space: nowrap;}
+div.flightSelectFormBlockA01 table.selectionDay select{margin: 0 3px 0 0;}
+div.flightSelectFormBlockA01 table.selectionDay img.iconCalendar{margin: -1px 3px 0 0;vertical-align: middle;}
 /* selectionAirport */
-div.flightSelectFormBlockA01 p {
-	margin: 0 0 5px 0;
-	line-height: 1.2;
-}
-
-div.flightSelectFormBlockA01 div.registedTerm {
-	margin: 0 0 8px 0;
-}
-
-div.flightSelectFormBlockA01 input.submit {
-	margin: 0 0 2px 0;
-	padding: 2px 0 0 0;
-	width: 170px;
-	line-height: 110%;
-	/*	line-height: 100%;(revised 2007/03/13 for accessibility) */
-}
-
-div.flightSelectFormBlockA01 table.selectionAirport {
-	font-size: 100%;
-	vertical-align: middle;
-}
-
-div.flightSelectFormBlockA01 table.selectionAirport td {
-	padding: 0 3px 0 0;
-	border: none;
-	vertical-align: middle;
-}
+div.flightSelectFormBlockA01 p{margin: 0 0 5px 0;line-height: 1.2;}
+div.flightSelectFormBlockA01 div.registedTerm{margin: 0 0 8px 0;}
+div.flightSelectFormBlockA01 input.submit{margin: 0 0 2px 0;padding: 2px 0 0 0;width: 170px;line-height: 110%;/*	line-height: 100%;(revised 2007/03/13 for accessibility) */}
+div.flightSelectFormBlockA01 table.selectionAirport{font-size: 100%;vertical-align: middle;}
+div.flightSelectFormBlockA01 table.selectionAirport td{padding: 0 3px 0 0;border: none;vertical-align: middle;}
 /* selectionClass */
-div.flightSelectFormBlockA01 table.selectionClass {
-	font-size: 100%;
-}
-
-div.flightSelectFormBlockA01 table.selectionClass td {
-	padding: 0 3px 0 0;
-	border: none;
-	vertical-align: middle;
-	white-space: nowrap;
-}
+div.flightSelectFormBlockA01 table.selectionClass{font-size: 100%;}
+div.flightSelectFormBlockA01 table.selectionClass td{padding: 0 3px 0 0;border: none;vertical-align: middle;white-space: nowrap;}
 /* =========== flightSelectFormBlockA01ここまで =========== */
-div.weather_info_txtBox {
-	padding: 10px;
-	border: 1px solid #666666;
-	background-color: #FFFFFF;
-}
 
-#information p {
-	line-height: 1.3;
-	margin-bottom: 14px;
-	margin-left: 20px;
-}
+div.weather_info_txtBox{padding:10px;border: 1px solid #666666;background-color: #FFFFFF;}
+#information p {line-height:1.3;margin-bottom:14px;margin-left:20px;}
+h3.headlineA01 {line-height:1.3;}
 
-h3.headlineA01 {
-	line-height: 1.3;
-}
 -->
 </style>
 </head>
 <body>
-  <noscript>当サイトをご利用になるためには、Javascript対応のブラウザが必要です。また、設定でJavascriptを有効にする必要があります。</noscript>
-  <!-- [wrapper] -->
-  <div id="wrapper">
-    <!-- [シンプルヘッダ] -->
-    <!-- [rnSimpleHead] -->
-    <div id="rnSimpleHead">
-      <!-- [rnSimpleHeadL01] -->
-      <div id="rnSimpleHeadL01">
-        <h1 id="rnSimpleLogo01">
-          <img src="/common_rn/img/logo_s_001.gif" width="171" height="38" alt="JAL | JAPAN AIRLINES">
-        </h1>
-      </div>
-      <!-- /[rnSimpleHeadL01] -->
-    </div>
-    <!-- /[rnSimpleHead] -->
+<noscript>当サイトをご利用になるためには、Javascript対応のブラウザが必要です。また、設定でJavascriptを有効にする必要があります。</noscript>
+<!-- [wrapper] -->
+<div id="wrapper">
+<!-- [シンプルヘッダ] -->
+<!-- [rnSimpleHead] -->
+<div id="rnSimpleHead">
+<!-- [rnSimpleHeadL01] -->
+<div id="rnSimpleHeadL01">
+<h1 id="rnSimpleLogo01"><img src="/common_rn/img/logo_s_001.gif" width="171" height="38" alt="JAL | JAPAN AIRLINES"></h1></div>
+<!-- /[rnSimpleHeadL01] -->
+</div>
+<!-- /[rnSimpleHead] -->
 
-    <!-- /[シンプルヘッダ] -->
-    <!-- [contents] -->
-    <div class="contents clearfix">
+<!-- /[シンプルヘッダ] -->
+<!-- [contents] -->
+<div class="contents clearfix">
 
-      <!-- [mainTitleA01] -->
-      <div class="mainTitleA01">
-        <h2>
-          <img src="/dom/img/head_weather_info_dom.gif" width="265" height="21" alt="運航の見通し(国内線)">
-        </h2>
-      </div>
-      <!-- /[mainTitleA01] -->
+<!-- [mainTitleA01] -->
+<div class="mainTitleA01">
+<h2><img src="/dom/img/head_weather_info_dom.gif" width="265" height="21" alt="運航の見通し(国内線)"></h2>
+</div>
+<!-- /[mainTitleA01] -->
 
-      <div class="spacer">
-        <img src="/common/img/clear.gif" width="1" height="15" alt="">
-      </div>
+<div class="spacer"><img src="/common/img/clear.gif" width="1" height="15" alt=""></div>
 
-      <!-- [コンテンツ]-->
+<!-- [コンテンツ]-->
 
-      <p>平素はJALグループ便をご利用いただき、まことにありがとうございます。</p>
+<p>平素はJALグループ便をご利用いただき、まことにありがとうございます。</p>
 
-      <p class="mgt10">
-        <strong>この情報は、日本時間2013年1月1日（火）の日本出発便・到着便に関する20時20分現在のものです。</strong>
-      </p>
+<p class="mgt10"><strong>この情報は、日本時間2013年1月1日（火）の日本出発便・到着便に関する20時20分現在のものです。</strong></p>
 
-      <ul class="notesListA01 mgt10">
-        <li>※<a href="/cms/other/ja/weather_info_int.html" class="uline">運航の見通し（国際線）はこちらをご覧ください。</a></li>
-      </ul>
+<ul class="notesListA01 mgt10">
+<li>※<a href="/cms/other/ja/weather_info_int.html" class="uline">運航の見通し（国際線）はこちらをご覧ください。</a></li>
+</ul>
 
-      <div class="spacer">
-        <img src="/common/img/clear.gif" width="1" height="15" alt="">
-      </div>
+<div class="spacer"><img src="/common/img/clear.gif" width="1" height="15" alt=""></div>
 
-      <!-- [ 発着案内 ] -->
-      <form action="https://www.5971.jal.co.jp/rsv/ArrivalAndDepartureSectionInfo.do" method="get" name="frm">
-        <div class="flightSelectFormBlockA01">
-          <h2>
-            <img src="/common_rn/img/icon_module001.gif" width="10" height="12" alt="" class="icon">国内線発着案内
-          </h2>
+<!-- [ 発着案内 ] -->
+<form action="https://www.5971.jal.co.jp/rsv/ArrivalAndDepartureSectionInfo.do" method="get" name="frm">
+<div class="flightSelectFormBlockA01">
+<h2><img src="/common_rn/img/icon_module001.gif" width="10" height="12" alt="" class="icon">国内線発着案内</h2>
 
-          <table border="0" cellpadding="0" cellspacing="0" class="selectionBlock">
-            <col width="40%">
-            <col width="25%">
-            <col>
-            <tr>
-              <td class="pseudo-firsrtChild">
-                <table border="0" cellpadding="0" cellspacing="0" class="selectionDay">
-                  <tr>
-                    <td>出発地&nbsp;<select name="DPORT" class="sel" id="D" style="width: 180px;">
-                        <option value="HND" selected>東京(羽田)</option>
-                        <option value="ITM">大阪(伊丹)</option>
-                        <option value="KIX">大阪(関西)</option>
-                        <option value="SPK">札幌(新千歳)</option>
-                        <option value="NGO">名古屋(中部)</option>
-                        <option value="FUK">福岡</option>
-                        <option value="OKA">沖縄(那覇)</option>
-                        <option value="123">---</option>
-                        <option value="SPK">札幌(新千歳)</option>
-                        <option value="MMB">女満別</option>
-                        <option value="AKJ">旭川</option>
-                        <option value="KUH">釧路</option>
-                        <option value="OBO">帯広</option>
-                        <option value="HKD">函館</option>
-                        <option value="AOJ">青森</option>
-                        <option value="MSJ">三沢</option>
-                        <option value="AXT">秋田</option>
-                        <option value="HNA">花巻</option>
-                        <option value="SDJ">仙台</option>
-                        <option value="GAJ">山形</option>
-                        <option value="HND">東京(羽田)</option>
-                        <option value="NRT">東京(成田)</option>
-                        <option value="KIJ">新潟</option>
-                        <option value="MMJ">松本</option>
-                        <option value="KMQ">小松</option>
-                        <option value="FSZ">静岡</option>
-                        <option value="NGO">名古屋(中部)</option>
-                        <option value="NKM">名古屋(小牧)</option>
-                        <option value="ITM">大阪(伊丹)</option>
-                        <option value="KIX">大阪(関西)</option>
-                        <option value="SHM">南紀白浜</option>
-                        <option value="TJH">但馬</option>
-                        <option value="OKI">隠岐</option>
-                        <option value="OKJ">岡山</option>
-                        <option value="IZO">出雲</option>
-                        <option value="HIJ">広島</option>
-                        <option value="UBJ">山口宇部</option>
-                        <option value="TKS">徳島</option>
-                        <option value="TAK">高松</option>
-                        <option value="KCZ">高知</option>
-                        <option value="MYJ">松山</option>
-                        <option value="FUK">福岡</option>
-                        <option value="KKJ">北九州</option>
-                        <option value="OIT">大分</option>
-                        <option value="NGS">長崎</option>
-                        <option value="KMJ">熊本</option>
-                        <option value="KMI">宮崎</option>
-                        <option value="KOJ">鹿児島</option>
-                        <option value="TNE">種子島</option>
-                        <option value="KUM">屋久島</option>
-                        <option value="KKX">喜界島</option>
-                        <option value="ASJ">奄美大島</option>
-                        <option value="TKN">徳之島</option>
-                        <option value="OKE">沖永良部</option>
-                        <option value="RNJ">与論</option>
-                        <option value="OKA">沖縄(那覇)</option>
-                        <option value="KTD">北大東</option>
-                        <option value="MMD">南大東</option>
-                        <option value="UEO">久米島</option>
-                        <option value="MMY">宮古</option>
-                        <option value="TRA">多良間</option>
-                        <option value="ISG">石垣</option>
-                        <option value="OGN">与那国</option>
+<table border="0" cellpadding="0" cellspacing="0" class="selectionBlock">
+<col width="40%">
+<col width="25%">
+<col>
+<tr>
+<td class="pseudo-firsrtChild">
+<table border="0" cellpadding="0" cellspacing="0" class="selectionDay">
+<tr>
+<td>出発地&nbsp;<select name="DPORT" class="sel" id="D" style="width:180px;">
+<option value="HND" selected>東京(羽田)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="SPK">札幌(新千歳)</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="FUK">福岡</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="123">---</option>
+<option value="SPK">札幌(新千歳)</option>
+<option value="MMB">女満別</option>
+<option value="AKJ">旭川</option>
+<option value="KUH">釧路</option>
+<option value="OBO">帯広</option>
+<option value="HKD">函館</option>
+<option value="AOJ">青森</option>
+<option value="MSJ">三沢</option>
+<option value="AXT">秋田</option>
+<option value="HNA">花巻</option>
+<option value="SDJ">仙台</option>
+<option value="GAJ">山形</option>
+<option value="HND">東京(羽田)</option>
+<option value="NRT">東京(成田)</option>
+<option value="KIJ">新潟</option>
+<option value="MMJ">松本</option>
+<option value="KMQ">小松</option>
+<option value="FSZ">静岡</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="NKM">名古屋(小牧)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="SHM">南紀白浜</option>
+<option value="TJH">但馬</option>
+<option value="OKI">隠岐</option>
+<option value="OKJ">岡山</option>
+<option value="IZO">出雲</option>
+<option value="HIJ">広島</option>
+<option value="UBJ">山口宇部</option>
+<option value="TKS">徳島</option>
+<option value="TAK">高松</option>
+<option value="KCZ">高知</option>
+<option value="MYJ">松山</option>
+<option value="FUK">福岡</option>
+<option value="KKJ">北九州</option>
+<option value="OIT">大分</option>
+<option value="NGS">長崎</option>
+<option value="KMJ">熊本</option>
+<option value="KMI">宮崎</option>
+<option value="KOJ">鹿児島</option>
+<option value="TNE">種子島</option>
+<option value="KUM">屋久島</option>
+<option value="KKX">喜界島</option>
+<option value="ASJ">奄美大島</option>
+<option value="TKN">徳之島</option>
+<option value="OKE">沖永良部</option>
+<option value="RNJ">与論</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="KTD">北大東</option>
+<option value="MMD">南大東</option>
+<option value="UEO">久米島</option>
+<option value="MMY">宮古</option>
+<option value="TRA">多良間</option>
+<option value="ISG">石垣</option>
+<option value="OGN">与那国</option>
 
-                    </select></td>
-                    <td><img src="/common/img/clear.gif" width="5" height="1" alt=""><img
-                      src="/common/img/icon_arrow_003.gif" height="9" width="8" alt=""><img src="/common/img/clear.gif"
-                      width="5" height="1" alt=""></td>
-                    <td>到着地&nbsp;<select name="APORT" class="sel" id="A" style="width: 180px;">
-                        <option value="HND" selected>東京(羽田)</option>
-                        <option value="ITM">大阪(伊丹)</option>
-                        <option value="KIX">大阪(関西)</option>
-                        <option value="SPK">札幌(新千歳)</option>
-                        <option value="NGO">名古屋(中部)</option>
-                        <option value="FUK">福岡</option>
-                        <option value="OKA">沖縄(那覇)</option>
-                        <option value="123">---</option>
-                        <option value="SPK">札幌(新千歳)</option>
-                        <option value="MMB">女満別</option>
-                        <option value="AKJ">旭川</option>
-                        <option value="KUH">釧路</option>
-                        <option value="OBO">帯広</option>
-                        <option value="HKD">函館</option>
-                        <option value="AOJ">青森</option>
-                        <option value="MSJ">三沢</option>
-                        <option value="AXT">秋田</option>
-                        <option value="HNA">花巻</option>
-                        <option value="SDJ">仙台</option>
-                        <option value="GAJ">山形</option>
-                        <option value="HND">東京(羽田)</option>
-                        <option value="NRT">東京(成田)</option>
-                        <option value="KIJ">新潟</option>
-                        <option value="MMJ">松本</option>
-                        <option value="KMQ">小松</option>
-                        <option value="FSZ">静岡</option>
-                        <option value="NGO">名古屋(中部)</option>
-                        <option value="NKM">名古屋(小牧)</option>
-                        <option value="ITM">大阪(伊丹)</option>
-                        <option value="KIX">大阪(関西)</option>
-                        <option value="SHM">南紀白浜</option>
-                        <option value="TJH">但馬</option>
-                        <option value="OKI">隠岐</option>
-                        <option value="OKJ">岡山</option>
-                        <option value="IZO">出雲</option>
-                        <option value="HIJ">広島</option>
-                        <option value="UBJ">山口宇部</option>
-                        <option value="TKS">徳島</option>
-                        <option value="TAK">高松</option>
-                        <option value="KCZ">高知</option>
-                        <option value="MYJ">松山</option>
-                        <option value="FUK">福岡</option>
-                        <option value="KKJ">北九州</option>
-                        <option value="OIT">大分</option>
-                        <option value="NGS">長崎</option>
-                        <option value="KMJ">熊本</option>
-                        <option value="KMI">宮崎</option>
-                        <option value="KOJ">鹿児島</option>
-                        <option value="TNE">種子島</option>
-                        <option value="KUM">屋久島</option>
-                        <option value="KKX">喜界島</option>
-                        <option value="ASJ">奄美大島</option>
-                        <option value="TKN">徳之島</option>
-                        <option value="OKE">沖永良部</option>
-                        <option value="RNJ">与論</option>
-                        <option value="OKA">沖縄(那覇)</option>
-                        <option value="KTD">北大東</option>
-                        <option value="MMD">南大東</option>
-                        <option value="UEO">久米島</option>
-                        <option value="MMY">宮古</option>
-                        <option value="TRA">多良間</option>
-                        <option value="ISG">石垣</option>
-                        <option value="OGN">与那国</option>
+</select></td>
+<td><img src="/common/img/clear.gif" width="5" height="1" alt=""><img src="/common/img/icon_arrow_003.gif" height="9" width="8" alt=""><img src="/common/img/clear.gif" width="5" height="1" alt=""></td>
+<td>到着地&nbsp;<select name="APORT" class="sel" id="A" style="width:180px;">
+<option value="HND" selected>東京(羽田)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="SPK">札幌(新千歳)</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="FUK">福岡</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="123">---</option>
+<option value="SPK">札幌(新千歳)</option>
+<option value="MMB">女満別</option>
+<option value="AKJ">旭川</option>
+<option value="KUH">釧路</option>
+<option value="OBO">帯広</option>
+<option value="HKD">函館</option>
+<option value="AOJ">青森</option>
+<option value="MSJ">三沢</option>
+<option value="AXT">秋田</option>
+<option value="HNA">花巻</option>
+<option value="SDJ">仙台</option>
+<option value="GAJ">山形</option>
+<option value="HND">東京(羽田)</option>
+<option value="NRT">東京(成田)</option>
+<option value="KIJ">新潟</option>
+<option value="MMJ">松本</option>
+<option value="KMQ">小松</option>
+<option value="FSZ">静岡</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="NKM">名古屋(小牧)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="SHM">南紀白浜</option>
+<option value="TJH">但馬</option>
+<option value="OKI">隠岐</option>
+<option value="OKJ">岡山</option>
+<option value="IZO">出雲</option>
+<option value="HIJ">広島</option>
+<option value="UBJ">山口宇部</option>
+<option value="TKS">徳島</option>
+<option value="TAK">高松</option>
+<option value="KCZ">高知</option>
+<option value="MYJ">松山</option>
+<option value="FUK">福岡</option>
+<option value="KKJ">北九州</option>
+<option value="OIT">大分</option>
+<option value="NGS">長崎</option>
+<option value="KMJ">熊本</option>
+<option value="KMI">宮崎</option>
+<option value="KOJ">鹿児島</option>
+<option value="TNE">種子島</option>
+<option value="KUM">屋久島</option>
+<option value="KKX">喜界島</option>
+<option value="ASJ">奄美大島</option>
+<option value="TKN">徳之島</option>
+<option value="OKE">沖永良部</option>
+<option value="RNJ">与論</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="KTD">北大東</option>
+<option value="MMD">南大東</option>
+<option value="UEO">久米島</option>
+<option value="MMY">宮古</option>
+<option value="TRA">多良間</option>
+<option value="ISG">石垣</option>
+<option value="OGN">与那国</option>
 
-                    </select></td>
+</select></td>
 
-                  </tr>
-                </table>
-              </td>
-              <td>出発日&nbsp;<select name="DATEFLG" class="sel" id="DATEFLG" style="width: 100px;">
-                  <option value="1">前日</option>
-                  <option value="" selected>当日</option>
-                  <option value="2">翌日</option>
-              </select></td>
-              <td class="pseudo-lastChild" style="text-align: right;"><input type="image" class="image linkButtonB"
-                src="/common_rn/img/btn_sidepane_unkou_001.gif" value="" alt="発着情報を見る"></td>
-            </tr>
-          </table>
-          <!-- /flightSelectFormBlockA01 -->
-        </div>
-      </form>
+</tr>
+</table>
+</td>
+<td>出発日&nbsp;<select name="DATEFLG" class="sel" id="DATEFLG" style="width:100px;">
+<option value="1">前日</option>
+<option value="" selected>当日</option>
+<option value="2">翌日</option>
+</select></td>
+<td class="pseudo-lastChild" style="text-align:right;"><input type="image" class="image linkButtonB" src="/common_rn/img/btn_sidepane_unkou_001.gif" value="" alt="発着情報を見る"></td>
+</tr>
+</table>
+<!-- /flightSelectFormBlockA01 --></div>
+</form>
 
-      <!-- /[ 発着案内 ] -->
+<!-- /[ 発着案内 ] -->
 
-      <div class="spacer">
-        <img src="/common/img/clear.gif" width="1" height="15" alt="">
-      </div>
+<div class="spacer"><img src="/common/img/clear.gif" width="1" height="15" alt=""></div>
 
-      <div class="weather_info_txtBox mgt20">
-        <p>
-          新年明けましておめでとうございます。<br> 2013年も、日本航空をご愛顧賜りますよう、どうぞ宜しくお願い申し上げます。<br> <br> <br> <b>≪北海道・東北地方
-            降雪による運航便情報について≫</b><br> <br> 明日2日は、北海道・東北地方に降雪の予報がでており、各空港を発着する運航便への影響が懸念されております。<br>
-          なお、札幌千歳空港を夕刻以降に発着する運航便につきましては、降雪が強まる見込みのため影響が発生する可能性がございます。<br> <br> 利用のお客さまは、お出かけ前に最新の運航状況を<b><a
-            href="http://www.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do">「国内線 発着案内」</a></b>にてご確認ください。<br> <br> <br>
-          また、本日1日および明日2日の遅延、欠航、条件付運航（出発空港への引き返し、他空港への着陸）の可能性がある空港は、以下のとおりです。<br> <br>
-        <table width="100%">
-          <tr>
-            <th scope="row" class="nowrap"
-              style="width: 150px; color: #cc0000; text-align: left; vertical-align: top; padding: 4px;">北海道</th>
-            <td style="padding: 4px; vertical-align: top;">【本日1日】平常どおりの運航を予定しています。<br>
-              【明日2日】函館（降雪）、札幌千歳・とかち帯広・釧路（夕刻からの降雪）
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" class="nowrap" style="color: #cc0000; text-align: left; vertical-align: top; padding: 4px;">東北・北陸</th>
-            <td style="padding: 4px; vertical-align: top;">【本日1日】青森・秋田・新潟（降雪）<br> 【明日2日】青森・三沢・秋田・新潟（降雪）、いわて花巻・小松（強風）
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" class="nowrap" style="color: #cc0000; text-align: left; vertical-align: top; padding: 4px;">関東・東海・近畿</th>
-            <td style="padding: 4px; vertical-align: top;">平常どおりの運航を予定しています。</td>
-          </tr>
-          <tr>
-            <th scope="row" class="nowrap" style="color: #cc0000; text-align: left; vertical-align: top; padding: 4px;">中国・四国</th>
-            <td style="padding: 4px; vertical-align: top;">平常どおりの運航を予定しています。</td>
-          </tr>
-          <tr>
-            <th scope="row" class="nowrap" style="color: #cc0000; text-align: left; vertical-align: top; padding: 4px;">九州・沖縄</th>
-            <td style="padding: 4px; vertical-align: top;">平常どおりの運航を予定しています。</td>
-          </tr>
-        </table>
-        <br> ※上記に空港名の記載がありましても、条件付運航のご案内は、運航する機種によって異なる場合があります。<br> <br> <br>
-        ※このページは、機材故障および使用機材の到着遅れによる遅延・欠航等および他社運航のコードシェア便の情報は含まれておりません。<br> <b>ご利用便の発着状況については、<b><a
-            href="http://www.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do">「国内線 発着案内」</a></b>をご確認ください。
-        </b><br> <br> <br> ◆次回のご案内は明朝を予定しております。<br> <br> <br>
+<div class="weather_info_txtBox">
+<p>
+新年明けましておめでとうございます。<br>
+2013年も、日本航空をご愛顧賜りますよう、どうぞ宜しくお願い申し上げます。<br>
+<br>
+<br>
+<b>≪北海道・東北地方　降雪による運航便情報について≫</b><br>
+<br>
+明日2日は、北海道・東北地方に降雪の予報がでており、各空港を発着する運航便への影響が懸念されております。<br>
+なお、札幌千歳空港を夕刻以降に発着する運航便につきましては、降雪が強まる見込みのため影響が発生する可能性がございます。<br>
+<br>
+利用のお客さまは、お出かけ前に最新の運航状況を<b><a href="http://www.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do">「国内線　発着案内」</a></b>にてご確認ください。<br>
+<br>
+<br>
+また、本日1日および明日2日の遅延、欠航、条件付運航（出発空港への引き返し、他空港への着陸）の可能性がある空港は、以下のとおりです。<br>
+<br>
+<table width="100%">
+<tr>
+<th scope="row" class="nowrap" style="width:150px; color:#cc0000; text-align:left; vertical-align:top; padding:4px;">北海道</th>
+<td style="padding:4px; vertical-align:top;">【本日1日】平常どおりの運航を予定しています。<br>
+【明日2日】函館（降雪）、札幌千歳・とかち帯広・釧路（夕刻からの降雪）</td>
+</tr>
+<tr>
+<th scope="row" class="nowrap" style="color:#cc0000; text-align:left; vertical-align:top; padding:4px;">東北・北陸</th>
+<td style="padding:4px; vertical-align:top;">【本日1日】青森・秋田・新潟（降雪）<br>
+【明日2日】青森・三沢・秋田・新潟（降雪）、いわて花巻・小松（強風）</td>
+</tr>
+<tr>
+<th scope="row" class="nowrap" style="color:#cc0000; text-align:left; vertical-align:top; padding:4px;">関東・東海・近畿</th>
+<td style="padding:4px; vertical-align:top;">平常どおりの運航を予定しています。</td>
+</tr>
+<tr>
+<th scope="row" class="nowrap" style="color:#cc0000; text-align:left; vertical-align:top; padding:4px;">中国・四国</th>
+<td style="padding:4px; vertical-align:top;">平常どおりの運航を予定しています。</td>
+</tr>
+<tr>
+<th scope="row" class="nowrap" style="color:#cc0000; text-align:left; vertical-align:top; padding:4px;">九州・沖縄</th>
+<td style="padding:4px; vertical-align:top;">平常どおりの運航を予定しています。</td>
+</tr>
+</table>
+<br>
+※上記に空港名の記載がありましても、条件付運航のご案内は、運航する機種によって異なる場合があります。<br>
+<br>
+<br>
+※このページは、機材故障および使用機材の到着遅れによる遅延・欠航等および他社運航のコードシェア便の情報は含まれておりません。<br>
+<b>ご利用便の発着状況については、<b><a href="http://www.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do">「国内線　発着案内」</a></b>をご確認ください。</b><br>
+<br>
+<br>
+◆次回のご案内は明朝を予定しております。<br>
+<br>
+<br>
 
-        </p>
-      </div>
+</p>
+</div>
 
-      <div class="clearfix mgt15">
-        <!-- [halfBoxL] -->
-        <div class="halfBoxL">
-          <p>
-            <a href="http://www.5971.jal.co.jp/rsv/IrregularFlightListInput.do" class="linkBtnA"><img
-              src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">欠航・遅延便検索</a> <a href="/dom/info/irrinfo/"
-              class="linkBtnA mgt3"><img src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">悪天候等により、ご予約便が遅延、欠航した場合の変更・払い戻しについて</a>
-            <a href="/dom/info/irregular.html" class="linkBtnA mgt3"><img src="/common_rn/img/icon_triangle_001.gif"
-              width="6" height="5" alt="">悪天候等による運航への影響をメールにてお知らせします</a> <a href="http://weather.jal.co.jp/"
-              class="linkBtnA mgt3"><img src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">各地の天候状況について</a>
+<div class="clearfix mgt15">
+<!-- [halfBoxL] -->
+<div class="halfBoxL">
+<p>
+<a href="http://www.5971.jal.co.jp/rsv/IrregularFlightListInput.do" class="linkBtnA"><img src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">欠航・遅延便検索</a>
 
-          </p>
-        </div>
-        <!-- /[halfBoxL] -->
+<a href="/dom/info/irrinfo/" class="linkBtnA mgt3"><img src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">悪天候等により、ご予約便が遅延、欠航した場合の変更・払い戻しについて</a>
 
-        <!-- [halfBoxR] -->
-        <div class="halfBoxR">
-          <div id="information">
-            <h3 class="headlineA01 larger01">●発着状況の自動音声によるご案内</h3>
-            <p>
-              <strong>「SKYナビ」</strong><br> <img src="/information/img/icon_freedial.gif" width="21" height="12"
-                alt="フリーダイヤル"><span class="txTel">0120-747-222</span> （24時間）<br> ※携帯電話からは、東京 03-5796-9345＜有料＞
-            </p>
-          </div>
-        </div>
-        <!-- /[halfBoxR] -->
-      </div>
+<a href="/dom/info/irregular.html" class="linkBtnA mgt3"><img src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">悪天候等による運航への影響をメールにてお知らせします</a>
+<a href="http://weather.jal.co.jp/" class="linkBtnA mgt3"><img src="/common_rn/img/icon_triangle_001.gif" width="6" height="5" alt="">各地の天候状況について</a>
 
-      <!-- [notesField] -->
-      <div class="notesField mgt15">
-        <h2>ご注意・ご案内</h2>
-        <ul class="textListA01">
-          <li>日本トランスオーシャン航空便の台風時等の情報については、<a href="/jta/st/st.html" class="inText uline">特別な運航情報</a>をご確認ください。
-          </li>
-          <li>日本エアコミューター、琉球エアーコミューターの便に関する詳細情報のお問い合わせ先につきましては、<a href="/information/dom/" class="inText uline">「お問い合わせ一覧」</a>ページをご覧ください。
-          </li>
-        </ul>
+</p>
+</div>
+<!-- /[halfBoxL] -->
 
-      </div>
+<!-- [halfBoxR] -->
+<div class="halfBoxR">
+<div id="information">
+<h3 class="headlineA01 larger01">●発着状況の自動音声によるご案内</h3>
+<p><strong>「SKYナビ」</strong><br>
+<img src="/information/img/icon_freedial.gif" width="21" height="12" alt="フリーダイヤル"><span class="txTel">0120-747-222</span> （24時間）<br>
+※携帯電話からは、東京　03-5796-9345＜有料＞</p>
+</div>
+</div>
+<!-- /[halfBoxR] -->
+</div>
 
-      <!-- /contents] -->
-    </div>
+<!-- [notesField] -->
+<div class="notesField mgt15">
+<h2>ご注意・ご案内</h2>
+<ul class="textListA01">
+<li>日本トランスオーシャン航空便の台風時等の情報については、<a href="/jta/st/st.html" class="inText uline">特別な運航情報</a>をご確認ください。</li>
+<li>日本エアコミューター、琉球エアーコミューターの便に関する詳細情報のお問い合わせ先につきましては、<a href="/information/dom/" class="inText uline">「お問い合わせ一覧」</a>ページをご覧ください。</li>
+</ul>
 
-    <!-- [シンプルフッタ] -->
-    <!-- [rnSimpleFoot] -->
-    <div id="rnSimpleFoot">
-      <div id="rnSimpleFootBnr01">
-        &nbsp;
-        <!-- [rnSimpleFootBnr01] -->
-      </div>
-      <p id="rnSimpleFootCopy">
-        <img src="/common_rn/img/txt_footer_copy_001.gif" width="219" height="11"
-          alt="Copyright &copy; Japan Airlines. All rights reserved.">
-      </p>
-    </div>
-    <!-- /[rnSimpleFoot] -->
-    <script type="text/javascript" src="/common_rn/js/rtam.js"></script>
-    <!-- /[シンプルフッタ] -->
-    <!-- /[wrapper] -->
-  </div>
+</div>
+
+<!-- /contents] --></div>
+
+<!-- [シンプルフッタ] -->
+<!-- [rnSimpleFoot] -->
+<div id="rnSimpleFoot">
+<div id="rnSimpleFootBnr01">&nbsp;
+<!-- [rnSimpleFootBnr01] --></div>
+<p id="rnSimpleFootCopy"><img src="/common_rn/img/txt_footer_copy_001.gif" width="219" height="11" alt="Copyright &copy; Japan Airlines. All rights reserved."></p>
+</div>
+<!-- /[rnSimpleFoot] -->
+<script type="text/javascript" src="/common_rn/js/rtam.js"></script>
+<!-- /[シンプルフッタ] -->
+<!-- /[wrapper] --></div>
 </body>
 </html>
