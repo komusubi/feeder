@@ -202,7 +202,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             // exercise
             NodeList nodes = target.scrape(resources, filter);
             // verify
@@ -215,7 +215,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             // exercise
             NodeList nodes = target.scrapeMatchNodes(resources, filter, TableHeader.class);
             // verify
@@ -234,7 +234,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             String expected1 = "平常どおりの運航を予定しています。";
             String expected2 = "平常どおりの運航を予定しています。";
             String expected3 = "平常どおりの運航を予定しています。";
@@ -275,7 +275,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class), 
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter("class", "weather_info_txtBox mgt20"));
             String expected = "";
             // exercise
             NodeList nodes = target.scrape(resources, filter);
