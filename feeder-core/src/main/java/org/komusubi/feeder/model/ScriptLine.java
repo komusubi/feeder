@@ -36,14 +36,6 @@ public class ScriptLine implements Script {
     }
 
     /**
-     * @see org.komusubi.feeder.model.Message.Script#line()
-     */
-    @Override
-    public String line() {
-        return line;
-    }
-
-    /**
      * @see org.komusubi.feeder.model.Message.Script#codePointCount()
      */
     @Override
@@ -51,6 +43,17 @@ public class ScriptLine implements Script {
         if (line == null)
             return 0;
         return line.codePointCount(0, line.length());
+    }
+
+    /**
+     * @see org.komusubi.feeder.model.Message.Script#codePointSubstring(int)
+     */
+    @Override
+    public String codePointSubstring(int begin) {
+        // FIXME code point substring.
+        if (line == null)
+            return null;
+        return codePointSubstring(begin, line.length());
     }
 
     /**
@@ -64,15 +67,37 @@ public class ScriptLine implements Script {
         return line.substring(begin, end);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ScriptLine other = (ScriptLine) obj;
+        if (line == null) {
+            if (other.line != null)
+                return false;
+        } else if (!line.equals(other.line))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((line == null) ? 0 : line.hashCode());
+        return result;
+    }
+
     /**
-     * @see org.komusubi.feeder.model.Message.Script#codePointSubstring(int)
+     * @see org.komusubi.feeder.model.Message.Script#line()
      */
     @Override
-    public String codePointSubstring(int begin) {
-        // FIXME code point substring.
-        if (line == null)
-            return null;
-        return codePointSubstring(begin, line.length());
+    public String line() {
+        return line;
     }
 
 }
