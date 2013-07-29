@@ -20,6 +20,7 @@ package org.komusubi.feeder.sns.twitter.strategy;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,6 +34,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.komusubi.common.util.Resolver;
+import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
@@ -55,8 +57,10 @@ import twitter4j.Status;
 @RunWith(Enclosed.class)
 public class SleepStrategyTest {
 
-//    @Mock private SocialNetwork mockSocialNetwork;
-
+    /**
+     * PageCache Test class. 
+     * @author jun.ozeki
+     */
     public static class PageCacheTest {
         @Mock private Twitter4j mockTwitter4j;
         @Mock private Resolver<Date> mockResolver;
@@ -64,10 +68,11 @@ public class SleepStrategyTest {
         @Mock private Page mockPage;
         @Mock private Topics<? extends Topic> mockTopics;
         @Mock private TweetTopics tweetTopics;
+        @Mock private Status mockStatus;
 
         @Before
         public void before() {
-            MockitoAnnotations.initMocks(this);
+            MockitoAnnotations.initMocks(PageCacheTest.this);
         }
 
         @Test
@@ -118,8 +123,6 @@ public class SleepStrategyTest {
            assertTrue(target.outdated());
            verify(mockResolver, times(2)).resolve();
         }
-        
-        @Mock private Status mockStatus;
 
         @Test
         public void existsMessage() {
@@ -148,6 +151,46 @@ public class SleepStrategyTest {
             // verify
             assertTrue(cache.exists(message));
             verify(mockPage).topics();
+        }
+    }
+    
+    public static class SleepStrategyParentTest {
+        
+        @Mock private PageCache mockCache;
+    
+        @Before
+        public void before() {
+            MockitoAnnotations.initMocks(this);
+        }
+
+        @Test
+        public void postAvailable() {
+            // setup
+            Message message = new TweetMessage();
+            doNothing().when(mockCache).refresh();
+            when(mockCache.exists(message)).thenReturn(Boolean.FALSE);
+            
+            // exercise
+            SleepStrategy target = new SleepStrategy(null, 1L, mockCache);
+            
+            // verify
+            assertTrue(target.available(message));
+            verify(mockCache).exists(message);
+        }
+        
+        @Test
+        public void postNotAvailable() {
+            // setup
+            Message message = new TweetMessage();
+            doNothing().when(mockCache).refresh();
+            when(mockCache.exists(message)).thenReturn(Boolean.TRUE);
+            
+            // exercise
+            SleepStrategy target = new SleepStrategy(null, 1L, mockCache);
+            
+            // verify 
+            assertFalse(target.available(message));
+            verify(mockCache).exists(message);
         }
     }
 
