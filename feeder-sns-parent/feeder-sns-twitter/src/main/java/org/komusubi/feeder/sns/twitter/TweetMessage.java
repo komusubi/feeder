@@ -20,6 +20,7 @@ package org.komusubi.feeder.sns.twitter;
 
 import java.util.ArrayList;
 
+import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 
@@ -32,7 +33,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      * 
      * @author jun.ozeki
      */
-    public static class TweetScript implements Script {
+    public static class TweetScript extends AbstractScript {
 
         private static final long serialVersionUID = 1L;
         private static final int MESSAGE_LENGTH_MAX = 140;
@@ -50,31 +51,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
                 throw new Twitter4jException("over max length of line: " + length);
             }
             this.line = line;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((line == null) ? 0 : line.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            TweetScript other = (TweetScript) obj;
-            if (line == null) {
-                if (other.line != null)
-                    return false;
-            } else if (!line.equals(other.line))
-                return false;
-            return true;
         }
 
         @Override

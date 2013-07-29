@@ -37,7 +37,7 @@ import org.htmlparser.tags.TableHeader;
 import org.htmlparser.util.NodeList;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +114,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
     /**
      * @author jun.ozeki
      */
-    public static class Content implements Script {
+    public static class Content extends AbstractScript {
 
         private static final long serialVersionUID = 1L;
         private Region region;

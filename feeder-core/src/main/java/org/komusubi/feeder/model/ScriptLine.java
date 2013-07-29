@@ -18,12 +18,10 @@
  */
 package org.komusubi.feeder.model;
 
-import org.komusubi.feeder.model.Message.Script;
-
 /**
  * @author jun.ozeki
  */
-public class ScriptLine implements Script {
+public class ScriptLine extends AbstractScript {
 
     private static final long serialVersionUID = 1L;
     private String line;
@@ -67,37 +65,19 @@ public class ScriptLine implements Script {
         return line.substring(begin, end);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ScriptLine other = (ScriptLine) obj;
-        if (line == null) {
-            if (other.line != null)
-                return false;
-        } else if (!line.equals(other.line))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((line == null) ? 0 : line.hashCode());
-        return result;
-    }
-
     /**
      * @see org.komusubi.feeder.model.Message.Script#line()
      */
     @Override
     public String line() {
         return line;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ScriptLine [line=").append(line).append("]");
+        return builder.toString();
     }
 
 }

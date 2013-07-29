@@ -25,19 +25,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.ParagraphTag;
-import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
-import org.komusubi.feeder.aggregator.AggregatorException;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.AbstractScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +45,7 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
      * weather announcement.
      * @author jun.ozeki
      */
-    public static class Announcement implements Script, Serializable {
+    public static class Announcement extends AbstractScript implements Serializable {
 
         private static final long serialVersionUID = 1L;
         private String information;
@@ -62,19 +58,19 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
             this.information = information;
         }
 
-        /**
-         * @see org.komusubi.feeder.model.Message.Script#line()
-         */
-        @Override
-        public String line() {
-            return information;
-        }
-        
         @Override
         public int codePointCount() {
             if (information == null)
                 return 0;
             return information.codePointCount(0, information.length());
+        }
+
+        @Override
+        public String codePointSubstring(int begin) {
+            // FIXME code point substring
+            if (information == null)
+                return null;
+            return codePointSubstring(begin, information.length());
         }
 
         @Override
@@ -84,13 +80,13 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
                 return null;
             return information.substring(begin, end);
         }
-
+        
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#line()
+         */
         @Override
-        public String codePointSubstring(int begin) {
-            // FIXME code point substring
-            if (information == null)
-                return null;
-            return codePointSubstring(begin, information.length());
+        public String line() {
+            return information;
         }
 
         @Override
@@ -115,18 +111,18 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
 
     /**
      * create new instance.
-     * @param site
-     */
-    public WeatherAnnouncementScraper(WeatherTopicSite site) {
-        this(site, new HtmlScraper());
-    }
-    
-    /**
-     * create new instance.
      * @param scraper
      */
     public WeatherAnnouncementScraper(HtmlScraper scraper) {
         this(new WeatherTopicSite(), scraper);
+    }
+    
+    /**
+     * create new instance.
+     * @param site
+     */
+    public WeatherAnnouncementScraper(WeatherTopicSite site) {
+        this(site, new HtmlScraper());
     }
     
     /**
@@ -139,12 +135,21 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
     }
 
     /**
-     * scrape with filter.
-     * @param filter
+     * Announcement filter for html scraper.
      * @return
      */
-    public NodeList scrape(NodeFilter filter) {
-        return scraper().scrape(site().url(), filter);
+    protected NodeFilter filter() {
+        return new AndFilter(
+                        new NodeClassFilter(ParagraphTag.class),
+                        new HasAttributeFilter(ATTR_NAME_CLASS, ATTR_VALUE));
+    }
+
+    /**
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<Announcement> iterator() {
+        return scrape().iterator();
     }
 
     /**
@@ -167,20 +172,11 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
     }
 
     /**
-     * Announcement filter for html scraper.
+     * scrape with filter.
+     * @param filter
      * @return
      */
-    protected NodeFilter filter() {
-        return new AndFilter(
-                        new NodeClassFilter(ParagraphTag.class),
-                        new HasAttributeFilter(ATTR_NAME_CLASS, ATTR_VALUE));
-    }
-
-    /**
-     * @see java.lang.Iterable#iterator()
-     */
-    @Override
-    public Iterator<Announcement> iterator() {
-        return scrape().iterator();
+    public NodeList scrape(NodeFilter filter) {
+        return scraper().scrape(site().url(), filter);
     }
 }
