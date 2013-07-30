@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.util;
+package org.komusubi.feeder.utils;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
