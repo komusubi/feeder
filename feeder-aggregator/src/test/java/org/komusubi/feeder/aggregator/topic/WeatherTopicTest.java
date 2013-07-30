@@ -41,7 +41,6 @@ import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Region;
 import org.komusubi.feeder.model.Tag;
-import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.spi.FeederMessageProvider;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -80,8 +79,7 @@ public class WeatherTopicTest {
     @Theory
     public void Titleはリターンコードを追加する(List<?>[] args) {
         // setup
-        Tags tags = new Tags();
-        tags.add(new Tag() {
+        Tag tag = new Tag() {
 
             private static final long serialVersionUID = 1L;
 
@@ -90,13 +88,13 @@ public class WeatherTopicTest {
                 return "#weather";
             }
             
-        });
+        };
         when(titleScraper.iterator()).thenReturn(((List<Title>) args[0]).iterator());
-        when(titleScraper.site()).thenReturn(new WeatherTopicSite(tags));
+        when(titleScraper.site()).thenReturn(new WeatherTopicSite(tag));
         when(announceScraper.scrape()).thenReturn((List<Announcement>) args[1]);
-        when(announceScraper.site()).thenReturn(new WeatherTopicSite(tags));
+        when(announceScraper.site()).thenReturn(new WeatherTopicSite(tag));
         when(topicScraper.iterator()).thenReturn(((List<Content>) args[2]).iterator());
-        when(topicScraper.site()).thenReturn(new WeatherTopicSite(tags));
+        when(topicScraper.site()).thenReturn(new WeatherTopicSite(tag));
         WeatherTopic target = new WeatherTopic(topicScraper, titleScraper, announceScraper, new FeederMessageProvider());
         String expected = "タイトルです。\nご確認下さい。\n関東: 平常通り運航します。\nこの情報は当日のものです。#weather";
         // exercise
