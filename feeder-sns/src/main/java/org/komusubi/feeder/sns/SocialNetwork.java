@@ -44,13 +44,8 @@ public interface SocialNetwork {
     void post(Message message);
 
     /**
-     * a page of messages.
      * @return
      */
-//    Page<Message> history();
-    
-    Message newMessage();
-    
-    History<Topic> history();
+    History history();
 
 }

@@ -50,17 +50,24 @@ public class TweetTopic implements Topic {
     }
 
     /**
+     * @see org.komusubi.feeder.model.Topic#createdAt()
+     */
+    @Override
+    public Date createdAt() {
+        return status.getCreatedAt();
+    }
+
+    /**
      * @see org.komusubi.feeder.model.Topic#message()
      */
     public Message message() {
         return message;
     }
 
-    /**
-     * @see org.komusubi.feeder.model.Topic#createdAt()
-     */
     @Override
-    public Date createdAt() {
-        return status.getCreatedAt();
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TweetTopic [status=").append(status).append(", message=").append(message).append("]");
+        return builder.toString();
     }
 }

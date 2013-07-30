@@ -61,6 +61,11 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
             this.status = status;
         }
 
+        public Status append(String str) {
+            status += str;
+            return this;
+        }
+
         /**
          * @see java.lang.Object#equals(java.lang.Object)
          */
@@ -131,6 +136,15 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
         }
 
         /**
+         * @see org.komusubi.feeder.model.Message.Script#append(java.lang.String)
+         */
+        @Override
+        public Content append(String str) {
+            status.append(str);
+            return this;
+        }
+
+        /**
          * @see org.komusubi.feeder.model.Message.Script#line()
          */
         @Override
@@ -177,6 +191,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
             builder.append("Content [region=").append(region).append(", status=").append(status).append("]");
             return builder.toString();
         }
+
 
     }
 

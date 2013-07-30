@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
+import org.komusubi.feeder.sns.GateKeeper;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
 import org.quartz.Job;
@@ -53,8 +54,8 @@ public class TopicSpeaker implements Job {
      * @param socialNetwork
      */
     @Inject
-    public TopicSpeaker(SocialNetwork socialNetwork, Topics topics) {
-        this(new Speaker(socialNetwork), topics);
+    public TopicSpeaker(SocialNetwork socialNetwork, GateKeeper gatekeeper, Topics topics) {
+        this(new Speaker(socialNetwork, gatekeeper), topics);
     }
 
     /**
@@ -76,8 +77,8 @@ public class TopicSpeaker implements Job {
             Message message = t.message();
             if (message.size() <= 0) 
                 continue;
-            Message msg = speaker.extract(message);
-            speaker.talk(msg);
+//            Message msg = speaker.extract(message);
+//            speaker.talk(msg);
         }
     }
 

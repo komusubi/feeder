@@ -27,11 +27,11 @@ import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.History;
 import org.komusubi.feeder.sns.SocialNetwork;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
 /**
@@ -39,8 +39,9 @@ import twitter4j.TwitterFactory;
  */
 public class Twitter4j implements SocialNetwork {
 
-    private Twitter twitter;
+    private static final Logger logger = LoggerFactory.getLogger(Twitter4j.class);
     private static final int MESSAGE_MAX_LENGTH = 140;
+    private Twitter twitter;
 
     /**
      * create new instance.
@@ -56,15 +57,6 @@ public class Twitter4j implements SocialNetwork {
     // package
     Twitter4j(Twitter twitter) {
         this.twitter = twitter;
-    }
-
-    /**
-     * create new message instance.
-     * @return
-     */
-    @Override
-    public Message newMessage() {
-        return new TweetMessage();
     }
 
     /**
@@ -125,10 +117,12 @@ public class Twitter4j implements SocialNetwork {
         try {
             // TODO dose need a max tweet count ?
             for (StatusUpdate status: chunkStatus(message)) {
-                Status result = twitter.updateStatus(status);
+//                Status result = twitter.updateStatus(status);
+                logger.info("tweet: {}", status.getStatus());
                 Thread.sleep(1000); // wait 1 second.
             }
-        } catch (TwitterException | InterruptedException e) {
+//        } catch (TwitterException | InterruptedException e) {
+        } catch (InterruptedException e) {
             throw new Twitter4jException(e);
         }
     }
@@ -137,7 +131,7 @@ public class Twitter4j implements SocialNetwork {
      * @see org.komusubi.feeder.sns.SocialNetwork#history()
      */
     @Override
-    public History<Topic> history() {
+    public History history() {
         return new TweetHistory(twitter);
     }
 

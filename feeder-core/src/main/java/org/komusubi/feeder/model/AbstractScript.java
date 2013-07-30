@@ -32,7 +32,7 @@ public abstract class AbstractScript implements Script {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) { 
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -40,7 +40,7 @@ public abstract class AbstractScript implements Script {
         if (obj instanceof Script) {
             if (this.line().equals(((Script) obj).line())) {
                 return true;
-            } else { 
+            } else {
                 return false;
             }
         } else {
@@ -55,4 +55,9 @@ public abstract class AbstractScript implements Script {
         result = prime * result + ((line() == null) ? 0 : line().hashCode());
         return result;
     }
+
+    public int length() {
+        return line().length();
+    }
+
 }

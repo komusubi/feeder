@@ -21,6 +21,7 @@ package org.komusubi.feeder.sns.twitter.strategy;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.komusubi.common.util.Resolver;
 import org.komusubi.feeder.model.Message;
@@ -35,23 +36,31 @@ import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
  */
 public class SleepStrategy implements GateKeeper {
 
-
     /**
      * 
      * @author jun.ozeki
      */
-    public class PageCache {
+    public static class PageCache {
         private static final long CACHE_DURATION = 60 * 60 * 1000;
         private Date date;
         private Page page;
         private Resolver<Date> resolver;
         private long cacheDuration;
+        private Twitter4j twitter4j;
 
         /**
          * create new instance.
          */
         public PageCache() {
-            this(new DateResolver(), CACHE_DURATION);
+            this(new Twitter4j(), new DateResolver(), CACHE_DURATION);
+        }
+
+        /**
+         * create new instance.
+         * @param twitter4j
+         */
+        public PageCache(Twitter4j twitter4j) {
+            this(twitter4j, new DateResolver(), CACHE_DURATION);
         }
 
         /**
@@ -59,7 +68,8 @@ public class SleepStrategy implements GateKeeper {
          * @param date
          */
         @Inject
-        public PageCache(Resolver<Date> resolver, long duration) {
+        public PageCache(Twitter4j twitter4j, Resolver<Date> resolver, @Named("cache duration") long duration) {
+            this.twitter4j = twitter4j;
             this.resolver = resolver;
             this.cacheDuration = duration;
             init();
@@ -94,7 +104,7 @@ public class SleepStrategy implements GateKeeper {
                 return;
             init();
         }
-        
+
         public boolean exists(Message message) {
             for (Topic t: page.topics()) {
                 if (t.message().equals(message))
@@ -105,51 +115,41 @@ public class SleepStrategy implements GateKeeper {
     }
 
     private long milliSecond;
-    private Twitter4j twitter4j;
     private PageCache cache;
 
     /**
-     * create new instance. 
+     * create new instance.
      */
     public SleepStrategy() {
         this(1);
     }
 
     /**
+     * create new instance.
      * @param sleepSecond
      */
     public SleepStrategy(long sleepSecond) {
-        this(new Twitter4j(), sleepSecond);
+        this(sleepSecond, new PageCache());
     }
-    
+
     /**
      * create new instance.
-     * @param twitter4j
-     * @param sleepSecond
-     */
-    public SleepStrategy(Twitter4j twitter4j, long sleepSecond) {
-        this(twitter4j, sleepSecond, null);
-    }
-    
-    /**
-     * create new instance.
-     * @param twitter4j
      * @param sleepSecond
      * @param cache
      */
-    public SleepStrategy(Twitter4j twitter4j, long sleepSecond, PageCache cache) {
-        this.twitter4j = twitter4j;
+    @Inject
+    public SleepStrategy(@Named("tweet sleep interval") long sleepSecond, PageCache cache) {
         this.milliSecond = sleepSecond * 1000;
-        init(cache);
+        this.cache = cache;
     }
 
     // PageCache is NOT static class, because access to twitter4j instance.
-    private void init(PageCache cache) {
-        if (cache == null)
-            this.cache = new PageCache();
-        else
-            this.cache = cache;
-    }
+//    private void init(PageCache cache) {
+//        if (cache == null)
+//            this.cache = new PageCache();
+//        else
+//            this.cache = cache;
+//    }
 
     /**
      * @see org.komusubi.feeder.sns.GateKeeper#available()

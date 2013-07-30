@@ -19,7 +19,6 @@
 package org.komusubi.feeder.sns.twitter;
 
 import org.komusubi.feeder.model.Page;
-import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.sns.History;
 
 import twitter4j.Twitter;
@@ -28,7 +27,7 @@ import twitter4j.Twitter;
  * 
  * @author jun.ozeki
  */
-public class TweetHistory implements History<Topic> {
+public class TweetHistory implements History {
 
     private Twitter twitter;
     private int index;
@@ -46,10 +45,10 @@ public class TweetHistory implements History<Topic> {
      * @see org.komusubi.feeder.sns.History#indexOf(int)
      */
     @Override
-    public Page<Topic> indexOf(int index) {
+    public Page indexOf(int index) {
         if (index < 1)
             throw new IllegalArgumentException("index must be a natural number.");
-        HistoryPage<Topic> page = new HistoryPage<Topic>(twitter, index);
+        HistoryPage page = new HistoryPage(twitter, index);
         return page;
     }
 
@@ -57,7 +56,7 @@ public class TweetHistory implements History<Topic> {
      * @see org.komusubi.feeder.sns.History#next()
      */
     @Override
-    public Page<Topic> next() {
+    public Page next() {
         return indexOf(++index);
     }
 
@@ -65,7 +64,7 @@ public class TweetHistory implements History<Topic> {
      * @see org.komusubi.feeder.sns.History#previous()
      */
     @Override
-    public Page<Topic> previous() {
+    public Page previous() {
         return indexOf(--index);
     }
     

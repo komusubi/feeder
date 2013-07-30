@@ -34,6 +34,15 @@ public class ScriptLine extends AbstractScript {
     }
 
     /**
+     * @see org.komusubi.feeder.model.Message.Script#append(java.lang.String)
+     */
+    @Override
+    public ScriptLine append(String str) {
+        line += str;
+        return this;
+    }
+
+    /**
      * @see org.komusubi.feeder.model.Message.Script#codePointCount()
      */
     @Override
@@ -79,5 +88,4 @@ public class ScriptLine extends AbstractScript {
         builder.append("ScriptLine [line=").append(line).append("]");
         return builder.toString();
     }
-
 }

@@ -23,16 +23,16 @@ import org.komusubi.feeder.model.Page;
 /**
  * @author jun.ozeki
  */
-public interface History<T> {
+public interface History {
 
     /**
      * @param index
      * @return
      */
-    Page<T> indexOf(int index);
+    Page indexOf(int index);
 
-    Page<T> next();
+    Page next();
     
-    Page<T> previous();
+    Page previous();
     
 }

@@ -31,7 +31,7 @@ import twitter4j.TwitterException;
 /**
  * @author jun.ozeki
  */
-public class HistoryPage<T extends Topic> implements Page<Topic> {
+public class HistoryPage implements Page {
 
     private static final long serialVersionUID = 1L;
     private Twitter twitter;
@@ -51,7 +51,8 @@ public class HistoryPage<T extends Topic> implements Page<Topic> {
      * @param count
      * @return
      */
-    public HistoryPage<? extends Topic> count(int count) {
+//    public HistoryPage<? extends Topic> count(int count) {
+    public HistoryPage count(int count) {
         current.count(count);
         return this;
     }

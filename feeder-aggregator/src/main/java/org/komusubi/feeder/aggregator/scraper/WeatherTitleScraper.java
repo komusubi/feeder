@@ -69,6 +69,15 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
         }
 
         /**
+         * @see org.komusubi.feeder.model.Message.Script#append(java.lang.String)
+         */
+        @Override
+        public Title append(String str) {
+            title += str;
+            return this;
+        }
+
+        /**
          * @see org.komusubi.feeder.model.Message.Script#codePointLength()
          */
         @Override
@@ -106,7 +115,6 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
             builder.append("Title [title=").append(title).append("]");
             return builder.toString();
         }
-
     }
 
     /**

@@ -20,10 +20,11 @@ package org.komusubi.feeder.model;
 
 import java.io.Serializable;
 
+
 /**
  * @author jun.ozeki
  */
-public interface Page<T> extends Serializable {
+public interface Page extends Serializable {
 
     Topics<? extends Topic> topics();
     

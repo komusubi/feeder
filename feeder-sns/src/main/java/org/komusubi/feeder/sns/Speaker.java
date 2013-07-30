@@ -20,9 +20,7 @@ package org.komusubi.feeder.sns;
 
 import javax.inject.Inject;
 
-import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 
@@ -32,32 +30,16 @@ import org.komusubi.feeder.model.Topics;
 public class Speaker {
 
     private SocialNetwork socialNetwork;
-    private History<Topic> history;
-
-    /**
-     * 
-     * @param socialNetwork
-     */
-    public Speaker(SocialNetwork socialNetwork) {
-        this(socialNetwork, socialNetwork.history());
-    }
+    private GateKeeper gatekeeper;
     
     /**
      * create new instance.
      * @param socialNetwork
      */
     @Inject
-    public Speaker(SocialNetwork socialNetwork, History<Topic> history) {
+    public Speaker(SocialNetwork socialNetwork, GateKeeper gatekeeper) {
         this.socialNetwork = socialNetwork;
-        this.history = history;
-    }
-
-    /**
-     * talk to friends.
-     * @param topic
-     */
-    public void talk(Topic topic) {
-        socialNetwork.post(topic);
+        this.gatekeeper = gatekeeper;
     }
 
     /**
@@ -65,30 +47,34 @@ public class Speaker {
      * @param topics
      */
     public void talk(Topics<? extends Topic> topics) {
-        socialNetwork.post(topics);
+        for (Topic topic: topics) {
+            talk(topic.message());
+        }
     }
-    
+
+    /**
+     * talkd to friends.
+     * @param topic
+     */
+    public void talk(Topic topic) {
+        talk(topic.message());
+    }
+
     /**
      * talk to friends.
      * @param message
      */
     public void talk(Message message) {
-        socialNetwork.post(message);
+        if (gatekeeper.available(message))
+            socialNetwork.post(message);
     }
     
-    /**
-     * 
-     * @return
-     */
-//    public Page<Topic> page(int number) {
-//        return history.page(number);
-//    }
-
-    /**
+    /*
      * @param message
      * @return
      */
     // FIXME is this method necessary ? it decide use to FeederMessage or TweetMessage.
+    /*
     public Message extract(Message message) {
         Message extracted = new FeederMessage();
         for (Script script: message) {
@@ -98,4 +84,5 @@ public class Speaker {
         }
         return extracted;
     }
+    */
 }

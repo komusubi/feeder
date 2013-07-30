@@ -44,6 +44,7 @@ import org.komusubi.feeder.sns.twitter.TweetTopic;
 import org.komusubi.feeder.sns.twitter.TweetTopics;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
+import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -85,8 +86,8 @@ public class SleepStrategyTest {
             when(mockPage.topics()).thenReturn(null);
 
             // exercise
-            SleepStrategy parent = new SleepStrategy(mockTwitter4j, 1L);
-            PageCache cache = parent.new PageCache(mockResolver, 36000L);
+//            SleepStrategy parent = new SleepStrategy(mockTwitter4j, 1L);
+            PageCache cache = new PageCache(mockTwitter4j, mockResolver, 36000L);
 
             // verify
             assertFalse(cache.outdated());
@@ -116,8 +117,7 @@ public class SleepStrategyTest {
            when(mockPage.topics()).thenReturn(null);
            
            // exercise
-           SleepStrategy parent = new SleepStrategy(mockTwitter4j, 1L);
-           PageCache target = parent.new PageCache(mockResolver, 36000L);
+           PageCache target = new PageCache(mockTwitter4j, mockResolver, 36000L);
            
            // verify
            assertTrue(target.outdated());
@@ -145,8 +145,7 @@ public class SleepStrategyTest {
             message.append(msg);
 
             // exercise
-            SleepStrategy parent = new SleepStrategy(mockTwitter4j, 1L);
-            PageCache cache = parent.new PageCache();
+            PageCache cache = new PageCache(mockTwitter4j, new DateResolver(), 36000L);
            
             // verify
             assertTrue(cache.exists(message));
@@ -154,6 +153,10 @@ public class SleepStrategyTest {
         }
     }
     
+    /**
+     * SleepStrategy Test class.
+     * @author jun.ozeki
+     */
     public static class SleepStrategyParentTest {
         
         @Mock private PageCache mockCache;
@@ -171,7 +174,7 @@ public class SleepStrategyTest {
             when(mockCache.exists(message)).thenReturn(Boolean.FALSE);
             
             // exercise
-            SleepStrategy target = new SleepStrategy(null, 1L, mockCache);
+            SleepStrategy target = new SleepStrategy(1L, mockCache);
             
             // verify
             assertTrue(target.available(message));
@@ -186,7 +189,7 @@ public class SleepStrategyTest {
             when(mockCache.exists(message)).thenReturn(Boolean.TRUE);
             
             // exercise
-            SleepStrategy target = new SleepStrategy(null, 1L, mockCache);
+            SleepStrategy target = new SleepStrategy(1L, mockCache);
             
             // verify 
             assertFalse(target.available(message));

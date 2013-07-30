@@ -19,7 +19,8 @@
 package org.komusubi.feeder.web;
 
 import org.komusubi.feeder.aggregator.topic.WeatherTopic;
-import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.sns.Speaker;
+import org.komusubi.feeder.sns.twitter.HashTag;
 import org.komusubi.feeder.web.Bootstrap.Jal5971Module;
 
 import com.google.inject.Guice;
@@ -41,8 +42,9 @@ public class StandAlone {
      */
     private void execute(Injector injector) {
         WeatherTopic topic = injector.getInstance(WeatherTopic.class);
-        Message message = topic.message();
-        System.out.printf("message: %s\n", message.text());
+        topic.addTag(new HashTag("jal"));
+        Speaker speaker = injector.getInstance(Speaker.class);
+        speaker.talk(topic);
     }
 
 }

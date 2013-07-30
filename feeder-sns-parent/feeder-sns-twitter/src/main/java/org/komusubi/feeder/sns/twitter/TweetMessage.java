@@ -19,6 +19,7 @@
 package org.komusubi.feeder.sns.twitter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
@@ -37,7 +38,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         private static final long serialVersionUID = 1L;
         private static final int MESSAGE_LENGTH_MAX = 140;
-        private String line;
+        private StringBuilder line;
 
         /**
          * create new instance.
@@ -50,14 +51,23 @@ public class TweetMessage extends ArrayList<Script> implements Message {
                 int length = line == null ? 0 : line.codePointCount(0, line.length());
                 throw new Twitter4jException("over max length of line: " + length);
             }
-            this.line = line;
+            this.line = new StringBuilder(line);
+        }
+
+        public TweetScript append(String buffer) {
+            line.append(buffer);
+            return this;
         }
 
         @Override
         public int codePointCount() {
+            return codePointCount(0, line.length());
+        }
+        
+        public int codePointCount(int start, int end) {
             if (line == null)
                 return 0;
-            return line.codePointCount(0, line.length());
+            return line.codePointCount(start, end);
         }
 
         @Override
@@ -72,7 +82,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         @Override
         public String line() {
-            return line;
+            return line.toString();
         }
 
         @Override
@@ -94,13 +104,27 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
     }
 
+    @Override
+    public boolean addAll(Collection<? extends Script> c) {
+        for (Script s: c)
+            append(s);
+        return true;
+    }
+
     /**
      * @see org.komusubi.feeder.model.Message#append(org.komusubi.feeder.model.Message.Script)
      */
     @Override
     public Message append(Script script) {
-        add(script);
+//        add(script);
+        append(script.line());
         return this;
+    }
+
+    @Override
+    public boolean add(Script script) {
+        append(script);
+        return true;
     }
 
     /**
@@ -112,19 +136,29 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             throw new Twitter4jException("line must NOT be null");
         // line over max size
         if (line.codePointCount(0, line.length()) > TweetScript.MESSAGE_LENGTH_MAX) {
-            // FIXME consider code point.
+            // FIXME consider code point and word wrap.
             int offset = 0;
-            for (offset = 0; 
-                    line.codePointCount(offset, line.length()) > TweetScript.MESSAGE_LENGTH_MAX; 
-                    offset += TweetScript.MESSAGE_LENGTH_MAX) {
-                append(new TweetScript(line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
+            for ( ; 
+                  line.codePointCount(offset, line.length()) > TweetScript.MESSAGE_LENGTH_MAX; 
+                  offset += TweetScript.MESSAGE_LENGTH_MAX) {
+                super.add(new TweetScript(line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
             }
             // append remain 
-            if (line.codePointCount(offset, line.length()) > 0)
-                append(new TweetScript(line.substring(offset)));
+            if (line.length() - offset > 0)
+                super.add(new TweetScript(line.substring(offset)));
             
         } else {
-            append(new TweetScript(line));
+            // try append latest script object.
+            if (size() > 0) {
+                AbstractScript latest = (AbstractScript) get(size() - 1);
+                if (latest.codePointCount() + line.codePointCount(0, line.length()) <= TweetScript.MESSAGE_LENGTH_MAX) {
+                    latest.append(line);
+                } else {
+                    super.add(new TweetScript(line));
+                }
+            } else {
+                super.add(new TweetScript(line));
+            }
         }
         return this;
     }

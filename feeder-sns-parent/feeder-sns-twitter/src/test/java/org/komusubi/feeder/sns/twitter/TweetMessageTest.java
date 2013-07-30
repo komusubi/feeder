@@ -78,4 +78,41 @@ public class TweetMessageTest {
         assertThat(target.get(0).line(), is(expected1));
         assertThat(target.get(1).line(), is(expected2));
     }
+    
+    @Test
+    public void chunkMaxLength() {
+        // setup
+        String line1 = "あいうえおかきくけこさしすせそたちつてと"
+                    + "なにぬねのはひふへほまみむめもやいゆえよ"
+                    + "らりるれろアイウエオカキクケコサシスセソ"
+                    + "タチツテトナニヌネノハヒフヘホマミムメモ"
+                    + "あいうえおかきくけこさしすせそたちつてと"
+                    + "なにぬねのはひふへほまみむめもやいゆえよ";
+
+        String line2 = "アイウエオカキクケコサシスセソタチツテト";
+        
+        String expected1 = 
+                      "あいうえおかきくけこさしすせそたちつてと"
+                    + "なにぬねのはひふへほまみむめもやいゆえよ"
+                    + "らりるれろアイウエオカキクケコサシスセソ"
+                    + "タチツテトナニヌネノハヒフヘホマミムメモ"
+                    + "あいうえおかきくけこさしすせそたちつてと"
+                    + "なにぬねのはひふへほまみむめもやいゆえよ"
+                    + "アイウエオカキクケコサシスセソタチツテト";
+        String expected2 =
+                      "アイウエオカキクケコサシスセソタチツテト"
+                    + "アイウエオカキクケコサシスセソタチツテト";
+
+        target.append(line1);
+        
+        // exercise for chunk max size
+        target.append(line2);
+        target.append(line2);
+        target.append(line2);
+        
+        // verify
+        assertThat(target.size(), is(2));
+        assertThat(target.get(0).line(), is(expected1));
+        assertThat(target.get(1).line(), is(expected2));
+    }
 }

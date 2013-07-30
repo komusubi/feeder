@@ -58,6 +58,15 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
             this.information = information;
         }
 
+        /**
+         * @see org.komusubi.feeder.model.Message.Script#append(java.lang.String)
+         */
+        @Override
+        public Announcement append(String str) {
+            information += str;
+            return this;
+        }
+
         @Override
         public int codePointCount() {
             if (information == null)
@@ -95,7 +104,8 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
             builder.append("Announcement [information=").append(information).append("]");
             return builder.toString();
         }
-        
+
+       
     }
 
     private static final Logger logger = LoggerFactory.getLogger(WeatherAnnouncementScraper.class);

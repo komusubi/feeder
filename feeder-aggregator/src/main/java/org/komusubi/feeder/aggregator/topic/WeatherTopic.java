@@ -51,6 +51,7 @@ public class WeatherTopic implements Topic, Iterable<Script> {
     private WeatherAnnouncementScraper announceScraper;
     private WeatherTitleScraper titleScraper;
     private WeatherContentScraper contentScraper;
+    private Tags tags;
 
     /**
      * create new instance.
@@ -106,6 +107,7 @@ public class WeatherTopic implements Topic, Iterable<Script> {
         this.announceScraper = announceScraper;
         this.created = new Date();
         this.message = provider.get();
+        this.tags = new Tags();
     }
 
     // exclude any scraper, does NOT need to compare.
@@ -140,6 +142,13 @@ public class WeatherTopic implements Topic, Iterable<Script> {
         return result;
     }
 
+    
+    public WeatherTopic addTag(Tag... tagArray) {
+        for (Tag t: tagArray)
+            tags.add(t);
+        return this;
+    }
+
     /**
      * @see org.komusubi.feeder.model.Topic#message()
      */
@@ -155,6 +164,18 @@ public class WeatherTopic implements Topic, Iterable<Script> {
         }
         message.addAll(announceScraper.scrape());
         
+        for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, contentScraper)) {
+            Tags scraperTags = scraper.site().tags();
+            for (Tag t: scraperTags) 
+                tags.add(t);
+        }
+        for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
+            Tag tag = it.next();
+            message.append(tag.label());
+            if (it.hasNext())
+                message.append(" ");
+        }
+/*
         // check duplicate tag
         Tags exists = new Tags();
         for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, contentScraper)) {
@@ -169,6 +190,7 @@ public class WeatherTopic implements Topic, Iterable<Script> {
                 exists.add(tag);
             }
         }
+*/
         return message;
     }
   

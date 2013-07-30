@@ -35,6 +35,7 @@ public interface Message extends List<Script>, Serializable {
     public interface Script extends Serializable {
         String line();
         int codePointCount();
+        Script append(String str);
         String codePointSubstring(int begin, int end);
         String codePointSubstring(int begin);
     }
