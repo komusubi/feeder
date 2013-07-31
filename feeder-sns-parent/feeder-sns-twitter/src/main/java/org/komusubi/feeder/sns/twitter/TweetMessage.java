@@ -21,6 +21,7 @@ package org.komusubi.feeder.sns.twitter;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
@@ -59,6 +60,11 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             return this;
         }
 
+        public void strip() {
+            // trim to \n or ' ' etc ...
+            line = new StringBuilder(StringUtils.strip(line()));
+        }
+
         @Override
         public int codePointCount() {
             return codePointCount(0, line.length());
@@ -82,7 +88,12 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         @Override
         public String line() {
-            return line.toString();
+            String value;
+            if (line.toString().endsWith("\n"))
+                value = line.substring(0, line.length() - 1);
+            else
+                value = line.toString();
+            return value;
         }
 
         @Override
@@ -116,7 +127,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      */
     @Override
     public Message append(Script script) {
-//        add(script);
         append(script.line());
         return this;
     }

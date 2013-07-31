@@ -115,14 +115,13 @@ public class Twitter4j implements SocialNetwork {
      */
     public void tweet(Message message) {
         try {
-            // TODO dose need a max tweet count ?
-            for (StatusUpdate status: chunkStatus(message)) {
+            for (Script script: message) {
+                StatusUpdate status = new StatusUpdate(script.line());
 //                Status result = twitter.updateStatus(status);
                 logger.info("tweet: {}", status.getStatus());
-                Thread.sleep(1000); // wait 1 second.
             }
-//        } catch (TwitterException | InterruptedException e) {
-        } catch (InterruptedException e) {
+//        } catch (TwitterException e) {
+        } catch (Exception e) {
             throw new Twitter4jException(e);
         }
     }

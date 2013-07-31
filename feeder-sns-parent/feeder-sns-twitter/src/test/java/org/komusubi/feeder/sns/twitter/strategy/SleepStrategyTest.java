@@ -18,7 +18,9 @@
  */
 package org.komusubi.feeder.sns.twitter.strategy;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -26,7 +28,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Before;
@@ -43,7 +47,9 @@ import org.komusubi.feeder.sns.twitter.TweetMessage;
 import org.komusubi.feeder.sns.twitter.TweetTopic;
 import org.komusubi.feeder.sns.twitter.TweetTopics;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.TimelinePageCache;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -62,7 +68,7 @@ public class SleepStrategyTest {
      * PageCache Test class. 
      * @author jun.ozeki
      */
-    public static class PageCacheTest {
+    public static class TimelinePageCacheTest {
         @Mock private Twitter4j mockTwitter4j;
         @Mock private Resolver<Date> mockResolver;
         @Mock private History mockHistory;
@@ -73,7 +79,7 @@ public class SleepStrategyTest {
 
         @Before
         public void before() {
-            MockitoAnnotations.initMocks(PageCacheTest.this);
+            MockitoAnnotations.initMocks(TimelinePageCacheTest.this);
         }
 
         @Test
@@ -87,7 +93,7 @@ public class SleepStrategyTest {
 
             // exercise
 //            SleepStrategy parent = new SleepStrategy(mockTwitter4j, 1L);
-            PageCache cache = new PageCache(mockTwitter4j, mockResolver, 36000L);
+            TimelinePageCache cache = new TimelinePageCache(mockTwitter4j, mockResolver, 36000L);
 
             // verify
             assertFalse(cache.outdated());
@@ -117,7 +123,7 @@ public class SleepStrategyTest {
            when(mockPage.topics()).thenReturn(null);
            
            // exercise
-           PageCache target = new PageCache(mockTwitter4j, mockResolver, 36000L);
+           TimelinePageCache target = new TimelinePageCache(mockTwitter4j, mockResolver, 36000L);
            
            // verify
            assertTrue(target.outdated());
@@ -145,7 +151,7 @@ public class SleepStrategyTest {
             message.append(msg);
 
             // exercise
-            PageCache cache = new PageCache(mockTwitter4j, new DateResolver(), 36000L);
+            TimelinePageCache cache = new TimelinePageCache(mockTwitter4j, new DateResolver(), 36000L);
            
             // verify
             assertTrue(cache.exists(message));
@@ -153,6 +159,28 @@ public class SleepStrategyTest {
         }
     }
     
+    public static class FilePageCacheTest {
+        
+        @Test
+        public void replaceRefresh() {
+            // setup
+            File file = new File(System.getProperty("java.io.tmpdir") + "/unit-feeder.txt");
+            FilePageCache cache = new FilePageCache(file);
+            Message message = new TweetMessage();
+            for (int i = 0; i < 25; i++) {
+                message.append("text message message  message  message  message  message  message  message  message  message  message  message  message  message : " + i);
+            }
+            cache.store(message);
+
+            // exercise
+            cache.refresh();
+            
+            // verify
+            List<String> items = cache.cache();
+            assertThat(items.size(), is(20));
+        }
+    }
+
     /**
      * SleepStrategy Test class.
      * @author jun.ozeki

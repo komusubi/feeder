@@ -28,4 +28,6 @@ public interface GateKeeper {
 
     
     boolean available(Message message);
+
+    void store(Message message);
 }
