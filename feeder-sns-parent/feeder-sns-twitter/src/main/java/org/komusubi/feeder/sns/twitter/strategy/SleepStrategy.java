@@ -60,8 +60,10 @@ public class SleepStrategy implements GateKeeper {
 
     public static class FilePageCache implements PageCache {
 
+        private static final Logger logger = LoggerFactory.getLogger(SleepStrategy.class);
         private File file;
         private ArrayList<String> items;
+        private String lineSeparator = System.getProperty("line.separator");
 
         /**
          * 
@@ -101,7 +103,7 @@ public class SleepStrategy implements GateKeeper {
                 for (int i = items.size() - retainCount; items.size() > i; i++) {
                     writer.write("tweet:");
                     writer.write(items.get(i));
-                    writer.write(System.getProperty("line.separator"));
+                    writer.write(lineSeparator);
                 }
             } catch (IOException e) {
                 throw new Twitter4jException(e);
@@ -122,19 +124,19 @@ public class SleepStrategy implements GateKeeper {
                 while ((line = reader.readLine()) != null) {
                     if (line.startsWith("tweet:")) {
                         if (builder.length() > 0) {
-                            if (builder.toString().endsWith(System.getProperty("line.separator")))
+                            if (builder.toString().endsWith(lineSeparator))
                                 builder.deleteCharAt(builder.length() - 1);
                             items.add(builder.toString());
                         }
                         builder = new StringBuilder(line.substring("tweet:".length()));
-                        builder.append(System.getProperty("line.separator"));
+                        builder.append(lineSeparator);
                         continue;
                     }
                     builder.append(line)
-                            .append(System.getProperty("line.separator"));
+                            .append(lineSeparator);
                 }
                 if (builder.length() > 0) {
-                    if (builder.toString().endsWith(System.getProperty("line.separator")))
+                    if (builder.toString().endsWith(lineSeparator))
                         builder.deleteCharAt(builder.length() - 1);
                     items.add(builder.toString());
                 }
@@ -150,18 +152,16 @@ public class SleepStrategy implements GateKeeper {
         @Override
         public boolean exists(Message message) {
             
+            // found same script to be tweet and history one.
             for (Script script: message) {
-                boolean found = false;
                 for (String item: cache()) {
                     if (script.line().equals(item)) {
-                        found = true;
-                        break;
+                        logger.info("deplicated script found: {}", script.line());
+                        return true;
                     }
                 }
-                if (!found)
-                    return false;
             }
-            return true;
+            return false;
         }
 
         /**
@@ -174,7 +174,7 @@ public class SleepStrategy implements GateKeeper {
                 for (Script script: message) {
                     writer.write("tweet:");
                     writer.write(script.line());
-                    writer.write(System.getProperty("line.separator"));
+                    writer.write(lineSeparator);
                 }
             } catch (IOException e) {
                 throw new Twitter4jException(e);

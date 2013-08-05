@@ -115,4 +115,16 @@ public class TweetMessageTest {
         assertThat(target.get(0).line(), is(expected1));
         assertThat(target.get(1).line(), is(expected2));
     }
+    
+    @Test
+    public void trimCarrigeRetrun() {
+        // setup 
+        String text = "this message dose not have carrige return.";
+        target.append("\n");
+        target.append(text);
+        target.append("\n");
+        
+        // verify
+        assertThat(target.text(), is(text));
+    }
 }

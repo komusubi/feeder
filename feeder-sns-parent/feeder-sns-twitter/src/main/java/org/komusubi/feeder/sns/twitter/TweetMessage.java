@@ -88,12 +88,12 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         @Override
         public String line() {
-            String value;
+            if (line.toString().startsWith("\n"))
+                line.delete(0, 1);
             if (line.toString().endsWith("\n"))
-                value = line.substring(0, line.length() - 1);
-            else
-                value = line.toString();
-            return value;
+                line.delete(line.length() - 1, line.length());
+
+            return line.toString();
         }
 
         @Override
