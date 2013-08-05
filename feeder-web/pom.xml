@@ -8,7 +8,7 @@
     <version>0.0.1</version>
   </parent>
   <artifactId>feeder-web</artifactId>
-  <packaging>war</packaging>
+  <packaging>${packaging.type}</packaging>
   <name>feeder-web</name>
   <dependencies>
     <dependency>
@@ -74,8 +74,21 @@
   </build>
   <profiles>
     <profile>
+      <id>webapp</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <packaging.type>war</packaging.type>
+      </properties>
+    </profile>
+    <profile>
       <id>standalone</id>
+      <properties>
+        <packaging.type>jar</packaging.type>
+      </properties>
       <build>
+        <finalName>feeder-standalone</finalName>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -83,7 +96,6 @@
             <configuration>
               <archive>
                 <manifest>
-                  <addClasspath>true</addClasspath>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                   <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                   <mainClass>org.komusubi.feeder.web.StandAlone</mainClass>

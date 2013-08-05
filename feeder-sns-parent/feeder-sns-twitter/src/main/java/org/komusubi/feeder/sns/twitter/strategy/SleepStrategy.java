@@ -155,7 +155,7 @@ public class SleepStrategy implements GateKeeper {
             // found same script to be tweet and history one.
             for (Script script: message) {
                 for (String item: cache()) {
-                    if (script.line().equals(item)) {
+                    if (script.trimedLine().equals(item)) {
                         logger.info("deplicated script found: {}", script.line());
                         return true;
                     }
@@ -173,7 +173,7 @@ public class SleepStrategy implements GateKeeper {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
                 for (Script script: message) {
                     writer.write("tweet:");
-                    writer.write(script.line());
+                    writer.write(script.trimedLine());
                     writer.write(lineSeparator);
                 }
             } catch (IOException e) {

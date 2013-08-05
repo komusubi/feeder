@@ -60,11 +60,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             return this;
         }
 
-        public void strip() {
-            // trim to \n or ' ' etc ...
-            line = new StringBuilder(StringUtils.strip(line()));
-        }
-
         @Override
         public int codePointCount() {
             return codePointCount(0, line.length());
@@ -88,11 +83,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         @Override
         public String line() {
-            if (line.toString().startsWith("\n"))
-                line.delete(0, 1);
-            if (line.toString().endsWith("\n"))
-                line.delete(line.length() - 1, line.length());
-
             return line.toString();
         }
 

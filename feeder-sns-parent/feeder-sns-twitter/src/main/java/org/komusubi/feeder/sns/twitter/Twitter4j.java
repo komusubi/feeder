@@ -88,10 +88,10 @@ public class Twitter4j implements SocialNetwork {
         try {
             for (Script script: message) {
                 if (outputConsole) {
-                    System.out.printf("tweet: %s\n", script.line());
-                    logger.info("tweet: {}", script.line());
+                    System.out.printf("tweet: %s\n", script.trimedLine());
+                    logger.info("tweet: {}", script.trimedLine());
                 } else {
-                    StatusUpdate status = new StatusUpdate(script.line());
+                    StatusUpdate status = new StatusUpdate(script.trimedLine());
                     Status result = twitter.updateStatus(status);
                     logger.info("tweet: {}", result.getText());
                 }

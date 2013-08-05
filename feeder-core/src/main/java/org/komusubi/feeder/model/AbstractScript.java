@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.komusubi.feeder.model.Message.Script;
 
 /**
@@ -60,4 +61,30 @@ public abstract class AbstractScript implements Script {
         return line().length();
     }
 
+    /**
+     * @see org.komusubi.feeder.model.Message.Script#trimedLine()
+     */
+    @Override
+    public String trimedLine() {
+        return StringUtils.strip(line());
+        /*
+        String trimed;
+        int start, finish;
+        for (start = 0; codePointCount() > start; start++) {
+            if (!Character.isWhitespace(line().codePointAt(start))) {
+                break;
+            }
+        }
+        for (finish = codePointCount() - 1; 0 <= finish; finish--) {
+            if (!Character.isWhitespace(line().codePointAt(finish))) {
+                break;
+            }
+        }
+        if (start != 0 || finish != codePointCount() - 1)
+            trimed = codePointSubstring(start, finish);
+        else
+            trimed = line();
+        return trimed;
+        */
+    }
 }
