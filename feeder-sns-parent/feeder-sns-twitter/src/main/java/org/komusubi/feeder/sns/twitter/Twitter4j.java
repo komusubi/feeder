@@ -39,8 +39,8 @@ import twitter4j.TwitterFactory;
 public class Twitter4j implements SocialNetwork {
 
     private static final Logger logger = LoggerFactory.getLogger(Twitter4j.class);
-    private static final int MESSAGE_MAX_LENGTH = 140;
     private Twitter twitter;
+    private boolean outputConsole = Boolean.getBoolean("tweet.console");
 
     /**
      * create new instance.
@@ -87,9 +87,14 @@ public class Twitter4j implements SocialNetwork {
     public void tweet(Message message) {
         try {
             for (Script script: message) {
-                StatusUpdate status = new StatusUpdate(script.line());
-                Status result = twitter.updateStatus(status);
-                logger.info("tweet: {}", result.getText());
+                if (outputConsole) {
+                    System.out.printf("tweet: %s\n", script.line());
+                    logger.info("tweet: {}", script.line());
+                } else {
+                    StatusUpdate status = new StatusUpdate(script.line());
+                    Status result = twitter.updateStatus(status);
+                    logger.info("tweet: {}", result.getText());
+                }
             }
         } catch (TwitterException e) {
             throw new Twitter4jException(e);
