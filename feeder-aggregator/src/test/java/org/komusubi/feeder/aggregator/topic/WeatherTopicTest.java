@@ -96,7 +96,7 @@ public class WeatherTopicTest {
         when(topicScraper.iterator()).thenReturn(((List<Content>) args[2]).iterator());
         when(topicScraper.site()).thenReturn(new WeatherTopicSite(tag));
         WeatherTopic target = new WeatherTopic(topicScraper, titleScraper, announceScraper, new FeederMessageProvider());
-        String expected = "タイトルです。\nご確認下さい。\n関東: 平常通り運航します。\nこの情報は当日のものです。#weather";
+        String expected = "この情報は当日のものです。\nタイトルです。\nご確認下さい。\n関東: 平常通り運航します。\n#weather";
         // exercise
         Message actual = target.message();
         // verify

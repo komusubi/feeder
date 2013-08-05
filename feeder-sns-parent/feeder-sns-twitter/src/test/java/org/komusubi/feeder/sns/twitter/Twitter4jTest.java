@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 
@@ -35,6 +36,7 @@ import twitter4j.Twitter;
 public class Twitter4jTest {
 
     @Mock private Twitter mock;
+    @Mock private Status mockStatus;
     
     @Before
     public void before() {
@@ -46,7 +48,9 @@ public class Twitter4jTest {
         // setup
         String tweet = "つぶやき";
         TweetTopic topic = new TweetTopic(tweet);
-        when(mock.updateStatus(tweet)).thenReturn(null);
+        StatusUpdate update = new StatusUpdate(topic.message().get(0).trimedLine());
+        when(mock.updateStatus(update)).thenReturn(mockStatus);
+        when(mockStatus.getText()).thenReturn(tweet);
         Twitter4j target = new Twitter4j(mock);
         // exercise
         target.post(topic);
@@ -66,8 +70,9 @@ public class Twitter4jTest {
                      + "あいうえお\nかきくけこ\nさしすせそ\nたちつてと"
                      + "あいうえお\nかきくけこ\nさしすせそ\nたちつてと";
         TweetTopic topic = new TweetTopic(tweet);
-//        topic.
-        when(mock.updateStatus(tweet)).thenReturn(null);
+        StatusUpdate update = new StatusUpdate(topic.message().get(0).trimedLine());
+        when(mock.updateStatus(update)).thenReturn(mockStatus);
+        when(mockStatus.getText()).thenReturn(tweet);
         Twitter4j target = new Twitter4j(mock);
         // exercise
         target.post(topic);
