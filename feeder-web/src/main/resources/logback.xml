@@ -19,8 +19,8 @@
     </encoder>
   </appender>
   <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${logdir}/feeder.log</file>
     <!-- 
+    <file>${logdir}/feeder.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
       <FileNamePattern>feeder-%i.log</FileNamePattern>
       <MinIndex>1</MinIndex>
@@ -30,8 +30,8 @@
     </triggeringPolicy>
     -->
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <FileNamePattern>feeder.%d{yyyy-MM-dd}.zip</FileNamePattern>
-      <MaxHistory>14</MaxHistory>
+      <fileNamePattern>${logdir}/feeder-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+      <maxHistory>14</maxHistory>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <pattern>[%d{yyyy/MM/dd HH:mm:ss:SSS}] %X{ipaddr} %X{sessionId} &lt;%-5level&gt; - %m%n</pattern>
