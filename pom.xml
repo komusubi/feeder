@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.komusubi.feeder</groupId>
   <artifactId>feeder</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>pom</packaging>
   <inceptionYear>2012</inceptionYear>
   <name>feeder</name>
@@ -34,43 +34,43 @@
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-core</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-aggregator</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-sns</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-web</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
         <type>war</type>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.2</version>
+        <version>1.7.5</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl104-over-slf4j</artifactId>
-        <version>1.5.8</version>
+        <version>1.5.11</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.0.9</version>
+        <version>1.0.13</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
-        <artifactId>feeder-sns</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <artifactId>feeder-sns-parent</artifactId>
+        <version>0.0.1</version>
         <type>pom</type>
       </dependency>
       <dependency>
@@ -81,7 +81,7 @@
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-sns-twitter</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.inject.extensions</groupId>
@@ -96,12 +96,68 @@
       <dependency>
         <groupId>org.quartz-scheduler</groupId>
         <artifactId>quartz</artifactId>
-        <version>2.1.6</version>
+        <version>2.2.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.komusubi</groupId>
+      	<artifactId>common</artifactId>
+      	<version>0.0.2-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.commons</groupId>
+      	<artifactId>commons-lang3</artifactId>
+      	<version>3.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-jar-plugin</artifactId>
+	      <version>2.4</version>
+        </plugin>
+        <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-compiler-plugin</artifactId>
+	      <version>3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>2.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
@@ -114,8 +170,215 @@
           <encoding>utf-8</encoding>
         </configuration>
       </plugin>
+      <!-- for jenkins cobertura plugin -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+          <formats>
+            <format>xml</format>
+          </formats>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>cobertura</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <locales>ja</locales>
+          <inputEncoding>UTF-8</inputEncoding>
+          <outputEncoding>UTF-8</outputEncoding>
+          <reportPlugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <version>2.7</version>
+              <configuration>
+                <dependencyDetailsEnabled>true</dependencyDetailsEnabled>
+                <dependencyLocationEnabled>true</dependencyLocationEnabled>
+                <showAvatorImages>true</showAvatorImages>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>2.9</version>
+              <configuration>
+                <inputEncoding>UTF-8</inputEncoding>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-jxr-plugin</artifactId>
+              <version>2.3</version>
+              <configuration>
+                <inputEncoding>UTF-8</inputEncoding>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-changelog-plugin</artifactId>
+              <version>2.2</version>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <!-- <report>dev-activity</report> -->
+                    <report>file-activity</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-pmd-plugin</artifactId>
+              <version>3.0.1</version>
+              <configuration>
+                <sourceEncoding>UTF-8</sourceEncoding>
+                <targetJdk>1.5</targetJdk>
+                <linkXref>true</linkXref>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>cobertura-maven-plugin</artifactId>
+           </plugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
     </plugins>
-    <!-- <pluginManagement> <plugins> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-compiler-plugin</artifactId> 
-      <version>2.3.2</version> </plugins> </pluginManagement> -->
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>2.4</version>
+      </extension>
+    </extensions>    
   </build>
+  <developers>
+ 	<developer>
+ 	  <id>komusubi</id>
+ 	  <name>jun.ozeki</name>
+ 	  <email>komusubi@gmail.com</email>
+ 	  <url>https://github.com/komusubi</url>
+ 	  <roles>
+ 	    <role>developer</role>
+ 	  </roles>
+ 	  <timezone>Asia/Tokyo</timezone>
+ 	</developer> 
+  </developers>
+  <organization>
+  	<name>komusubi</name>
+  	<url>http://komusubi.org</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <ciManagement>
+  	<url>http://builds.komusubi.org/job/feeder/</url>
+  	<system>jenkins</system>
+  </ciManagement>
+  <issueManagement>
+  	<url>https://github.com/komusubi/feeder/issues</url>
+  	<system>github</system>
+  </issueManagement>
+  <scm>
+  	<url>https://github.com/komusubi/feeder</url>
+  	<tag>develop</tag>
+  	<connection>scm:git:https://github.com/komusubi/feeder.git</connection>
+  </scm>
+  <repositories>
+    <repository>
+      <id>komusubi-release</id>
+      <name>komusubi maven2 repository</name>
+      <url>http://repos.komusubi.org/release</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>komsuubi-snapshot</id>
+      <name>komsuubi snapshot repository</name>
+      <url>http://repos.komusubi.org/snapshot</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled> 
+      </releases>
+    </repository>
+  </repositories>
+  <distributionManagement>
+    <downloadUrl>http://repos.komusubi.org/release</downloadUrl>
+    <site>
+      <id>komusubi-site</id>
+      <name>komusubi vps</name>
+      <url>scp://komusubi.org/var/www/html/sites/feeder</url>
+    </site>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>komusubi-release</id>
+      <name>komusubi vps</name>
+      <url>scp://komusubi.org/var/www/m2repo/release</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>komusubi-snapshot</id>
+      <name>komusubi vps</name>
+      <url>scp://komusubi.org/var/www/m2repo/snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <profiles>
+    <profile>
+      <id>release</id>
+    </profile>
+    <profile>
+      <id>staging</id>
+    </profile>
+    <profile>
+      <id>standalone</id>
+      <build>
+        <defaultGoal>clean package shade:shade</defaultGoal>
+        <!-- 
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>jar</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <finalName>feeder-standalone</finalName>
+                  <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <manifestEntries>
+                        <Main-Class>org.komusubi.feeder.web.StandAlone</Main-Class>
+                      </manifestEntries>
+                    </transformer>
+                  </transformers>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+        -->
+      </build>
+    </profile>
+  </profiles>
 </project>

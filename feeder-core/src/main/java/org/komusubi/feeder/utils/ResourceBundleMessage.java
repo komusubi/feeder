@@ -16,24 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns.twitter.spi;
+package org.komusubi.feeder.utils;
 
-import javax.inject.Provider;
-
-import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.sns.twitter.TweetMessage;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author jun.ozeki
  */
-public class TweetMessageProvidier implements Provider<Message> {
-
+public class ResourceBundleMessage {
+    private final ResourceBundle resourceBundle; // = ResourceBundle.getBundle(BUNDLE_NAME);
+    
     /**
-     * @see javax.inject.Provider#get()
+     * create new instance.
      */
-    @Override
-    public Message get() {
-        return new TweetMessage(); 
+    public ResourceBundleMessage(Class<?> clazz) {
+        this.resourceBundle = ResourceBundle.getBundle(clazz.getName());
     }
 
+    /**
+     * get value from resource file.
+     * @param key
+     * @return
+     */
+    public String getString(String key) {
+        try {
+            return resourceBundle.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }

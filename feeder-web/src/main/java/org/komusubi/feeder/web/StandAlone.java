@@ -16,28 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.model;
+package org.komusubi.feeder.web;
 
-import java.io.Serializable;
-import java.util.List;
+import org.komusubi.feeder.aggregator.topic.WeatherTopic;
+import org.komusubi.feeder.sns.Speaker;
+import org.komusubi.feeder.sns.twitter.HashTag;
+import org.komusubi.feeder.web.Bootstrap.Jal5971Module;
 
-import org.komusubi.feeder.model.Message.Script;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * @author jun.ozeki
  */
-public interface Message extends List<Script>, Serializable {
+public class StandAlone {
 
-    String text();
-    Message append(Script script);
-    Message append(String line);
-    
-    public interface Script extends Serializable {
-        String line();
-        String trimedLine();
-        int codePointCount();
-        Script append(String str);
-        String codePointSubstring(int begin, int end);
-        String codePointSubstring(int begin);
+
+    public static void main(String[] args) {
+        Injector injector = Guice.createInjector(new Jal5971Module());
+        new StandAlone().execute(injector);
     }
+
+    /**
+     * @param injector
+     */
+    private void execute(Injector injector) {
+        WeatherTopic topic = injector.getInstance(WeatherTopic.class);
+        topic.addTag(new HashTag("jal"));
+        Speaker speaker = injector.getInstance(Speaker.class);
+        speaker.talk(topic);
+    }
+
 }

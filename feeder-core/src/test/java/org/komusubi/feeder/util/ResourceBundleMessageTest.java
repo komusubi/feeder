@@ -21,6 +21,7 @@ package org.komusubi.feeder.util;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.komusubi.feeder.utils.ResourceBundleMessage;
 
 /**
  * @author jun.ozeki

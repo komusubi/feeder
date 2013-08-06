@@ -16,28 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.model;
+package org.komusubi.feeder.utils;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.common.util.Resolver;
 
 /**
  * @author jun.ozeki
  */
-public interface Message extends List<Script>, Serializable {
+public class ResolverUtils {
 
-    String text();
-    Message append(Script script);
-    Message append(String line);
-    
-    public interface Script extends Serializable {
-        String line();
-        String trimedLine();
-        int codePointCount();
-        Script append(String str);
-        String codePointSubstring(int begin, int end);
-        String codePointSubstring(int begin);
+    /**
+     * 
+     * @author jun.ozeki
+     */
+    public static class DateResolver implements Resolver<Date> {
+
+        /**
+         * @see org.komusubi.common.util.Resolver#resolve()
+         */
+        @Override
+        public Date resolve() {
+            return new Date();
+        }
+
+        /**
+         * @see org.komusubi.common.util.Resolver#resolve(java.lang.Object)
+         */
+        @Override
+        public Date resolve(Date value) {
+            return value;
+        }
+        
     }
 }

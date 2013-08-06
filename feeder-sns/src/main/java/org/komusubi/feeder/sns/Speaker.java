@@ -20,83 +20,75 @@ package org.komusubi.feeder.sns;
 
 import javax.inject.Inject;
 
-import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.Message.Script;
-import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
  */
 public class Speaker {
-
+    private static final Logger logger = LoggerFactory.getLogger(Speaker.class);
     private SocialNetwork socialNetwork;
-    private History<Message> history;
-
-    /**
-     * 
-     * @param socialNetwork
-     */
-    @Inject
-    public Speaker(SocialNetwork socialNetwork) {
-        this(socialNetwork, socialNetwork.history());
-    }
+    private GateKeeper gatekeeper;
     
     /**
      * create new instance.
      * @param socialNetwork
      */
     @Inject
-    public Speaker(SocialNetwork socialNetwork, History<Message> history) {
+    public Speaker(SocialNetwork socialNetwork, GateKeeper gatekeeper) {
         this.socialNetwork = socialNetwork;
-        this.history = history;
-    }
-
-    /**
-     * talk to friends.
-     * @param topic
-     */
-    public void talk(Topic topic) {
-        socialNetwork.post(topic);
+        this.gatekeeper = gatekeeper;
     }
 
     /**
      * talk to friends.
      * @param topics
      */
-    public void talk(Topics topics) {
-        socialNetwork.post(topics);
+    public void talk(Topics<? extends Topic> topics) {
+        for (Topic topic: topics) {
+            talk(topic.message());
+        }
     }
-    
+
+    /**
+     * talkd to friends.
+     * @param topic
+     */
+    public void talk(Topic topic) {
+        talk(topic.message());
+    }
+
     /**
      * talk to friends.
      * @param message
      */
     public void talk(Message message) {
-        socialNetwork.post(message);
+        if (gatekeeper.available(message)) {
+            socialNetwork.post(message);
+            gatekeeper.store(message);
+        } else {
+            logger.info("message duplicated, dose NOT post: {}", message.text());
+        }
     }
     
-    /**
-     * 
-     * @return
-     */
-    public Page<Message> page(int number) {
-        return history.page(number);
-    }
-
-    /**
+    /*
      * @param message
      * @return
      */
+    // FIXME is this method necessary ? it decide use to FeederMessage or TweetMessage.
+    /*
     public Message extract(Message message) {
         Message extracted = new FeederMessage();
         for (Script script: message) {
-            if (history.exists(script))
-                continue;
+//            if (history.exists(script))
+//                continue;
             extracted.append(script);
         }
         return extracted;
     }
+    */
 }

@@ -18,24 +18,37 @@
  */
 package org.komusubi.feeder.web;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+import org.komusubi.common.util.Resolver;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
-import org.komusubi.feeder.aggregator.scraper.WeatherTopicScraper;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics;
+import org.komusubi.feeder.aggregator.topic.WeatherTopic;
+import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Site;
+import org.komusubi.feeder.sns.GateKeeper;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
+import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvider;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
+import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.komusubi.feeder.web.scheduler.QuartzModule;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
@@ -91,15 +104,22 @@ public class Bootstrap extends GuiceServletContextListener {
 
         @Override
         protected void configure() {
+            bind(SocialNetwork.class).to(Twitter4j.class).in(Singleton.class);
             bind(Speaker.class);
-            bind(SocialNetwork.class).to(Twitter4j.class);
-            bind(WeatherTopics.class);
-            bind(WeatherTopicScraper.class);
+            bind(Long.class).annotatedWith(Names.named("cache duration")).toInstance(60 * 10 * 1000L);
+            bind(Long.class).annotatedWith(Names.named("tweet sleep interval")).toInstance(1L);
+            bind(String.class).annotatedWith(Names.named("tweet store file"))
+                .toInstance(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
+            bind(PageCache.class).to(FilePageCache.class);
+            bind(GateKeeper.class).to(SleepStrategy.class);
+            bind(new TypeLiteral<Resolver<Date>>(){}).to(DateResolver.class);
+            bind(WeatherContentScraper.class);
             bind(WeatherAnnouncementScraper.class);
             bind(WeatherTitleScraper.class);
+            bind(Message.class).toProvider(TweetMessageProvider.class);
             bind(HtmlScraper.class);
             bind(Site.class).to(WeatherTopicSite.class);
+            bind(WeatherTopic.class);
         }
-        
     }
 }

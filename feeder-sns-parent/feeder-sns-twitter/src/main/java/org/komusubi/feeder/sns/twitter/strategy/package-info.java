@@ -16,28 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.model;
-
-import java.io.Serializable;
-import java.util.List;
-
-import org.komusubi.feeder.model.Message.Script;
-
 /**
  * @author jun.ozeki
  */
-public interface Message extends List<Script>, Serializable {
-
-    String text();
-    Message append(Script script);
-    Message append(String line);
-    
-    public interface Script extends Serializable {
-        String line();
-        String trimedLine();
-        int codePointCount();
-        Script append(String str);
-        String codePointSubstring(int begin, int end);
-        String codePointSubstring(int begin);
-    }
-}
+package org.komusubi.feeder.sns.twitter.strategy;

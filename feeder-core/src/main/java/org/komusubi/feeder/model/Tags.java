@@ -18,13 +18,13 @@
  */
 package org.komusubi.feeder.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * @author jun.ozeki
  */
-public class Tags extends ArrayList<Tag> {
+public class Tags extends HashSet<Tag> {
 
     private static final long serialVersionUID = 1L;
 
@@ -51,13 +51,13 @@ public class Tags extends ArrayList<Tag> {
         super(initialCapacity);
     }
 
-    /**
+    /*
      * append tag.
      * @param tag
      * @return
      */
-    public Tags append(Tag tag) {
-        add(tag);
-        return this;
-    }
+//    public Tags append(Tag tag) {
+//        add(tag);
+//        return this;
+//    }
 }

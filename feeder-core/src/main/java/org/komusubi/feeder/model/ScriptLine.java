@@ -18,12 +18,10 @@
  */
 package org.komusubi.feeder.model;
 
-import org.komusubi.feeder.model.Message.Script;
-
 /**
  * @author jun.ozeki
  */
-public class ScriptLine implements Script {
+public class ScriptLine extends AbstractScript {
 
     private static final long serialVersionUID = 1L;
     private String line;
@@ -36,11 +34,12 @@ public class ScriptLine implements Script {
     }
 
     /**
-     * @see org.komusubi.feeder.model.Message.Script#line()
+     * @see org.komusubi.feeder.model.Message.Script#append(java.lang.String)
      */
     @Override
-    public String line() {
-        return line;
+    public ScriptLine append(String str) {
+        line += str;
+        return this;
     }
 
     /**
@@ -51,6 +50,17 @@ public class ScriptLine implements Script {
         if (line == null)
             return 0;
         return line.codePointCount(0, line.length());
+    }
+
+    /**
+     * @see org.komusubi.feeder.model.Message.Script#codePointSubstring(int)
+     */
+    @Override
+    public String codePointSubstring(int begin) {
+        // FIXME code point substring.
+        if (line == null)
+            return null;
+        return codePointSubstring(begin, line.length());
     }
 
     /**
@@ -65,14 +75,17 @@ public class ScriptLine implements Script {
     }
 
     /**
-     * @see org.komusubi.feeder.model.Message.Script#codePointSubstring(int)
+     * @see org.komusubi.feeder.model.Message.Script#line()
      */
     @Override
-    public String codePointSubstring(int begin) {
-        // FIXME code point substring.
-        if (line == null)
-            return null;
-        return codePointSubstring(begin, line.length());
+    public String line() {
+        return line;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ScriptLine [line=").append(line).append("]");
+        return builder.toString();
+    }
 }

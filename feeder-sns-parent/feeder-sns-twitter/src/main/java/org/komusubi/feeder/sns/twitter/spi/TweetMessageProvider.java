@@ -16,28 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.model;
+package org.komusubi.feeder.sns.twitter.spi;
 
-import java.io.Serializable;
-import java.util.List;
+import javax.inject.Provider;
 
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.sns.twitter.TweetMessage;
 
 /**
  * @author jun.ozeki
  */
-public interface Message extends List<Script>, Serializable {
+public class TweetMessageProvider implements Provider<Message> {
 
-    String text();
-    Message append(Script script);
-    Message append(String line);
-    
-    public interface Script extends Serializable {
-        String line();
-        String trimedLine();
-        int codePointCount();
-        Script append(String str);
-        String codePointSubstring(int begin, int end);
-        String codePointSubstring(int begin);
+    /**
+     * @see javax.inject.Provider#get()
+     */
+    @Override
+    public Message get() {
+        return new TweetMessage(); 
     }
+
 }

@@ -16,28 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.model;
+package org.komusubi.feeder.sns.twitter;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Topic;
+import org.komusubi.feeder.model.Topics;
 
 /**
  * @author jun.ozeki
  */
-public interface Message extends List<Script>, Serializable {
+public class TweetTopics extends Topics<Topic> {
 
-    String text();
-    Message append(Script script);
-    Message append(String line);
-    
-    public interface Script extends Serializable {
-        String line();
-        String trimedLine();
-        int codePointCount();
-        Script append(String str);
-        String codePointSubstring(int begin, int end);
-        String codePointSubstring(int begin);
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * @param timeline
+     */
+    public TweetTopics() {
+//        this.timeline = timeline;
     }
+
+    /**
+     * @see org.komusubi.feeder.model.Topic#message()
+     */
+//    @Override
+//    public Message message() {
+//        return null;
+//    }
+
+    /**
+     * @see org.komusubi.feeder.model.Topic#createdAt()
+     */
+//    @Override
+//    public Date createdAt() {
+        // TODO Auto-generated method stub
+//        return null;
+//    }
+
 }

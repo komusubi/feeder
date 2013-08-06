@@ -101,7 +101,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             // exercise
             NodeList nodes = target.scrape(resources, filter);
             // verify
@@ -114,7 +114,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             // exercise
             NodeList nodes = target.scrapeMatchNodes(resources, filter, TableHeader.class);
             // verify
@@ -133,7 +133,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             String expected1 = "【本日1日】平常どおりの運航を予定しています。\n【明日2日】函館（降雪）、札幌千歳・とかち帯広・釧路（夕刻からの降雪）";
             String expected2 = "【本日1日】青森・秋田・新潟（降雪）\n【明日2日】青森・三沢・秋田・新潟（降雪）、いわて花巻・小松（強風）";
             String expected3 = "平常どおりの運航を予定しています。";
@@ -174,7 +174,8 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class), 
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
+            String expected1 = "【本日1日】平常どおりの運航を予定しています。\n【明日2日】函館（降雪）、札幌千歳・とかち帯広・釧路（夕刻からの降雪）";
             String expected = "";
             // exercise
             NodeList nodes = target.scrapeMatchNodes(resources, filter, ParagraphTag.class);
@@ -202,7 +203,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             // exercise
             NodeList nodes = target.scrape(resources, filter);
             // verify
@@ -215,7 +216,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             // exercise
             NodeList nodes = target.scrapeMatchNodes(resources, filter, TableHeader.class);
             // verify
@@ -234,7 +235,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class),
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter(AbstractWeatherScraper.ATTR_NAME_CLASS, AbstractWeatherScraper.ATTR_VALUE_WEATHER_BOX));
             String expected1 = "平常どおりの運航を予定しています。";
             String expected2 = "平常どおりの運航を予定しています。";
             String expected3 = "平常どおりの運航を予定しています。";
@@ -275,7 +276,7 @@ public class HtmlScraperTest {
             String resources = fileResource.getResource();
             AndFilter filter = new AndFilter(
                             new NodeClassFilter(Div.class), 
-                            new HasAttributeFilter("class", "weather_info_txtBox"));
+                            new HasAttributeFilter("class", "weather_info_txtBox mgt20"));
             String expected = "";
             // exercise
             NodeList nodes = target.scrape(resources, filter);

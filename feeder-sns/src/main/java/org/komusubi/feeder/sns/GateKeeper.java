@@ -16,34 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.util;
+package org.komusubi.feeder.sns;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.komusubi.feeder.model.Message;
+
 
 /**
  * @author jun.ozeki
  */
-public class ResourceBundleMessage {
-    private final ResourceBundle resourceBundle; // = ResourceBundle.getBundle(BUNDLE_NAME);
-    
-    /**
-     * create new instance.
-     */
-    public ResourceBundleMessage(Class<?> clazz) {
-        this.resourceBundle = ResourceBundle.getBundle(clazz.getName());
-    }
+public interface GateKeeper {
 
-    /**
-     * get value from resource file.
-     * @param key
-     * @return
-     */
-    public String getString(String key) {
-        try {
-            return resourceBundle.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
+    
+    boolean available(Message message);
+
+    void store(Message message);
 }

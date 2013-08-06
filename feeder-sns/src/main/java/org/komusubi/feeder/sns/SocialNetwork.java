@@ -36,7 +36,7 @@ public interface SocialNetwork {
      * 
      * @param topics
      */
-    void post(Topics topics);
+    void post(Topics<? extends Topic> topics);
     
     /**
      * @param message
@@ -44,13 +44,8 @@ public interface SocialNetwork {
     void post(Message message);
 
     /**
-     * a page of messages.
      * @return
      */
-//    Page<Message> history();
-    
-    Message newMessage();
-    
-    History<Message> history();
+    History history();
 
 }

@@ -19,12 +19,11 @@
 package org.komusubi.feeder.aggregator;
 
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
-import org.komusubi.feeder.aggregator.scraper.WeatherTopicScraper;
-import org.komusubi.feeder.aggregator.topic.WeatherTopic;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics.Announcement;
-import org.komusubi.feeder.aggregator.topic.WeatherTopics.Title;
+import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
+import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Topics;
 
 /**
@@ -32,17 +31,9 @@ import org.komusubi.feeder.model.Topics;
  */
 public class WeatherAggregator implements Aggregator {
 
-    private WeatherTopicScraper topicScraper;
+    private WeatherContentScraper topicScraper;
     private WeatherAnnouncementScraper announceScraper;
     private WeatherTitleScraper titleScraper;
-    
-    /*
-     * create new instance.
-     * default constructor.
-     */
-//    public WeatherAggregator(Scraper scraper...) {
-//        this(new WeatherTopicScraper(), new WeatherAnnouncementScraper(), new WeatherTitleScraper());
-//    }
     
     /**
      * create new instance.
@@ -50,7 +41,7 @@ public class WeatherAggregator implements Aggregator {
      * @param announceScraper
      * @param titleScraper
      */
-    public WeatherAggregator(WeatherTopicScraper scraper, 
+    public WeatherAggregator(WeatherContentScraper scraper, 
                             WeatherAnnouncementScraper announceScraper,
                             WeatherTitleScraper titleScraper) {
         this.topicScraper = scraper;
@@ -64,13 +55,14 @@ public class WeatherAggregator implements Aggregator {
     @Override
     public Topics aggregate() {
         
-        WeatherTopics topics = new WeatherTopics();
+        Topics topics = new Topics();
         for (Announcement announce: announceScraper) {
 //            topics.add()
         }
-        for (WeatherTopic topic: topicScraper) {
-            topics.add(topic);
+        for (Script script: topicScraper) {
+
         }
+//            topics.add(script);
         for (Title title: titleScraper) {
             
         }

@@ -67,7 +67,7 @@ public class WeatherTitleScraperTest {
             String expected4 = "明日2日は、北海道・東北地方に降雪の予報がでており、各空港を発着する運航便への影響が懸念されております。";
             String expected5 = "なお、札幌千歳空港を夕刻以降に発着する運航便につきましては、降雪が強まる見込みのため影響が発生する可能性がございます。";
             String expected6 = "利用のお客さまは、お出かけ前に最新の運航状況を";
-            String expected7 = "「国内線　発着案内」";
+            String expected7 = "http://www.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do";
             String expected8 = "にてご確認ください。";
             String expected9 = "また、本日1日および明日2日の遅延、欠航、条件付運航（出発空港への引き返し、他空港への着陸）の可能性がある空港は、以下のとおりです。";
             // exercise

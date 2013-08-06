@@ -18,11 +18,13 @@
  */
 package org.komusubi.feeder.sns.twitter;
 
+import java.util.Date;
+
 import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Topic;
 
-import twitter4j.StatusUpdate;
+import twitter4j.Status;
 
 /**
  * @author jun.ozeki
@@ -30,29 +32,42 @@ import twitter4j.StatusUpdate;
 public class TweetTopic implements Topic {
 
     private static final long serialVersionUID = 1L;
-    private StatusUpdate statusUpdate;
+    private Status status;
+    private Message message;
 
     /**
      * create new instance.
+     * @param status
      */
-    public TweetTopic(String text) {
-        this(new StatusUpdate(text));
+    public TweetTopic(Status status) {
+        this.status = status;
+        this.message = new FeederMessage().append(status.getText());
+    }
+
+    // package
+    TweetTopic(String str) {
+        this.message = new FeederMessage().append(str);
     }
 
     /**
-     * create new instance.
-     * @param statusUpdate
+     * @see org.komusubi.feeder.model.Topic#createdAt()
      */
-    public TweetTopic(StatusUpdate statusUpdate) {
-        this.statusUpdate = statusUpdate;
+    @Override
+    public Date createdAt() {
+        return status.getCreatedAt();
     }
 
     /**
      * @see org.komusubi.feeder.model.Topic#message()
      */
     public Message message() {
-        FeederMessage message = new FeederMessage();
-        message.append(statusUpdate.getStatus());
         return message;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TweetTopic [status=").append(status).append(", message=").append(message).append("]");
+        return builder.toString();
     }
 }

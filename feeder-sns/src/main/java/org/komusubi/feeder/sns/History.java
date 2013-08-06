@@ -18,25 +18,21 @@
  */
 package org.komusubi.feeder.sns;
 
-import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Page;
 
 /**
  * @author jun.ozeki
  */
-public interface History<T> {
+public interface History {
 
     /**
-     * @param script
+     * @param index
      * @return
      */
-    boolean exists(Script script);
+    Page indexOf(int index);
 
-    /**
-     * @param number
-     * @return
-     */
-    Page<T> page(int number);
-
+    Page next();
+    
+    Page previous();
     
 }

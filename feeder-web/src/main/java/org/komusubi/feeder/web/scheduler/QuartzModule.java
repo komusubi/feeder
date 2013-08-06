@@ -18,7 +18,6 @@
  */
 package org.komusubi.feeder.web.scheduler;
 
-import org.komusubi.feeder.web.scheduler.job.TopicSpeaker;
 import org.quartz.spi.JobFactory;
 
 import com.google.inject.AbstractModule;
@@ -34,7 +33,7 @@ public class QuartzModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(JobFactory.class).to(InjectionJobFactory.class);
-        bind(TopicSpeaker.class);
+//        bind(TopicSpeaker.class);
     }
 
 }

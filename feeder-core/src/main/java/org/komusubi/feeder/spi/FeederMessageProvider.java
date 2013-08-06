@@ -16,23 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package twitter4j.internal.json;
+package org.komusubi.feeder.spi;
 
-import twitter4j.internal.http.HttpResponse;
+import javax.inject.Provider;
+
+import org.komusubi.feeder.model.FeederMessage;
+import org.komusubi.feeder.model.Message;
 
 /**
  * @author jun.ozeki
  */
-public class ExtendsResponseList<T> extends ResponseListImpl<T> {
+public class FeederMessageProvider implements Provider<Message> {
 
-    private static final long serialVersionUID = 1L;
-    
     /**
-     * @param res
+     * @see javax.inject.Provider#get()
      */
-    ExtendsResponseList(HttpResponse res) {
-        super(res);
+    @Override
+    public Message get() {
+        return new FeederMessage();
     }
-
 
 }

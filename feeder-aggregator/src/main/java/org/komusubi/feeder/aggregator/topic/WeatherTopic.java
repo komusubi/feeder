@@ -18,99 +18,100 @@
  */
 package org.komusubi.feeder.aggregator.topic;
 
-import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
 
-import org.komusubi.feeder.model.FeederMessage;
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import org.komusubi.feeder.aggregator.scraper.AbstractWeatherScraper;
+import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
+import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
+import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
-import org.komusubi.feeder.model.Region;
+import org.komusubi.feeder.model.Tag;
+import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Topic;
+import org.komusubi.feeder.spi.FeederMessageProvider;
 
 /**
  * @author jun.ozeki
  */
-public class WeatherTopic implements Topic {
+public class WeatherTopic implements Topic, Iterable<Script> {
 
-    /**
-     * 
-     * @author jun.ozeki
-     */
-    public static class WeatherStatus implements Serializable {
-        private static final long serialVersionUID = 1L;
-        private String status;
-
-        /**
-         * @param status
-         */
-        public WeatherStatus(String status) {
-            this.status = status;
-        }
-
-        /**
-         * @see java.lang.Object#equals(java.lang.Object)
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            WeatherStatus other = (WeatherStatus) obj;
-            if (status == null) {
-                if (other.status != null)
-                    return false;
-            } else if (!status.equals(other.status))
-                return false;
-            return true;
-        }
-
-        /**
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((status == null) ? 0 : status.hashCode());
-            return result;
-        }
-
-        /**
-         * @see java.lang.Object#toString()
-         */
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            builder.append("WeatherStatus [status=").append(status).append("]");
-            return builder.toString();
-        }
-
-        /**
-         * 
-         * @return
-         */
-        public String value() {
-            return status;
-        }
-    }
-    
     private static final long serialVersionUID = 1L;
-    private Region region;
-    private WeatherStatus status;
+    private Date created;
+    private Message message;
+    private WeatherAnnouncementScraper announceScraper;
+    private WeatherTitleScraper titleScraper;
+    private WeatherContentScraper contentScraper;
+    private Tags tags;
 
     /**
      * create new instance.
      */
-    public WeatherTopic(Region region, WeatherStatus status) {
-        this.region = region;
-        this.status = status;
+    public WeatherTopic() {
+        this(new WeatherTopicSite(), new HtmlScraper(), new FeederMessageProvider());
+    }
+    
+    /**
+     * create new instance.
+     * @param site
+     * @param provider
+     */
+    public WeatherTopic(WeatherTopicSite site, Provider<Message> provider) {
+        this(site, new HtmlScraper(), provider);
     }
 
     /**
-     * @see java.lang.Object#equals(java.lang.Object)
+     * create new instance.
+     * @param scraper
+     * @param provider
      */
+    public WeatherTopic(HtmlScraper scraper, Provider<Message> provider) {
+        this(new WeatherTopicSite(), scraper, provider);
+    }
+
+    /**
+     * create new instance.
+     * @param site
+     * @param scraper
+     * @param provider
+     */
+    public WeatherTopic(WeatherTopicSite site, HtmlScraper scraper, Provider<Message> provider) {
+        this(new WeatherContentScraper(site, scraper), 
+             new WeatherTitleScraper(site, scraper), 
+             new WeatherAnnouncementScraper(site, scraper),
+             provider);
+    }
+
+    /**
+     * create new instance.
+     * @param topicScraper
+     * @param titleScraper
+     * @param announceScraper
+     * @param provider
+     */
+    @Inject
+    public WeatherTopic(WeatherContentScraper topicScraper, 
+                        WeatherTitleScraper titleScraper,
+                        WeatherAnnouncementScraper announceScraper, Provider<Message> provider) {
+        this.contentScraper = topicScraper;
+        this.titleScraper = titleScraper;
+        this.announceScraper = announceScraper;
+        this.created = new Date();
+        this.message = provider.get();
+        this.tags = new Tags();
+    }
+
+    // exclude any scraper, does NOT need to compare.
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -120,29 +121,33 @@ public class WeatherTopic implements Topic {
         if (getClass() != obj.getClass())
             return false;
         WeatherTopic other = (WeatherTopic) obj;
-        if (region == null) {
-            if (other.region != null)
+        if (created == null) {
+            if (other.created != null)
                 return false;
-        } else if (!region.equals(other.region))
+        } else if (!created.equals(other.created))
             return false;
-        if (status == null) {
-            if (other.status != null)
+        if (message == null) {
+            if (other.message != null)
                 return false;
-        } else if (!status.equals(other.status))
+        } else if (!message.equals(other.message))
             return false;
         return true;
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((region == null) ? 0 : region.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
+        result = prime * result + ((created == null) ? 0 : created.hashCode());
+        result = prime * result + ((message == null) ? 0 : message.hashCode());
         return result;
+    }
+
+    
+    public WeatherTopic addTag(Tag... tagArray) {
+        for (Tag t: tagArray)
+            tags.add(t);
+        return this;
     }
 
     /**
@@ -150,57 +155,71 @@ public class WeatherTopic implements Topic {
      */
     @Override
     public Message message() {
-        Message message = new FeederMessage();
-        message.add(this.toScript());
+
+        for (Announcement announcement: announceScraper.scrape()) {
+            message.append(announcement)
+                    .append("\n");
+        }
+        for (Title title: titleScraper) {
+            message.append(title)
+                    .append("\n");
+        }
+        for (Content content: contentScraper) {
+            message.append(content)
+                   .append("\n"); 
+        }
+        
+        for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, contentScraper)) {
+            Tags scraperTags = scraper.site().tags();
+            for (Tag t: scraperTags) 
+                tags.add(t);
+        }
+        for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
+            Tag tag = it.next();
+            message.append(tag.label());
+            if (it.hasNext())
+                message.append(" ");
+        }
+/*
+        // check duplicate tag
+        Tags exists = new Tags();
+        for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, contentScraper)) {
+            Tags tags = scraper.site().tags();
+            for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
+                Tag tag = it.next();
+                if (exists.contains(tag))
+                    continue;
+                message.append(tag.label());
+                if (it.hasNext())
+                    message.append(" ");
+                exists.add(tag);
+            }
+        }
+*/
         return message;
     }
-
+  
     /**
-     * to script.
-     * @return script
+     * 
+     * @see java.lang.Iterable#iterator()
      */
-    public Script toScript() {
-        return new Script() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public String line() {
-                if (region == null || status == null)
-                    return null;
-                return region.name() + ": " + status.value();
-            }
-
-            @Override
-            public int codePointCount() {
-                if (line() == null)
-                    return 0;
-                return line().codePointCount(0, line().length());
-            }
-
-            @Override
-            public String codePointSubstring(int begin, int end) {
-                // FIXME code point substring.
-                if (line() == null)
-                    return null;
-                return line().substring(begin, end);
-            }
-            
-            @Override
-            public String codePointSubstring(int begin) {
-                if (line() == null)
-                    return null;
-                return codePointSubstring(begin, line().length());
-            }
-        };
+    @Override
+    public Iterator<Script> iterator() {
+        return message.iterator();
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * @see org.komusubi.feeder.model.Topic#createdAt()
      */
+    @Override
+    public Date createdAt() {
+        return created;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("WeatherTopic [region=").append(region).append(", status=").append(status).append("]");
+        builder.append("WeatherTopic [created=").append(created).append(", message=").append(message).append("]");
         return builder.toString();
     }
 
