@@ -21,9 +21,12 @@ package org.komusubi.feeder.sns.twitter.strategy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +64,7 @@ public class SleepStrategy implements GateKeeper {
     public static class FilePageCache implements PageCache {
 
         private static final Logger logger = LoggerFactory.getLogger(SleepStrategy.class);
+        private static final String CHARSET = "UTF-8";
         private File file;
         private ArrayList<String> items;
         private String lineSeparator = System.getProperty("line.separator");
@@ -118,7 +122,7 @@ public class SleepStrategy implements GateKeeper {
             if (!file.exists() || items.size() > 0)
                 return items;
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), CHARSET))) {
                 String line;
                 StringBuilder builder = new StringBuilder();
                 while ((line = reader.readLine()) != null) {
@@ -169,8 +173,9 @@ public class SleepStrategy implements GateKeeper {
          */
         @Override
         public void store(Message message) {
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            
+            try (BufferedWriter writer = new BufferedWriter(
+                                            new OutputStreamWriter(new FileOutputStream(file, true), CHARSET))) {
                 for (Script script: message) {
                     writer.write("tweet:");
                     writer.write(script.trimedLine());
