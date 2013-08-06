@@ -50,4 +50,14 @@
     	<artifactId>logback-classic</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <excludes>
+          <exclude>**/twitter4j.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
+  </build>
 </project>
