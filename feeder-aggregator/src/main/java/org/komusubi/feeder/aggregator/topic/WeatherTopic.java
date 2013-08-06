@@ -28,6 +28,7 @@ import javax.inject.Provider;
 import org.komusubi.feeder.aggregator.scraper.AbstractWeatherScraper;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
+import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
@@ -154,6 +155,11 @@ public class WeatherTopic implements Topic, Iterable<Script> {
      */
     @Override
     public Message message() {
+
+        for (Announcement announcement: announceScraper.scrape()) {
+            message.append(announcement)
+                    .append("\n");
+        }
         for (Title title: titleScraper) {
             message.append(title)
                     .append("\n");
@@ -162,7 +168,6 @@ public class WeatherTopic implements Topic, Iterable<Script> {
             message.append(content)
                    .append("\n"); 
         }
-        message.addAll(announceScraper.scrape());
         
         for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, contentScraper)) {
             Tags scraperTags = scraper.site().tags();

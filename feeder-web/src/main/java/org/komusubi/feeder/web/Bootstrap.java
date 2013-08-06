@@ -33,14 +33,14 @@ import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.aggregator.topic.WeatherTopic;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Site;
-import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.sns.GateKeeper;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
-import org.komusubi.feeder.sns.twitter.HashTag;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.spi.TweetMessageProvider;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
+import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.komusubi.feeder.web.scheduler.QuartzModule;
 
@@ -108,6 +108,9 @@ public class Bootstrap extends GuiceServletContextListener {
             bind(Speaker.class);
             bind(Long.class).annotatedWith(Names.named("cache duration")).toInstance(60 * 10 * 1000L);
             bind(Long.class).annotatedWith(Names.named("tweet sleep interval")).toInstance(1L);
+            bind(String.class).annotatedWith(Names.named("tweet store file"))
+                .toInstance(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
+            bind(PageCache.class).to(FilePageCache.class);
             bind(GateKeeper.class).to(SleepStrategy.class);
             bind(new TypeLiteral<Resolver<Date>>(){}).to(DateResolver.class);
             bind(WeatherContentScraper.class);

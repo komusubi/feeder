@@ -21,6 +21,7 @@ package org.komusubi.feeder.sns.twitter;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
@@ -116,7 +117,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      */
     @Override
     public Message append(Script script) {
-//        add(script);
         append(script.line());
         return this;
     }

@@ -18,9 +18,6 @@
  */
 package org.komusubi.feeder.sns.twitter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Topic;
@@ -30,8 +27,10 @@ import org.komusubi.feeder.sns.SocialNetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
 /**
@@ -40,8 +39,8 @@ import twitter4j.TwitterFactory;
 public class Twitter4j implements SocialNetwork {
 
     private static final Logger logger = LoggerFactory.getLogger(Twitter4j.class);
-    private static final int MESSAGE_MAX_LENGTH = 140;
     private Twitter twitter;
+    private boolean outputConsole = Boolean.getBoolean("tweet.console");
 
     /**
      * create new instance.
@@ -57,34 +56,6 @@ public class Twitter4j implements SocialNetwork {
     // package
     Twitter4j(Twitter twitter) {
         this.twitter = twitter;
-    }
-
-    /**
-     * chunk message.
-     * @param message
-     * @return
-     */
-    // package
-    List<StatusUpdate> chunkStatus(Message message) {
-        StringBuilder builder = new StringBuilder();
-        List<StatusUpdate> chunks = new ArrayList<StatusUpdate>();
-        for (Script script: message) {
-            // a script over tweet message max length.
-            // TODO a script is over MESSAGE_MAX_LENGTH that must edit message.
-            if (script.codePointCount() >= MESSAGE_MAX_LENGTH) {
-//                chunks.add(new StatusUpdate(script.codePointSubstring(0, MESSAGE_MAX_LENGTH)));
-//            } else {
-
-            }
-            if (builder.codePointCount(0, builder.length()) + script.codePointCount() >= MESSAGE_MAX_LENGTH) {
-                chunks.add(new StatusUpdate(builder.toString()));
-                builder.delete(0, builder.length());
-            }
-            builder.append(script.line());
-        }
-        if (builder.length() > 0)
-            chunks.add(new StatusUpdate(builder.toString()));
-        return chunks;
     }
 
     /**
@@ -115,14 +86,17 @@ public class Twitter4j implements SocialNetwork {
      */
     public void tweet(Message message) {
         try {
-            // TODO dose need a max tweet count ?
-            for (StatusUpdate status: chunkStatus(message)) {
-//                Status result = twitter.updateStatus(status);
-                logger.info("tweet: {}", status.getStatus());
-                Thread.sleep(1000); // wait 1 second.
+            for (Script script: message) {
+                if (outputConsole) {
+                    System.out.printf("tweet: %s\n", script.trimedLine());
+                    logger.info("tweet: {}", script.trimedLine());
+                } else {
+                    StatusUpdate status = new StatusUpdate(script.trimedLine());
+                    Status result = twitter.updateStatus(status);
+                    logger.info("tweet: {}", result.getText());
+                }
             }
-//        } catch (TwitterException | InterruptedException e) {
-        } catch (InterruptedException e) {
+        } catch (TwitterException e) {
             throw new Twitter4jException(e);
         }
     }

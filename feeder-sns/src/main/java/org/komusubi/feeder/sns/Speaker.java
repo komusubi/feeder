@@ -23,12 +23,14 @@ import javax.inject.Inject;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
  */
 public class Speaker {
-
+    private static final Logger logger = LoggerFactory.getLogger(Speaker.class);
     private SocialNetwork socialNetwork;
     private GateKeeper gatekeeper;
     
@@ -65,8 +67,12 @@ public class Speaker {
      * @param message
      */
     public void talk(Message message) {
-        if (gatekeeper.available(message))
+        if (gatekeeper.available(message)) {
             socialNetwork.post(message);
+            gatekeeper.store(message);
+        } else {
+            logger.info("message duplicated, dose NOT post: {}", message.text());
+        }
     }
     
     /*

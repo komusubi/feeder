@@ -5,10 +5,10 @@
   <parent>
     <groupId>org.komusubi.feeder</groupId>
     <artifactId>feeder</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <artifactId>feeder-web</artifactId>
-  <packaging>war</packaging>
+  <packaging>${packaging.type}</packaging>
   <name>feeder-web</name>
   <dependencies>
     <dependency>
@@ -56,6 +56,63 @@
     </dependency>
   </dependencies>
   <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <excludes>
+          <exclude>**/logback-test.xml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
     <finalName>feeder-web</finalName>
   </build>
+  <profiles>
+    <profile>
+      <id>webapp</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <packaging.type>war</packaging.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>standalone</id>
+      <properties>
+        <packaging.type>jar</packaging.type>
+      </properties>
+      <build>
+        <finalName>feeder-standalone</finalName>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifest>
+                  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                  <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                  <mainClass>org.komusubi.feeder.web.StandAlone</mainClass>
+                </manifest>
+              </archive>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
