@@ -34,6 +34,7 @@
       <maxHistory>14</maxHistory>
     </rollingPolicy>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <charset>UTF-8</charset>
       <pattern>[%d{yyyy/MM/dd HH:mm:ss:SSS}] %X{ipaddr} %X{sessionId} &lt;%-5level&gt; - %m%n</pattern>
     </encoder>
   </appender>
