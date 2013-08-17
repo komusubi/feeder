@@ -103,7 +103,8 @@ public class SleepStrategy implements GateKeeper {
                 throw new Twitter4jException(e);
             }
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(tmp))) {
+            try (BufferedWriter writer = new BufferedWriter(
+                                            new OutputStreamWriter(new FileOutputStream(tmp), CHARSET))) {
                 for (int i = items.size() - retainCount; items.size() > i; i++) {
                     writer.write("tweet:");
                     writer.write(items.get(i));
