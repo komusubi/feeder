@@ -39,6 +39,7 @@ import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.sns.GateKeeper;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.Twitter4jException;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
@@ -54,12 +55,19 @@ public class SleepStrategy implements GateKeeper {
      * 
      * @author jun.ozeki
      */
-    public static interface PageCache {
+    public interface PageCache {
+
         void refresh();
+
         boolean exists(Message message);
+
         void store(Message message);
     }
 
+    /**
+     * 
+     * @author jun.ozeki
+     */
     public static class FilePageCache implements PageCache {
 
         private static final Logger logger = LoggerFactory.getLogger(SleepStrategy.class);
@@ -69,14 +77,14 @@ public class SleepStrategy implements GateKeeper {
         private String lineSeparator = System.getProperty("line.separator");
 
         /**
-         * 
+         * create new instance.
          * @param path
          */
         @Inject
-        public FilePageCache(@Named("tweet store file")String path) {
-            this(new File(path)); 
+        public FilePageCache(@Named("tweet store file") String path) {
+            this(new File(path));
         }
-        
+
         /**
          * 
          * @param file
@@ -103,7 +111,7 @@ public class SleepStrategy implements GateKeeper {
             }
 
             try (BufferedWriter writer = new BufferedWriter(
-                                            new OutputStreamWriter(new FileOutputStream(tmp), CHARSET))) {
+                            new OutputStreamWriter(new FileOutputStream(tmp), CHARSET))) {
                 for (int i = items.size() - retainCount; items.size() > i; i++) {
                     writer.write("tweet:");
                     writer.write(items.get(i));
@@ -137,7 +145,7 @@ public class SleepStrategy implements GateKeeper {
                         continue;
                     }
                     builder.append(line)
-                            .append(lineSeparator);
+                                    .append(lineSeparator);
                 }
                 if (builder.length() > 0) {
                     if (builder.toString().endsWith(lineSeparator))
@@ -155,7 +163,7 @@ public class SleepStrategy implements GateKeeper {
          */
         @Override
         public boolean exists(Message message) {
-            
+
             // found same script to be tweet and history one.
             for (Script script: message) {
                 for (String item: cache()) {
@@ -173,19 +181,90 @@ public class SleepStrategy implements GateKeeper {
          */
         @Override
         public void store(Message message) {
-            
+
             try (BufferedWriter writer = new BufferedWriter(
-                                            new OutputStreamWriter(new FileOutputStream(file, true), CHARSET))) {
+                            new OutputStreamWriter(new FileOutputStream(file, true), CHARSET))) {
                 for (Script script: message) {
                     writer.write("tweet:");
-                    writer.write(script.trimedLine());
+//                    writer.write(script.trimedLine());
+                    writer.write(line(script));
                     writer.write(lineSeparator);
                 }
             } catch (IOException e) {
                 throw new Twitter4jException(e);
             }
         }
+
+        public String line(Script script) {
+            if (script != null)
+                return script.trimedLine(); 
+            return "";
+        }
+    }
+
+    /**
+     * 
+     * @author jun.ozeki
+     */
+    public static class PartialMatchPageCache extends FilePageCache implements PageCache {
+
+        private static final Logger logger = LoggerFactory.getLogger(PartialMatchPageCache.class);
+
+        /**
+         * @param path
+         */
+        @Inject
+        public PartialMatchPageCache(@Named("tweet store file") String path) {
+            super(path);
+        }
+
+        /**
+         * @param file
+         */
+        public PartialMatchPageCache(File file) {
+            super(file);
+        }
+
+        /**
+         * @see org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache#exists(org.komusubi.feeder.model.Message)
+         */
+        @Override
+        public boolean exists(Message message) {
+            if (message == null || message.size() <= 0)
+                return false; // this right ?
+            // compare to first script only.
+            Script script = message.get(0);
+            String comparison;
+            if (script instanceof TweetScript) {
+                TweetScript ts = (TweetScript) script;
+                if (ts.isFragment()) {
+                    comparison = ts.trimedLine().substring(ts.fragment().length());
+                } else {
+                    comparison = ts.trimedLine();
+                }
+            } else {
+                comparison = message.get(0).trimedLine();
+            }
+            for (String item: cache()) {
+                if (comparison.equals(item)) {
+                    logger.info("duplicated message: {}", comparison);
+                    return true;
+                }
+            }
+            return false;
+        }
         
+        @Override
+        public String line(Script script) {
+            String line;
+            if (script instanceof TweetScript) {
+                TweetScript ts = (TweetScript) script;
+                line = ts.trimedLine().substring(ts.fragment().length());
+            } else {
+                line = script.trimedLine();
+            }
+            return line;
+        }
     }
 
     /**
@@ -280,7 +359,7 @@ public class SleepStrategy implements GateKeeper {
          */
         @Override
         public void store(Message message) {
-           // nothing to do 
+            // nothing to do
         }
     }
 
