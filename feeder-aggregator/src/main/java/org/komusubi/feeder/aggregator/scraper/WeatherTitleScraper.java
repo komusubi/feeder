@@ -238,13 +238,6 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
             nodes.visitAllNodesWith(new WeatherTitleVisitor(visited));
             for (NodeIterator it = visited.elements(); it.hasMoreNodes(); ) {
                 Node n = it.nextNode();
-                if (n instanceof LinkTag) {
-                   logger.debug("bingo!! : {}", n);
-                   logger.debug("bingo!! : {}", n.getText());
-                   logger.debug("bingo!! : {}", n.toHtml(true));
-                   logger.debug("bingo!! : {}", n.toHtml(false));
-                   logger.debug("bingo!! : {}", n.toPlainTextString());
-                }
                 titles.add(new Title(n.getText()));
                 logger.debug("title: {}", n.getText());
             }

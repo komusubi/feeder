@@ -18,13 +18,19 @@
  */
 package org.komusubi.feeder.sns.twitter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.komusubi.common.util.Resolver;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 
 /**
  * @author jun.ozeki
@@ -35,29 +41,92 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      * 
      * @author jun.ozeki
      */
+    public static interface Fragment {
+        String get();
+    }
+
+    /**
+     * 
+     * @author jun.ozeki
+     */
+    public static class TimestampFragment implements Fragment {
+        
+        private SimpleDateFormat formatter;
+        private Resolver<Date> dateResolver;
+        
+
+        @Inject
+        public TimestampFragment(@Named("fragment format") String fragmentFormat) {
+            this(fragmentFormat, new DateResolver());
+        }
+
+        public TimestampFragment(String fragmentFormat, Resolver<Date> resolver) {
+            if (fragmentFormat == null || fragmentFormat.length() == 0)
+                throw new IllegalArgumentException("arguemnt fragmentFormat MUST not be blank"); 
+            this.formatter = new SimpleDateFormat(fragmentFormat);
+            this.dateResolver = resolver;
+        }
+
+        /**
+         * @see org.komusubi.feeder.sns.twitter.TweetMessage.Fragment#get()
+         */
+        @Override
+        public String get() {
+            return formatter.format(dateResolver.resolve());
+        }
+    }
+
+    /**
+     * 
+     * @author jun.ozeki
+     */
     public static class TweetScript extends AbstractScript {
 
         private static final long serialVersionUID = 1L;
         private static final int MESSAGE_LENGTH_MAX = 140;
         private StringBuilder line;
+        private String fragment;
 
         /**
          * create new instance.
          * @param line
          */
         public TweetScript(String line) {
+            this(null, line);
+        }
+
+        /**
+         * create new instance
+         * @param fragment
+         * @param line
+         */
+        public TweetScript(Fragment fragment, String line) {
             if (line == null)
                 throw new Twitter4jException("line must NOT be null");
             if (line != null && line.codePointCount(0, line.length()) > MESSAGE_LENGTH_MAX) {
                 int length = line == null ? 0 : line.codePointCount(0, line.length());
                 throw new Twitter4jException("over max length of line: " + length);
             }
-            this.line = new StringBuilder(line);
+            if (fragment != null) {
+                this.fragment = fragment.get() + "\n";
+                this.line = new StringBuilder(this.fragment)
+                                                .append(line);
+            } else {
+                this.line = new StringBuilder(line);
+            }
         }
 
         public TweetScript append(String buffer) {
             line.append(buffer);
             return this;
+        }
+
+        public String fragment() {
+            return this.fragment;
+        }
+
+        public boolean isFragment() {
+            return fragment != null;
         }
 
         @Override
@@ -73,7 +142,10 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         @Override
         public String codePointSubstring(int begin) {
-            throw new UnsupportedOperationException("not implemented.");
+            // FIXME consider codepoint 
+            if (begin > line.length())
+                throw new StringIndexOutOfBoundsException("wrong index size: argument is " + begin + " but actual " + line.length());
+            return line.substring(begin);
         }
 
         @Override
@@ -96,13 +168,22 @@ public class TweetMessage extends ArrayList<Script> implements Message {
     }
 
     private static final long serialVersionUID = 1L;
+    private Fragment fragment;
+
+    /**
+     * create new instance.
+     */
+    public TweetMessage() {
+        this(null);
+    }
 
     /**
      * create new instance.
      * default constructor.
      */
-    public TweetMessage() {
-
+    @Inject
+    public TweetMessage(Fragment fragment) {
+        this.fragment = fragment;
     }
 
     @Override
@@ -126,7 +207,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         append(script);
         return true;
     }
-
+    
     /**
      * @see org.komusubi.feeder.model.Message#append(java.lang.String)
      */
@@ -141,11 +222,12 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             for ( ; 
                   line.codePointCount(offset, line.length()) > TweetScript.MESSAGE_LENGTH_MAX; 
                   offset += TweetScript.MESSAGE_LENGTH_MAX) {
-                super.add(new TweetScript(line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
+                super.add(new TweetScript(fragment, line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
             }
             // append remain 
-            if (line.length() - offset > 0)
-                super.add(new TweetScript(line.substring(offset)));
+            if (line.length() - offset > 0) {
+                super.add(new TweetScript(fragment, line.substring(offset)));
+            }
             
         } else {
             // try append latest script object.
@@ -154,10 +236,10 @@ public class TweetMessage extends ArrayList<Script> implements Message {
                 if (latest.codePointCount() + line.codePointCount(0, line.length()) <= TweetScript.MESSAGE_LENGTH_MAX) {
                     latest.append(line);
                 } else {
-                    super.add(new TweetScript(line));
+                    super.add(new TweetScript(fragment, line));
                 }
             } else {
-                super.add(new TweetScript(line));
+                super.add(new TweetScript(fragment, line));
             }
         }
         return this;

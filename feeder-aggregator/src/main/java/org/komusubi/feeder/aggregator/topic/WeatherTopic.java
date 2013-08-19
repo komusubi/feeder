@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import org.komusubi.feeder.aggregator.scraper.AbstractWeatherScraper;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
@@ -34,12 +33,12 @@ import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Topic;
-import org.komusubi.feeder.spi.FeederMessageProvider;
 
 /**
  * @author jun.ozeki
@@ -58,38 +57,38 @@ public class WeatherTopic implements Topic, Iterable<Script> {
      * create new instance.
      */
     public WeatherTopic() {
-        this(new WeatherTopicSite(), new HtmlScraper(), new FeederMessageProvider());
+        this(new WeatherTopicSite(), new HtmlScraper(), new FeederMessage());
     }
     
     /**
      * create new instance.
      * @param site
-     * @param provider
+     * @param message
      */
-    public WeatherTopic(WeatherTopicSite site, Provider<Message> provider) {
-        this(site, new HtmlScraper(), provider);
+    public WeatherTopic(WeatherTopicSite site, Message message) {
+        this(site, new HtmlScraper(), message);
     }
 
     /**
      * create new instance.
      * @param scraper
-     * @param provider
+     * @param message
      */
-    public WeatherTopic(HtmlScraper scraper, Provider<Message> provider) {
-        this(new WeatherTopicSite(), scraper, provider);
+    public WeatherTopic(HtmlScraper scraper, Message message) {
+        this(new WeatherTopicSite(), scraper, message);
     }
 
     /**
      * create new instance.
      * @param site
      * @param scraper
-     * @param provider
+     * @param message
      */
-    public WeatherTopic(WeatherTopicSite site, HtmlScraper scraper, Provider<Message> provider) {
+    public WeatherTopic(WeatherTopicSite site, HtmlScraper scraper, Message message) {
         this(new WeatherContentScraper(site, scraper), 
              new WeatherTitleScraper(site, scraper), 
              new WeatherAnnouncementScraper(site, scraper),
-             provider);
+             message);
     }
 
     /**
@@ -102,12 +101,12 @@ public class WeatherTopic implements Topic, Iterable<Script> {
     @Inject
     public WeatherTopic(WeatherContentScraper topicScraper, 
                         WeatherTitleScraper titleScraper,
-                        WeatherAnnouncementScraper announceScraper, Provider<Message> provider) {
+                        WeatherAnnouncementScraper announceScraper, Message message) {
         this.contentScraper = topicScraper;
         this.titleScraper = titleScraper;
         this.announceScraper = announceScraper;
         this.created = new Date();
-        this.message = provider.get();
+        this.message = message;
         this.tags = new Tags();
     }
 

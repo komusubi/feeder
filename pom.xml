@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.komusubi.feeder</groupId>
   <artifactId>feeder</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>pom</packaging>
   <inceptionYear>2012</inceptionYear>
   <name>feeder</name>
@@ -34,23 +34,34 @@
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-core</artifactId>
-        <version>0.0.1</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-aggregator</artifactId>
-        <version>0.0.1</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-sns</artifactId>
-        <version>0.0.1</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-web</artifactId>
-        <version>0.0.1</version>
+        <version>${project.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>org.komusubi.feeder</groupId>
+        <artifactId>feeder-sns-parent</artifactId>
+        <version>${project.verion}</version>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.komusubi.feeder</groupId>
+        <artifactId>feeder-sns-twitter</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -68,20 +79,9 @@
         <version>1.0.13</version>
       </dependency>
       <dependency>
-        <groupId>org.komusubi.feeder</groupId>
-        <artifactId>feeder-sns-parent</artifactId>
-        <version>0.0.1</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
         <version>1.9.5</version>
-      </dependency>
-      <dependency>
-        <groupId>org.komusubi.feeder</groupId>
-        <artifactId>feeder-sns-twitter</artifactId>
-        <version>0.0.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.inject.extensions</groupId>

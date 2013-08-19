@@ -21,7 +21,6 @@ package org.komusubi.feeder.sns.twitter.spi;
 import javax.inject.Provider;
 
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.sns.twitter.TweetMessage;
 
 /**
  * @author jun.ozeki
@@ -33,7 +32,8 @@ public class TweetMessageProvider implements Provider<Message> {
      */
     @Override
     public Message get() {
-        return new TweetMessage(); 
+//        return new TweetMessage(new TweetScriptProvider("HHmm")); 
+        return null;
     }
 
 }

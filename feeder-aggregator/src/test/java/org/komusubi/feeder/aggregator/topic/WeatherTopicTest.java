@@ -38,10 +38,10 @@ import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Status;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Region;
 import org.komusubi.feeder.model.Tag;
-import org.komusubi.feeder.spi.FeederMessageProvider;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -95,7 +95,7 @@ public class WeatherTopicTest {
         when(announceScraper.site()).thenReturn(new WeatherTopicSite(tag));
         when(topicScraper.iterator()).thenReturn(((List<Content>) args[2]).iterator());
         when(topicScraper.site()).thenReturn(new WeatherTopicSite(tag));
-        WeatherTopic target = new WeatherTopic(topicScraper, titleScraper, announceScraper, new FeederMessageProvider());
+        WeatherTopic target = new WeatherTopic(topicScraper, titleScraper, announceScraper, new FeederMessage());
         String expected = "この情報は当日のものです。\nタイトルです。\nご確認下さい。\n関東: 平常通り運航します。\n#weather";
         // exercise
         Message actual = target.message();
