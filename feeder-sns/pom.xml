@@ -5,7 +5,11 @@
   <parent>
     <groupId>org.komusubi.feeder</groupId>
     <artifactId>feeder</artifactId>
+<<<<<<< HEAD
     <version>0.0.2-SNAPSHOT</version>
+=======
+    <version>0.0.2</version>
+>>>>>>> hotfix-0.0.2
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>feeder-sns</artifactId>
