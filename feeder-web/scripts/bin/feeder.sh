@@ -3,6 +3,7 @@
 FEEDER_HOME=$(cd $(dirname $0)/..;pwd)
 FEEDER_LIB=${FEEDER_HOME}/lib
 FEEDER_LOGS=${FEEDER_HOME}/logs
+FEEDER_CONF=${FEEDER_HOME}/conf
 SCRIPT_NAME=$(basename $0)
 JAR_NAME=feeder-standalone.jar
 
@@ -37,7 +38,8 @@ function execute()
   fi
 
   #echo "java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME}"
-  java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME} 
+  cd ${FEEDER_CONF}
+  java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME}
 }
 
 function main()
