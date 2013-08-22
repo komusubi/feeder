@@ -18,7 +18,6 @@
  */
 package org.komusubi.feeder.aggregator.scraper;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.ParserFeedback;
 import org.komusubi.feeder.aggregator.AggregatorException;
+import org.komusubi.feeder.model.Url;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +108,7 @@ public class HtmlScraper {
      * @param url
      * @return
      */
-    public NodeList scrape(URL url, NodeFilter filter) {
+    public NodeList scrape(Url url, NodeFilter filter) {
         return scrape(url.toExternalForm(), filter);
     }
 
@@ -129,7 +129,7 @@ public class HtmlScraper {
      * @param clazz
      * @return
      */
-    public NodeList scrapeMatchNodes(URL url, NodeFilter filter, Class<?> clazz) {
+    public NodeList scrapeMatchNodes(Url url, NodeFilter filter, Class<?> clazz) {
         return scrapeMatchNodes(url.toExternalForm(), filter, clazz);
     }
 

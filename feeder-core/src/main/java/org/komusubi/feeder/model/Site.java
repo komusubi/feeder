@@ -18,14 +18,13 @@
  */
 package org.komusubi.feeder.model;
 
-import java.net.URL;
 
 /**
  * @author jun.ozeki
  */
 public interface Site {
     
-    URL url();
+    Url url();
     Tags tags();
 //    String 
 }
