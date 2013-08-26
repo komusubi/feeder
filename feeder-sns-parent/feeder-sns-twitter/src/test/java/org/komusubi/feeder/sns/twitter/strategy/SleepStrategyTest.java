@@ -216,8 +216,8 @@ public class SleepStrategyTest {
             };
             // use FeederMessage, because TweetMessage adjust text length by append method.
             Message message = new FeederMessage();
-            message.append("this message exists no 1.")
-                    .append("this message exists no 2.")
+            message.append(scripts[2])
+                    .append(scripts[0])
                     .append(scripts[1]);
 
             // exercise

@@ -18,9 +18,10 @@
  */
 package org.komusubi.feeder.model;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -31,21 +32,23 @@ public class UrlTest {
     @Test
     public void delegationMethods() throws Exception {
         Url shorten = new Url("http://bit.ly/1do2OxD");
-        assertThat(shorten.getHost(), is("bitly"));
-        assertThat(shorten.getAuthority(), is("bit.ly"));
-        assertThat(shorten.getPort(), is(-1));
-        assertThat(shorten.getDefaultPort(), is(80));
-        assertThat(shorten.getPath(), is("/1do2OxD"));
-        assertThat(shorten.getFile(), is("/1do2OxD"));
-        assertThat(shorten.getProtocol(), is("http"));
+        assertThat(shorten.getHost(), equalTo("bit.ly"));
+        assertThat(shorten.getAuthority(), equalTo("bit.ly"));
+        assertThat(shorten.getPort(), equalTo(-1));
+        assertThat(shorten.getDefaultPort(), equalTo(80));
+        assertThat(shorten.getPath(), equalTo("/1do2OxD"));
+        assertThat(shorten.getFile(), equalTo("/1do2OxD"));
+        assertThat(shorten.getProtocol(), equalTo("http"));
     }
 
+    // TODO issue #19
+    @Ignore
     @Test
     public void shorten() {
         Url shorten = new Url("https://githug.com/");
         Url once = shorten.shorten();
-        assertThat(shorten.toExternalForm(), is(once.toExternalForm()));
+        assertThat(shorten.toExternalForm(), equalTo(once.toExternalForm()));
         Url twice = shorten.shorten(); 
-        assertThat(shorten.toExternalForm(), is(twice.toExternalForm()));
+        assertThat(shorten.toExternalForm(), equalTo(twice.toExternalForm()));
     }
 }

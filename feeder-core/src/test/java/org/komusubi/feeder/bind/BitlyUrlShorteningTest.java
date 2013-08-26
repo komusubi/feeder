@@ -24,6 +24,7 @@ import static org.junit.Assert.assertThat;
 import java.net.URL;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -38,12 +39,15 @@ public class BitlyUrlShorteningTest {
         target = new BitlyUrlShortening();
     }
 
+    // TODO issue #19 
+    @Ignore
     @Test
     public void shorten() throws Exception {
         URL url = target.shorten(new URL("https://www.jal.co.jp/cms/other/ja/weather_info_dom.html"));
         assertThat(url.toExternalForm(), is("http://bit.ly/1dtKP91"));
     }
     
+    @Ignore
     @Test
     public void shortenedTwice() {
         URL url = target.shorten("http://bit.ly/1dtKP91");
