@@ -54,7 +54,7 @@ public class BitlyUrlShortening implements UrlShortening {
         PROPERTIES = new Properties();
         try {
             PROPERTIES.load(BitlyUrlShortening.class.getClassLoader().getResourceAsStream("accessKey.properties"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("error load properties: {}", e);
             e.printStackTrace();
         }
