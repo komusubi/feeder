@@ -101,12 +101,24 @@ public class Url {
         return url.getRef();
     }
 
+    @Override
     public boolean equals(Object obj) {
-        return url.equals(obj);
+        if (obj instanceof Url) {
+            URL another = ((Url) obj).toURL();
+            return url.equals(another);
+        } else {
+            return false;
+        }
     }
 
+    @Override
     public int hashCode() {
-        return url.hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (shortened ? 1231 : 1237);
+        result = prime * result + ((shortening == null) ? 0 : shortening.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        return result;
     }
 
     public boolean sameFile(URL other) {
@@ -158,6 +170,13 @@ public class Url {
         this.url = shortening.shorten(this.url);
         shortened = true;
         return this;
+    }
+
+    /**
+     * @return
+     */
+    public URL toURL() {
+        return url;
     }
     
 }

@@ -55,7 +55,7 @@ public class Speaker {
     }
 
     /**
-     * talkd to friends.
+     * talked to friends.
      * @param topic
      */
     public void talk(Topic topic) {
@@ -74,21 +74,4 @@ public class Speaker {
             logger.info("message duplicated, dose NOT post: {}", message.text());
         }
     }
-    
-    /*
-     * @param message
-     * @return
-     */
-    // FIXME is this method necessary ? it decide use to FeederMessage or TweetMessage.
-    /*
-    public Message extract(Message message) {
-        Message extracted = new FeederMessage();
-        for (Script script: message) {
-//            if (history.exists(script))
-//                continue;
-            extracted.append(script);
-        }
-        return extracted;
-    }
-    */
 }

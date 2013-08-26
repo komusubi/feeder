@@ -99,11 +99,11 @@ public class BitlyUrlShortening implements UrlShortening {
                     switch (event) {
                     case KEY_NAME:
                         key = parser.getString();
-                        logger.debug("key name: {}", key);
+                        logger.trace("key name: {}", key);
                         break;
                     case VALUE_STRING:
                         map.put(key, parser.getString());
-                        logger.debug("value: {}", parser.getString());
+                        logger.trace("value: {}", parser.getString());
                         break;
                     }
                 }

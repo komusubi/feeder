@@ -20,7 +20,6 @@ package org.komusubi.feeder.sns.twitter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -186,12 +185,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         this.fragment = fragment;
     }
 
-    @Override
-    public boolean addAll(Collection<? extends Script> c) {
-        for (Script s: c)
-            append(s);
-        return true;
-    }
 
     /**
      * @see org.komusubi.feeder.model.Message#append(org.komusubi.feeder.model.Message.Script)
@@ -202,11 +195,17 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         return this;
     }
 
-    @Override
-    public boolean add(Script script) {
-        append(script);
-        return true;
-    }
+//    @Override
+//    public boolean addAll(Collection<? extends Script> c) {
+//        for (Script s: c)
+//            append(s);
+//        return true;
+//    }
+//    @Override
+//    public boolean add(Script script) {
+//        append(script);
+//        return true;
+//    }
     
     /**
      * @see org.komusubi.feeder.model.Message#append(java.lang.String)
@@ -260,8 +259,16 @@ public class TweetMessage extends ArrayList<Script> implements Message {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("TweetMessage [text()=").append(text()).append("]");
+        builder.append("TweetMessage [fragment=").append(fragment).append("]");
+        builder.append(super.toString());
         return builder.toString();
     }
+
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("TweetMessage [text()=").append(text()).append("]");
+//        return builder.toString();
+//    }
 
 }

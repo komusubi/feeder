@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -165,15 +166,16 @@ public class SleepStrategy implements GateKeeper {
         public boolean exists(Message message) {
 
             // found same script to be tweet and history one.
-            for (Script script: message) {
+            for (Iterator<Script> it = message.iterator(); it.hasNext(); ) {
+                Script script = it.next();
                 for (String item: cache()) {
                     if (script.trimedLine().equals(item)) {
                         logger.info("deplicated script found: {}", script.line());
-                        return true;
+                        it.remove();
                     }
                 }
             }
-            return false;
+            return message.size() <= 0;
         }
 
         /**
