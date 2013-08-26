@@ -170,7 +170,7 @@ public class SleepStrategy implements GateKeeper {
                 Script script = it.next();
                 for (String item: cache()) {
                     if (script.trimedLine().equals(item)) {
-                        logger.info("deplicated script found: {}", script.line());
+                        logger.info("duplicated script found: {}", script.line());
                         it.remove();
                     }
                 }
