@@ -125,13 +125,15 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
         private NodeList visited;
         private boolean startTable;
         private boolean linkParseToggle = false;
+        private HtmlScraper scraper;
 
         /**
          * create new instance.
          * default constructor.
          */
-        public WeatherTitleVisitor(NodeList visited) {
+        public WeatherTitleVisitor(NodeList visited, HtmlScraper scraper) {
             this.visited = visited;
+            this.scraper = scraper;
         }
 
         @Override
@@ -158,7 +160,7 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
                 startTable = true;
             if (!startTable && (tag instanceof LinkTag)) {
                LinkTag link = (LinkTag) tag;
-               visited.add(new TextNode(link.getLink()));
+               visited.add(new TextNode(scraper.urlShorten(link.getLink())));
                linkParseToggle = true;
             }
         }
@@ -235,7 +237,7 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
         NodeList visited = new NodeList();
         List<Title> titles = new ArrayList<Title>();
         try {
-            nodes.visitAllNodesWith(new WeatherTitleVisitor(visited));
+            nodes.visitAllNodesWith(new WeatherTitleVisitor(visited, scraper()));
             for (NodeIterator it = visited.elements(); it.hasMoreNodes(); ) {
                 Node n = it.nextNode();
                 titles.add(new Title(n.getText()));

@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.aggregator.scraper;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,9 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.util.ParserFeedback;
 import org.komusubi.feeder.aggregator.AggregatorException;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,23 +44,25 @@ public class HtmlScraper {
     private Parser parser;
     private boolean cacheable;
     private Map<String, NodeList> cachedNodes;
+    private UrlShortening urlShortening;
 
     /**
      * create new instance.
      */
     public HtmlScraper() {
-        this(true);
-        parser = newParser();
-        cachedNodes = new HashMap<String, NodeList>();
-        configure(parser, Parser.getConnectionManager());
+        this(true, new BitlyUrlShortening());
     }
 
     /**
      * create new instance.
      * @param cacheable
      */
-    public HtmlScraper(boolean cacheable) {
+    public HtmlScraper(boolean cacheable, UrlShortening urlShortening) {
         this.cacheable = cacheable;
+        this.urlShortening = urlShortening;
+        parser = newParser();
+        cachedNodes = new HashMap<String, NodeList>();
+        configure(parser, Parser.getConnectionManager());
     }
 
     /**
@@ -131,6 +136,11 @@ public class HtmlScraper {
      */
     public NodeList scrapeMatchNodes(Url url, NodeFilter filter, Class<?> clazz) {
         return scrapeMatchNodes(url.toExternalForm(), filter, clazz);
+    }
+
+    public String urlShorten(String url) {
+        URL u = urlShortening.shorten(url);
+        return u.toExternalForm();
     }
 
     /**

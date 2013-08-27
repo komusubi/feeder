@@ -63,4 +63,8 @@ public class AbstractWeatherScraper {
     protected HtmlScraper scraper() {
         return scraper;
     }
+    
+    protected String urlShorten(String url) {
+        return scraper.urlShorten(url);
+    }
 }
