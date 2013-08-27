@@ -26,20 +26,25 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
  */
 public class BitlyUrlShorteningTest {
-
+    private static final Logger logger = LoggerFactory.getLogger(BitlyUrlShorteningTest.class);
+      
     private BitlyUrlShortening target = new BitlyUrlShortening();
 
     @Before
     public void before() {
+        logger.info("--------------------------------------------------------------");
+        logger.info("このテストは bit.ly web api を呼び出すため、Ignore 設定しています");
+        logger.info("--------------------------------------------------------------");
         target = new BitlyUrlShortening();
     }
 
-    // TODO issue #19 
     @Ignore
     @Test
     public void shorten() throws Exception {
