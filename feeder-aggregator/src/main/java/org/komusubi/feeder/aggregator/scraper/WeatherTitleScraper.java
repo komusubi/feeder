@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Tag;
@@ -143,14 +144,10 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
                 return;
             }
             if (!startTable && !"\n".equals(text.toPlainTextString())) {
-                Text textNode;
-                if (text.getText().startsWith("\n")) {
-                    String value = text.getText().substring("\n".length());
-                    textNode = new TextNode(value);
-                } else {
-                    textNode = text;
-                }
-                visited.add(textNode);
+                String value = StringUtils.strip(text.getText());
+                if (StringUtils.isEmpty(value))
+                    return;
+                visited.add(new TextNode(value));
             }
         }
 
