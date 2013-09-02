@@ -214,6 +214,7 @@ public class SleepStrategy implements GateKeeper {
                     writer.write(line(script));
                     writer.write(lineSeparator);
                 }
+                items.clear();
             } catch (IOException e) {
                 throw new Twitter4jException(e);
             }
