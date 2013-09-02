@@ -20,6 +20,7 @@ package org.komusubi.feeder.sns.twitter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -195,17 +196,33 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         return this;
     }
 
-//    @Override
-//    public boolean addAll(Collection<? extends Script> c) {
-//        for (Script s: c)
-//            append(s);
-//        return true;
-//    }
-//    @Override
-//    public boolean add(Script script) {
-//        append(script);
-//        return true;
-//    }
+    @Override
+    public boolean addAll(Collection<? extends Script> c) {
+        for (Script s: c)
+            add(s);
+        return true;
+    }
+
+    @Override
+    public boolean add(Script script) {
+        if (script instanceof TweetScript) {
+            super.add(script);
+        } else {
+            if (script.codePointCount() > TweetScript.MESSAGE_LENGTH_MAX) {
+                String line = script.line();
+                int offset = 0;
+                // FIXME code point count and word wrap.
+                for ( ;
+                      line.codePointCount(offset, line.length()) > TweetScript.MESSAGE_LENGTH_MAX;
+                      offset += TweetScript.MESSAGE_LENGTH_MAX) {
+                    super.add(new TweetScript(line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
+                }
+                if (line.length() - offset > 0)
+                    super.add(new TweetScript(line.substring(offset)));
+            }
+        }
+        return true;
+    }
     
     /**
      * @see org.komusubi.feeder.model.Message#append(java.lang.String)
