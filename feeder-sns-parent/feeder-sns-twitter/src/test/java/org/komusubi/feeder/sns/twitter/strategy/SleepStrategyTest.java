@@ -170,7 +170,7 @@ public class SleepStrategyTest {
             // setup
             FilePageCache cache = new FilePageCache(file);
             Message message = new TweetMessage();
-            for (int i = 0; i < 25; i++) {
+            for (int i = 0; i < 50; i++) {
                 message.append("text message message  message  message  message  message  message  message  message  message  message  message  message  message : " + i);
             }
             cache.store(message);
@@ -180,7 +180,7 @@ public class SleepStrategyTest {
             
             // verify
             List<String> items = cache.cache();
-            assertThat(items.size(), is(20));
+            assertThat(items.size(), is(40));
         }
         
         @Test
