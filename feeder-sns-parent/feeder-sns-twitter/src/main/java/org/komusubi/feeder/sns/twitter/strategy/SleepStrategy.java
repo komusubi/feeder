@@ -75,7 +75,7 @@ public class SleepStrategy implements GateKeeper {
         private static final String CHARSET = "UTF-8";
         private File file;
         private ArrayList<String> items;
-        private String lineSeparator = System.getProperty("line.separator");
+        private String lineSeparator = System.lineSeparator();
 
         /**
          * create new instance.
@@ -101,7 +101,7 @@ public class SleepStrategy implements GateKeeper {
         @Override
         public void refresh() {
             cache();
-            int retainCount = 20;
+            int retainCount = 40;
             if (items.size() <= retainCount)
                 return;
             File tmp;
@@ -159,6 +159,26 @@ public class SleepStrategy implements GateKeeper {
             return items;
         }
 
+        protected String strip(String line) {
+            return stripSchema(line, "http");
+        }
+
+        protected String stripSchema(String line, String schema) {
+            if (!line.contains(schema)) 
+                return line;
+            int start = line.indexOf(schema);
+            int finish = line.length();
+            for (int index = start; index <= line.length(); index++) {
+                if (Character.isWhitespace(line.charAt(index))) {
+                    finish = index + 1;
+                    break;
+                }
+            }
+            StringBuilder builder = new StringBuilder(line.substring(0, start));
+            builder.append(line.substring(finish));
+            return builder.toString();
+        }
+        
         /**
          * @see org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache#exists(org.komusubi.feeder.model.Message)
          */
@@ -168,10 +188,12 @@ public class SleepStrategy implements GateKeeper {
             // found same script to be tweet and history one.
             for (Iterator<Script> it = message.iterator(); it.hasNext(); ) {
                 Script script = it.next();
+                String stripped = strip(script.trimedLine());
                 for (String item: cache()) {
-                    if (script.trimedLine().equals(item)) {
+                    if (stripped.equals(strip(item))) {
                         logger.info("duplicated script found: {}", script.line());
                         it.remove();
+                        break;
                     }
                 }
             }

@@ -184,6 +184,14 @@ public class SleepStrategyTest {
         }
         
         @Test
+        public void stripSchema() {
+            // setup
+            FilePageCache cache = new FilePageCache(file);
+            String stripped = cache.strip("message test http://localhost/test abcdefg");
+            assertThat(stripped, is("message test abcdefg"));
+        }
+
+        @Test
         public void existsAllMessages() {
             // setup
             final String[] scripts = new String[]{"script no 1.", "script no 2.", "script no 3."};
