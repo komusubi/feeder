@@ -55,7 +55,7 @@
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-sns-parent</artifactId>
-        <version>${project.verion}</version>
+        <version>${project.version}</version>
         <type>pom</type>
       </dependency>
       <dependency>
@@ -136,7 +136,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>cobertura-maven-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>2.6</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -204,6 +204,7 @@
         <artifactId>cobertura-maven-plugin</artifactId>
         <configuration>
           <formats>
+            <format>html</format>
             <format>xml</format>
           </formats>
         </configuration>
@@ -271,11 +272,19 @@
                 <sourceEncoding>UTF-8</sourceEncoding>
                 <targetJdk>1.5</targetJdk>
                 <linkXref>true</linkXref>
+                <aggregate>true</aggregate>
               </configuration>
             </plugin>
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>cobertura-maven-plugin</artifactId>
+              <configuration>
+                <aggregate>true</aggregate>
+                <formats>
+                  <format>html</format>
+                  <format>xml</format>
+                </formats>
+              </configuration>
            </plugin>
           </reportPlugins>
         </configuration>
