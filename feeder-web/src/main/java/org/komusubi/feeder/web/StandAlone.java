@@ -57,13 +57,14 @@ public class StandAlone {
         StandAlone standAlone = new StandAlone();
 
         Topics<Topic> topics;
-        File storeFile = new File(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
         PageCache pageCache;
         if ("scraper".equalsIgnoreCase(args[0])) {
             topics = standAlone.aggregateScraper();
+            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/scraper-store.txt");
             pageCache = new PartialMatchPageCache(storeFile);
         } else if("feeder".equalsIgnoreCase(args[0])) {
             topics = standAlone.aggregateFeeder();
+            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
