@@ -219,6 +219,8 @@ public class TweetMessage extends ArrayList<Script> implements Message {
                 }
                 if (line.length() - offset > 0)
                     super.add(new TweetScript(line.substring(offset)));
+            } else {
+                super.add(script);
             }
         }
         return true;
