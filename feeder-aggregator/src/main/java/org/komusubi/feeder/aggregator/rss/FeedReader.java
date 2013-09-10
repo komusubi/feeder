@@ -35,9 +35,10 @@ import org.komusubi.feeder.model.Url;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.fetcher.FetcherException;
+import com.sun.syndication.fetcher.impl.AbstractFeedFetcher;
 import com.sun.syndication.fetcher.impl.FeedFetcherCache;
 import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
-import com.sun.syndication.fetcher.impl.HttpURLFeedFetcher;
+import com.sun.syndication.fetcher.impl.HttpClientFeedFetcher;
 import com.sun.syndication.io.FeedException;
 
 /**
@@ -152,7 +153,7 @@ public class FeedReader implements Iterable<EntryScript> {
     public List<EntryScript> retrieve(long lastModified) {
 
         List<EntryScript> scripts = new ArrayList<>();
-        HttpURLFeedFetcher fetcher = new HttpURLFeedFetcher(this.feedInfoCache);
+        AbstractFeedFetcher fetcher = new HttpClientFeedFetcher(this.feedInfoCache);
         try {
             SyndFeed feed = fetcher.retrieveFeed(site.url().toURL());
             if (feed == null)
