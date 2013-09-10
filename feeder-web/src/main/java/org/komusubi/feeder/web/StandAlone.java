@@ -32,6 +32,7 @@ import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.HashTag;
 import org.komusubi.feeder.sns.twitter.TweetMessage;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
@@ -77,7 +78,7 @@ public class StandAlone {
         WeatherTopic weather = new WeatherTopic(new WeatherContentScraper(),
                                                  new WeatherTitleScraper(),
                                                  new WeatherAnnouncementScraper(),
-                                                 new TweetMessage());
+                                                 new TweetMessage(new TimestampFragment("HHmm")));
         HashTag jal = new HashTag("jal");
         weather.addTag(jal);
 

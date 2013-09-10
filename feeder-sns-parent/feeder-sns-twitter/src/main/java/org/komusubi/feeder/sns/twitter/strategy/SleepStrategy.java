@@ -284,7 +284,11 @@ public class SleepStrategy implements GateKeeper {
             String line;
             if (script instanceof TweetScript) {
                 TweetScript ts = (TweetScript) script;
-                line = ts.trimedLine().substring(ts.fragment().length());
+                if (ts.isFragment()) {
+                    line = ts.trimedLine().substring(ts.fragment().length());
+                } else {
+                    line = ts.trimedLine();
+                }
             } else {
                 line = script.trimedLine();
             }
