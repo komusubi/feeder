@@ -397,35 +397,6 @@
     </profile>
     <profile>
       <id>standalone</id>
-      <build>
-      <!-- 
-        <defaultGoal>clean package shade:shade</defaultGoal>
-        -->
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>shade</goal>
-                </goals>
-                <configuration>
-                  <finalName>feeder-standalone</finalName>
-                  <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                      <manifestEntries>
-                        <Main-Class>org.komusubi.feeder.web.StandAlone</Main-Class>
-                      </manifestEntries>
-                    </transformer>
-                  </transformers>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>
