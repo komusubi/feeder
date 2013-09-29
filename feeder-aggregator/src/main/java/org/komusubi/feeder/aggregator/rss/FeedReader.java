@@ -179,7 +179,7 @@ public class FeedReader implements Iterable<EntryScript> {
                 if (lastModified < e.getPublishedDate().getTime())
                     scripts.add(new EntryScript(it.next()));
                 else
-                    logger.info("read already entry: {}", e.getTitle());
+                    logger.info("read already entry: {}, {}", e.getPublishedDate(), e.getTitle());
             }
             // reverse order
             Collections.reverse(scripts);
@@ -195,7 +195,7 @@ public class FeedReader implements Iterable<EntryScript> {
      */
     @Override
     public Iterator<EntryScript> iterator() {
-        return retrieve(0L).iterator();
+        return retrieve().iterator();
     }
     
 }
