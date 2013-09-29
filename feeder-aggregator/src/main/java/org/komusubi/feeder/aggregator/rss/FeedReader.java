@@ -31,21 +31,24 @@ import org.komusubi.feeder.aggregator.site.RssSite;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Url;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.fetcher.FetcherException;
 import com.sun.syndication.fetcher.impl.AbstractFeedFetcher;
+import com.sun.syndication.fetcher.impl.DiskFeedInfoCache;
 import com.sun.syndication.fetcher.impl.FeedFetcherCache;
-import com.sun.syndication.fetcher.impl.HashMapFeedInfoCache;
 import com.sun.syndication.fetcher.impl.HttpClientFeedFetcher;
+import com.sun.syndication.fetcher.impl.SyndFeedInfo;
 import com.sun.syndication.io.FeedException;
 
 /**
  * @author jun.ozeki
  */
 public class FeedReader implements Iterable<EntryScript> {
-
+    private static final Logger logger = LoggerFactory.getLogger(FeedReader.class);
     /**
      * 
      * @author jun.ozeki
@@ -139,11 +142,21 @@ public class FeedReader implements Iterable<EntryScript> {
      */
     public FeedReader(RssSite site) {
         this.site = site;
-        this.feedInfoCache = HashMapFeedInfoCache.getInstance();
+//        this.feedInfoCache = HashMapFeedInfoCache.getInstance();
+        this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
     }
 
     public List<EntryScript> retrieve() {
-        return retrieve(0L);
+        SyndFeedInfo feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
+        long lastModified = 0L;
+        if (feedInfo != null && feedInfo.getSyndFeed().getEntries().size() > 0) {
+            // get first entry feed publish date because it was wrong in lastModified date in http header.
+            // TODO this implementation for specific url. fix near future.
+            SyndEntry entry = (SyndEntry) feedInfo.getSyndFeed().getEntries().get(0);
+            logger.debug("last modified url:{}, {}", site.url().toExternalForm(), entry.getPublishedDate());
+            lastModified = entry.getPublishedDate().getTime();
+        }
+        return retrieve(lastModified);
     }
 
     /**
@@ -159,8 +172,14 @@ public class FeedReader implements Iterable<EntryScript> {
             if (feed == null)
                 return scripts;
             
+            // target site does not work lastModified in HTTP header,
+            // compare to each entry#getUpdateDate()
             for (Iterator<SyndEntry> it = (Iterator<SyndEntry>) feed.getEntries().iterator(); it.hasNext(); ) {
-                scripts.add(new EntryScript(it.next()));
+                SyndEntry e = it.next();
+                if (lastModified < e.getPublishedDate().getTime())
+                    scripts.add(new EntryScript(it.next()));
+                else
+                    logger.info("read already entry: {}", e.getTitle());
             }
             // reverse order
             Collections.reverse(scripts);
