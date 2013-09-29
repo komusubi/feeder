@@ -19,7 +19,9 @@
 package org.komusubi.feeder.bind;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -49,15 +51,31 @@ public class BitlyUrlShortening implements UrlShortening {
     private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(BitlyUrlShortening.class);
     private static final String ACCESS_KEY_VALUE = "bitly.access_token";
     private static final Properties PROPERTIES;
+    private static final String PROPERTY_FILE_NAME = "accessKey.properties";
 
     static {
         PROPERTIES = new Properties();
+        URL url;
         try {
-            PROPERTIES.load(BitlyUrlShortening.class.getClassLoader().getResourceAsStream("accessKey.properties"));
+            File file = new File("." + File.separator + PROPERTY_FILE_NAME);
+            if (file.exists()) {
+                url = file.toURI().toURL();
+            } else {
+                // find resource form classpath.
+                ClassLoader loader = BitlyUrlShortening.class.getClassLoader();
+                url = loader.getResource(PROPERTY_FILE_NAME);
+            }
+        } catch (MalformedURLException e) {
+            throw new FeederException(e);
+        }
+        System.out.printf("accessKey.properties are : %s\n", url.toExternalForm());
+        logger.debug("property file path: %s\n", url.toExternalForm());
+        try (InputStream in = url.openStream()){
+            PROPERTIES.load(in);
         } catch (Exception e) {
             logger.error("error load properties: {}", e);
             e.printStackTrace();
-        }
+        } 
     }
 
     /**
