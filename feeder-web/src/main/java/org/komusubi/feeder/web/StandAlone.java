@@ -56,7 +56,7 @@ public class StandAlone {
         } 
         StandAlone standAlone = new StandAlone();
 
-        Topics<Topic> topics;
+        Topics<? extends Topic> topics;
         PageCache pageCache;
         if ("scraper".equalsIgnoreCase(args[0])) {
             topics = standAlone.aggregateScraper();
@@ -74,7 +74,7 @@ public class StandAlone {
         speaker.talk(topics);
     }
 
-    private Topics<Topic> aggregateScraper() {
+    private Topics<? extends Topic> aggregateScraper() {
 
         WeatherTopic weather = new WeatherTopic(new WeatherContentScraper(),
                                                  new WeatherTitleScraper(),
@@ -83,13 +83,13 @@ public class StandAlone {
         HashTag jal = new HashTag("jal");
         weather.addTag(jal);
 
-        Topics<Topic> topics = new Topics<>();
+        Topics<WeatherTopic> topics = new Topics<>();
         topics.add(weather);
         
         return topics;
     }
     
-    private Topics<Topic> aggregateFeeder() {
+    private Topics<? extends Topic> aggregateFeeder() {
         
         HashTag jal = new HashTag("jal");
         FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info"), new TweetMessage());
@@ -98,7 +98,7 @@ public class StandAlone {
         FeedTopic jalDomestic = new FeedTopic(new RssSite("jal.domestic"), new TweetMessage());
         jalDomestic.addTag(jal);
 
-        Topics<Topic> topics = new Topics<>();
+        Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
         topics.add(jalDomestic);
 

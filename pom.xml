@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.komusubi.feeder</groupId>
   <artifactId>feeder</artifactId>
@@ -17,6 +18,7 @@
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <compileSource>1.7</compileSource>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -99,24 +101,24 @@
         <version>2.2.0</version>
       </dependency>
       <dependency>
-      	<groupId>org.komusubi</groupId>
-      	<artifactId>common</artifactId>
-      	<version>0.0.2-SNAPSHOT</version>
+        <groupId>org.komusubi</groupId>
+        <artifactId>common</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
-      	<groupId>org.apache.commons</groupId>
-      	<artifactId>commons-lang3</artifactId>
-      	<version>3.1</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.1</version>
       </dependency>
       <dependency>
-      	<groupId>javax.json</groupId>
-      	<artifactId>javax.json-api</artifactId>
-      	<version>1.0</version>
+        <groupId>javax.json</groupId>
+        <artifactId>javax.json-api</artifactId>
+        <version>1.0</version>
       </dependency>
       <dependency>
-      	<groupId>org.glassfish</groupId>
-      	<artifactId>javax.json</artifactId>
-      	<version>1.0.2</version>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.json</artifactId>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -129,14 +131,14 @@
     <pluginManagement>
       <plugins>
         <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-jar-plugin</artifactId>
-	      <version>2.4</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.4</version>
         </plugin>
         <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-compiler-plugin</artifactId>
-	      <version>3.1</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -155,11 +157,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>2.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
           <version>2.2.1</version>
         </plugin>
@@ -167,6 +164,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
           <version>2.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.5.2</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -201,11 +203,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>${compileSource}</source>
+          <target>${compileSource}</target>
           <optimize>true</optimize>
           <debug>true</debug>
-          <encoding>utf-8</encoding>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
       <!-- for jenkins cobertura plugin -->
@@ -232,8 +234,8 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <locales>ja</locales>
-          <inputEncoding>UTF-8</inputEncoding>
-          <outputEncoding>UTF-8</outputEncoding>
+          <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+          <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
           <reportPlugins>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -250,15 +252,15 @@
               <artifactId>maven-javadoc-plugin</artifactId>
               <version>2.9</version>
               <configuration>
-                <inputEncoding>UTF-8</inputEncoding>
+                <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
               </configuration>
             </plugin>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
-	          <artifactId>maven-jxr-plugin</artifactId>
+              <artifactId>maven-jxr-plugin</artifactId>
               <version>2.3</version>
               <configuration>
-                <inputEncoding>UTF-8</inputEncoding>
+                <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
               </configuration>
             </plugin>
             <plugin>
@@ -279,8 +281,8 @@
               <artifactId>maven-pmd-plugin</artifactId>
               <version>3.0.1</version>
               <configuration>
-                <sourceEncoding>UTF-8</sourceEncoding>
-                <targetJdk>1.5</targetJdk>
+                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                <targetJdk>${compileSource}</targetJdk>
                 <linkXref>true</linkXref>
                 <aggregate>true</aggregate>
               </configuration>
@@ -295,7 +297,67 @@
                   <format>xml</format>
                 </formats>
               </configuration>
-           </plugin>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>findbugs-maven-plugin</artifactId>
+              <configuration>
+                <findbugsXmlReport>true</findbugsXmlReport>
+                <xmlOutput>true</xmlOutput>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>jdepend-maven-plugin</artifactId>
+              <version>2.0-beta-2</version>
+            </plugin>
+            <!-- javancss could not parse jdk1.7 code.
+                 ex) https://jira.codehaus.org/browse/JAVANCSS-49
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>javancss-maven-plugin</artifactId>
+              <version>2.0</version>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>dashboard-maven-plugin</artifactId>
+              <version>1.0-SNAPSHOT</version>
+            </plugin>
+            -->
+            <plugin>
+              <groupId>net.sf.xradar</groupId>
+              <artifactId>maven-xradar-plugin</artifactId>
+              <version>1.2.2</version>
+              <configuration>
+                <autoRadar>false</autoRadar>
+                <aggregate>true</aggregate>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>taglist-maven-plugin</artifactId>
+              <version>2.4</version>
+              <configuration>
+                <aggregate>true</aggregate>
+                <sourceFileLocale>ja</sourceFileLocale>
+                <encoding>${project.build.sourceEncoding}</encoding>
+                <tagListOptions>
+                  <tagClasses>
+                    <tagClass>
+                      <displayName>Todo Work</displayName>
+                      <tags>
+                        <tag>
+                          <matchString>TODO</matchString>
+                        </tag>
+                        <tag>
+                          <matchString>FIXME</matchString>
+                        </tag>
+                      </tags>
+                    </tagClass>
+                  </tagClasses>
+                </tagListOptions>
+              </configuration>
+            </plugin>
           </reportPlugins>
         </configuration>
       </plugin>
@@ -306,23 +368,23 @@
         <artifactId>wagon-ssh</artifactId>
         <version>2.4</version>
       </extension>
-    </extensions>    
+    </extensions>
   </build>
   <developers>
- 	<developer>
- 	  <id>komusubi</id>
- 	  <name>jun.ozeki</name>
- 	  <email>komusubi@gmail.com</email>
- 	  <url>https://github.com/komusubi</url>
- 	  <roles>
- 	    <role>developer</role>
- 	  </roles>
- 	  <timezone>Asia/Tokyo</timezone>
- 	</developer> 
+    <developer>
+      <id>komusubi</id>
+      <name>jun.ozeki</name>
+      <email>komusubi@gmail.com</email>
+      <url>https://github.com/komusubi</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>Asia/Tokyo</timezone>
+    </developer>
   </developers>
   <organization>
-  	<name>komusubi</name>
-  	<url>http://komusubi.org</url>
+    <name>komusubi</name>
+    <url>http://komusubi.org</url>
   </organization>
   <licenses>
     <license>
@@ -332,17 +394,17 @@
     </license>
   </licenses>
   <ciManagement>
-  	<url>http://builds.komusubi.org/job/feeder/</url>
-  	<system>jenkins</system>
+    <url>http://builds.komusubi.org/job/feeder/</url>
+    <system>jenkins</system>
   </ciManagement>
   <issueManagement>
-  	<url>https://github.com/komusubi/feeder/issues</url>
-  	<system>github</system>
+    <url>https://github.com/komusubi/feeder/issues</url>
+    <system>github</system>
   </issueManagement>
   <scm>
-  	<url>https://github.com/komusubi/feeder</url>
-  	<tag>develop</tag>
-  	<connection>scm:git:https://github.com/komusubi/feeder.git</connection>
+    <url>https://github.com/komusubi/feeder</url>
+    <tag>develop</tag>
+    <connection>scm:git:https://github.com/komusubi/feeder.git</connection>
   </scm>
   <repositories>
     <repository>
@@ -364,7 +426,7 @@
         <enabled>true</enabled>
       </snapshots>
       <releases>
-        <enabled>false</enabled> 
+        <enabled>false</enabled>
       </releases>
     </repository>
   </repositories>
@@ -396,14 +458,14 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-             <executions>
-               <execution>
-                 <phase>package</phase>
-                   <goals>
-                     <goal>jar</goal>
-                   </goals>
-               </execution>
-             </executions>   
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
