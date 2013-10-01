@@ -76,7 +76,8 @@ public class FeedReader implements Iterable<EntryScript> {
             Url url = new Url(entry.getLink()).shorten();
             if (!builder.toString().endsWith("\n"))
                 builder.append("\n");
-            builder.append(url.toExternalForm()); 
+            // FIXME bitly shortening url length 21, but to.co's 22, adjust length
+            builder.append(url.toExternalForm() + " "); 
 
             return builder;
         }
@@ -142,7 +143,6 @@ public class FeedReader implements Iterable<EntryScript> {
      */
     public FeedReader(RssSite site) {
         this.site = site;
-//        this.feedInfoCache = HashMapFeedInfoCache.getInstance();
         this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
     }
 
