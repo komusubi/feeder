@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.sns.twitter;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,8 +50,9 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      * 
      * @author jun.ozeki
      */
-    public static class TimestampFragment implements Fragment {
+    public static class TimestampFragment implements Fragment, Serializable {
         
+        private static final long serialVersionUID = 1L;
         private SimpleDateFormat formatter;
         private Resolver<Date> dateResolver;
         
@@ -103,7 +105,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         public TweetScript(Fragment fragment, String line) {
             if (line == null)
                 throw new Twitter4jException("line must NOT be null");
-            if (line != null && line.codePointCount(0, line.length()) > MESSAGE_LENGTH_MAX) {
+            if (line.codePointCount(0, line.length()) > MESSAGE_LENGTH_MAX) {
                 int length = line.codePointCount(0, line.length());
                 throw new Twitter4jException("over max length of line: " + length);
             }
@@ -282,12 +284,5 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         builder.append(super.toString());
         return builder.toString();
     }
-
-//    @Override
-//    public String toString() {
-//        StringBuilder builder = new StringBuilder();
-//        builder.append("TweetMessage [text()=").append(text()).append("]");
-//        return builder.toString();
-//    }
 
 }
