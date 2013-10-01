@@ -104,7 +104,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             if (line == null)
                 throw new Twitter4jException("line must NOT be null");
             if (line != null && line.codePointCount(0, line.length()) > MESSAGE_LENGTH_MAX) {
-                int length = line == null ? 0 : line.codePointCount(0, line.length());
+                int length = line.codePointCount(0, line.length());
                 throw new Twitter4jException("over max length of line: " + length);
             }
             if (fragment != null) {
