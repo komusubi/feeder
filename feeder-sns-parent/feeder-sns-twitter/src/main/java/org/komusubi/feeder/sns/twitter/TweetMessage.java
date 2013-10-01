@@ -41,7 +41,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      * 
      * @author jun.ozeki
      */
-    public static interface Fragment {
+    interface Fragment {
         String get();
     }
 
@@ -109,8 +109,8 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             }
             if (fragment != null) {
                 this.fragment = fragment.get() + "\n";
-                this.line = new StringBuilder(this.fragment)
-                                                .append(line);
+                this.line = new StringBuilder(this.fragment);
+                this.line.append(line);
             } else {
                 this.line = new StringBuilder(line);
             }
