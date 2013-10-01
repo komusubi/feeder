@@ -41,7 +41,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      * 
      * @author jun.ozeki
      */
-    interface Fragment {
+    public interface Fragment {
         String get();
     }
 
