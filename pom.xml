@@ -215,6 +215,11 @@
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.16</version>
+      </plugin>
       <!-- for jenkins cobertura plugin -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
