@@ -170,7 +170,7 @@ public class SleepStrategyTest {
             // setup
             FilePageCache cache = new FilePageCache(file);
             Message message = new TweetMessage();
-            for (int i = 0; i < 25; i++) {
+            for (int i = 0; i < 50; i++) {
                 message.append("text message message  message  message  message  message  message  message  message  message  message  message  message  message : " + i);
             }
             cache.store(message);
@@ -180,9 +180,17 @@ public class SleepStrategyTest {
             
             // verify
             List<String> items = cache.cache();
-            assertThat(items.size(), is(20));
+            assertThat(items.size(), is(40));
         }
         
+        @Test
+        public void stripSchema() {
+            // setup
+            FilePageCache cache = new FilePageCache(file);
+            String stripped = cache.strip("message test http://localhost/test abcdefg");
+            assertThat(stripped, is("message test abcdefg"));
+        }
+
         @Test
         public void existsAllMessages() {
             // setup
@@ -216,8 +224,8 @@ public class SleepStrategyTest {
             };
             // use FeederMessage, because TweetMessage adjust text length by append method.
             Message message = new FeederMessage();
-            message.append("this message exists no 1.")
-                    .append("this message exists no 2.")
+            message.append(scripts[2])
+                    .append(scripts[0])
                     .append(scripts[1]);
 
             // exercise

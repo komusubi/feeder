@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 
 /**
@@ -159,6 +160,39 @@ public class TweetMessageTest {
             
             // verify
             assertThat(target.text(), is(expected));
+        }
+        
+        // add method chunk TweetScritp.MESSAGE_LENGTH_MAX and add list.
+        @Test
+        public void chunkAdd() {
+            // setup
+            String line = "あいうえおかきくけこさしすせそたちつてと"
+                        + "なにぬねのはひふへほまみむめもやいゆえよ"
+                        + "らりるれろアイウエオカキクケコサシスセソ"
+                        + "タチツテトナニヌネノハヒフヘホマミムメモ"
+                        + "あいうえおかきくけこさしすせそたちつてと"
+                        + "なにぬねのはひふへほまみむめもやいゆえよ"
+                        + "らりるれろアイウエオカキクケコサシスセソ"
+                        + "タチツテトナニヌネノハヒフヘホマミムメモ"
+                        + "あいうえおかきくけこさしすせそたちつてと";
+
+            String expected1 = "あいうえおかきくけこさしすせそたちつてと"
+                        + "なにぬねのはひふへほまみむめもやいゆえよ"
+                        + "らりるれろアイウエオカキクケコサシスセソ"
+                        + "タチツテトナニヌネノハヒフヘホマミムメモ"
+                        + "あいうえおかきくけこさしすせそたちつてと"
+                        + "なにぬねのはひふへほまみむめもやいゆえよ"
+                        + "らりるれろアイウエオカキクケコサシスセソ";
+
+            String expected2 = "タチツテトナニヌネノハヒフヘホマミムメモ"
+                        + "あいうえおかきくけこさしすせそたちつてと";
+            // exercise
+            target.add(new ScriptLine(line));
+            
+            // verify
+            assertThat(2, is(target.size()));
+            assertThat(expected1, is(target.get(0).line()));
+            assertThat(expected2, is(target.get(1).line()));
         }
     }
 }

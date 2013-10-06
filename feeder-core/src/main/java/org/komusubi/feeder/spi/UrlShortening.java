@@ -16,23 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.aggregator.site;
+package org.komusubi.feeder.spi;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.komusubi.feeder.model.Url;
+import java.net.URL;
 
 /**
  * @author jun.ozeki
  */
-public class WeatherTopicSiteTest {
+public interface UrlShortening {
 
-    private static final String WEATHER_TOPIC_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
-
-    @Test
-    public void URL取得() throws Exception {
-        WeatherTopicSite site = new WeatherTopicSite();
-        assertEquals(new Url(WEATHER_TOPIC_URL), site.url());
-    }
+    URL shorten(URL url);
+    URL shorten(String url);
 }

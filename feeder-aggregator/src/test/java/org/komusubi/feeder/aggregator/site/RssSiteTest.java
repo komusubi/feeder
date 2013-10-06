@@ -18,7 +18,8 @@
  */
 package org.komusubi.feeder.aggregator.site;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.komusubi.feeder.model.Url;
@@ -26,13 +27,12 @@ import org.komusubi.feeder.model.Url;
 /**
  * @author jun.ozeki
  */
-public class WeatherTopicSiteTest {
-
-    private static final String WEATHER_TOPIC_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
+public class RssSiteTest {
 
     @Test
-    public void URL取得() throws Exception {
-        WeatherTopicSite site = new WeatherTopicSite();
-        assertEquals(new Url(WEATHER_TOPIC_URL), site.url());
+    public void compareToUrl() {
+        RssSite site = new RssSite("jal.info");
+        assertThat(site.url(), equalTo(new Url("http://rss.jal.co.jp/f4728/index.rdf")));
     }
+
 }

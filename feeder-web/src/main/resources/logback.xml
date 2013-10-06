@@ -38,15 +38,18 @@
       <pattern>[%d{yyyy/MM/dd HH:mm:ss:SSS}] %X{ipaddr} %X{sessionId} &lt;%-5level&gt; - %m%n</pattern>
     </encoder>
   </appender>
-  <logger name="jp.dip.komusubi">
+  <logger name="org.komusubi">
     <level value="debug" />
+  </logger>
+  <logger name="httpclient.wire.content">
+    <level value="info" />
   </logger>
   <logger name="org.apache.wicket">
     <level value="info" />
   </logger>
   <logger name="org.eclipse.jetty">
     <level value="info" />
-  </logger>    
+  </logger>
   <logger name="org.springframework">
     <level value="info" />
   </logger>

@@ -19,13 +19,12 @@
 package org.komusubi.feeder.aggregator.site;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 
-import org.komusubi.feeder.aggregator.AggregatorException;
 import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
+import org.komusubi.feeder.model.Url;
 import org.komusubi.feeder.utils.ResourceBundleMessage;
 
 /**
@@ -35,7 +34,7 @@ public class WeatherTopicSite implements Site {
 
     private static final ResourceBundleMessage BUNDLE_MESSAGE = new ResourceBundleMessage(WeatherTopicSite.class);
     private static final String URL_RESOURCE_KEY = "site.url";
-    private URL siteUrl;
+    private Url siteUrl;
     private Tags tags;
 
     /**
@@ -51,20 +50,16 @@ public class WeatherTopicSite implements Site {
      * @throws MalformedURLException
      */
     public WeatherTopicSite(String resourceKey, Tag... tags) {
-        try {
-            this.siteUrl = new URL(BUNDLE_MESSAGE.getString(resourceKey));
-            this.tags = new Tags();
-            this.tags.addAll(Arrays.asList(tags));
-        } catch (MalformedURLException e) {
-            throw new AggregatorException(e);
-        }
+        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey));
+        this.tags = new Tags();
+        this.tags.addAll(Arrays.asList(tags));
     }
 
     /**
      * create new instance.
      * @param url
      */
-    public WeatherTopicSite(URL url) {
+    public WeatherTopicSite(Url url) {
         this(url, new Tag[0]);
     }
 
@@ -73,7 +68,7 @@ public class WeatherTopicSite implements Site {
      * @param url
      * @param tags
      */
-    public WeatherTopicSite(URL url, Tag... tags) {
+    public WeatherTopicSite(Url url, Tag... tags) {
         this.siteUrl = url;
         this.tags = new Tags();
         this.tags.addAll(Arrays.asList(tags));
@@ -130,7 +125,7 @@ public class WeatherTopicSite implements Site {
      * @see org.komusubi.feeder.model.Site#url()
      */
     @Override
-    public URL url() {
+    public Url url() {
         return siteUrl;
     }
 

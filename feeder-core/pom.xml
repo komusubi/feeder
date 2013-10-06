@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.komusubi.feeder</groupId>
     <artifactId>feeder</artifactId>
-    <version>0.0.2</version>
+    <version>0.1</version>
   </parent>
   <artifactId>feeder-core</artifactId>
   <packaging>jar</packaging>
@@ -30,16 +30,56 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
-    	<groupId>org.komusubi</groupId>
-    	<artifactId>common</artifactId>
+      <groupId>org.komusubi</groupId>
+      <artifactId>common</artifactId>
     </dependency>
     <dependency>
-    	<groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-classic</artifactId>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
     </dependency>
     <dependency>
-    	<groupId>org.apache.commons</groupId>
-    	<artifactId>commons-lang3</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>standalone</id>
+      <build>
+        <resources>
+          <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <excludes>
+              <exclude>**/accessKey.properties</exclude>
+            </excludes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>release</id>
+      <build>
+        <resources>
+          <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <excludes>
+              <exclude>**/accessKey.properties</exclude>
+            </excludes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
 </project>

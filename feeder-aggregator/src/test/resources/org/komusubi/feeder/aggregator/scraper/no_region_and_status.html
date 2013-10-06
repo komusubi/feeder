@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta name="description" content="">
+<title>JAL - 運航の見通し(国内線)</title>
+<link rel="stylesheet" href="/common_rn/css/import_2012.css" type="text/css" media="screen,print">
+<link rel="stylesheet" href="/common_rn/css/modules/fare_940.css" type="text/css" media="screen,print">
+<!-- [共通スクリプト] -->
+<script type="text/javascript" src="/common_rn/js/common.js"></script>
+<script type="text/javascript" src="/common_rn/js/rollover.js"></script>
+<script type="text/javascript" src="/common_rn/js/login.js"></script>
+<script type="text/javascript" src="/common_rn/js/insiteSearchInput.js"></script>
+<!-- /[共通スクリプト] -->
+<style type="text/css">
+<!--
+div.weather_info_txtBox{padding:10px;border: 1px solid #666666;background-color: #FFFFFF;}
+-->
+</style>
+</head>
+<body>
+<noscript>当サイトをご利用になるためには、Javascript対応のブラウザが必要です。また、設定でJavascriptを有効にする必要があります。</noscript>
+<!-- [wrapper] -->
+<div id="wrapper">
+<!-- [シンプルヘッダ] -->
+<!-- [rnSimpleHead] -->
+<div id="rnSimpleHead">
+<!-- [rnSimpleHeadL01] -->
+<div id="rnSimpleHeadL01">
+<h1 id="rnSimpleLogo01"><img src="/common_rn/img/logo_s_001.gif" width="171" height="38" alt="JAL | JAPAN AIRLINES"></h1></div>
+<!-- /[rnSimpleHeadL01] -->
+</div>
+<!-- /[rnSimpleHead] -->
+
+<!-- /[シンプルヘッダ] -->
+<!-- [contents] -->
+<div class="contents clearfix">
+
+<!-- [mainTitleA01] -->
+<div class="mainTitleA01">
+<h2><img src="/dom/img/head_weather_info_dom.gif" width="204" height="24" alt="運航の見通し(国内線)"></h2>
+</div>
+<!-- /[mainTitleA01] -->
+
+
+<!-- [コンテンツ]-->
+
+<p class="mgt15">平素はJALグループ便をご利用いただき、まことにありがとうございます。</p>
+
+<p class="mgt10"><strong>この情報は、日本時間2013年8月30日（金）6時00分現在のものです。</strong></p>
+
+<ul class="notesListA01 mgt10">
+<li>※<a href="/cms/other/ja/weather_info_int.html" class="uline">運航の見通し（国際線）はこちらをご覧ください。</a></li>
+</ul>
+
+
+<!-- [ 発着案内 ] -->
+<!--<div class="weather_info_txtBox mgt10">
+<span class="mgt5 bold">システムメインテナンスのお知らせ</span>
+<div class="mgt5">システムメインテナンスのため以下の時間帯は発着情報が更新されません。ご不便をおかけいたしますことをお詫び申し上げます。<br>
+対象期間：XX月XX日（XX）XX：XX～XX：XX（日本時間）</div></div>-->
+
+<!-- [運賃モジュール] -->
+<!-- [fare940] -->
+<div class="fare940 mgt15">
+<h3><img src="/dom/img/head_fare940_weather_info.gif" width="940" height="33" alt="国内線発着案内"></h3>
+<div class="fareBox">
+<form action="https://fltinfo.5971.jal.co.jp/rsv/ArrivalAndDepartureSectionInfo.do" method="get" name="frm">
+<table class="fareTbl" summary="国内線発着案内">
+<tr>
+<th>出発地</th>
+<td class="board"><select name="DPORT" class="sel" id="D" style="width:180px;">
+<option value="HND" selected>東京(羽田)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="CTS">札幌(新千歳)</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="FUK">福岡</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="123">---</option>
+<option value="CTS">札幌(新千歳)</option>
+<option value="OKD">札幌(丘珠)</option>
+<option value="RIS">利尻</option>
+<option value="MMB">女満別</option>
+<option value="AKJ">旭川</option>
+<option value="KUH">釧路</option>
+<option value="OBO">帯広</option>
+<option value="HKD">函館</option>
+<option value="OIR">奥尻</option>
+<option value="AOJ">青森</option>
+<option value="MSJ">三沢</option>
+<option value="AXT">秋田</option>
+<option value="HNA">花巻</option>
+<option value="SDJ">仙台</option>
+<option value="GAJ">山形</option>
+<option value="HND">東京(羽田)</option>
+<option value="NRT">東京(成田)</option>
+<option value="KIJ">新潟</option>
+<option value="MMJ">松本</option>
+<option value="KMQ">小松</option>
+<option value="FSZ">静岡</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="NKM">名古屋(小牧)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="SHM">南紀白浜</option>
+<option value="TJH">但馬</option>
+<option value="OKI">隠岐</option>
+<option value="OKJ">岡山</option>
+<option value="IZO">出雲</option>
+<option value="HIJ">広島</option>
+<option value="UBJ">山口宇部</option>
+<option value="TKS">徳島</option>
+<option value="TAK">高松</option>
+<option value="KCZ">高知</option>
+<option value="MYJ">松山</option>
+<option value="FUK">福岡</option>
+<option value="KKJ">北九州</option>
+<option value="OIT">大分</option>
+<option value="NGS">長崎</option>
+<option value="KMJ">熊本</option>
+<option value="KMI">宮崎</option>
+<option value="KOJ">鹿児島</option>
+<option value="TNE">種子島</option>
+<option value="KUM">屋久島</option>
+<option value="KKX">喜界島</option>
+<option value="ASJ">奄美大島</option>
+<option value="TKN">徳之島</option>
+<option value="OKE">沖永良部</option>
+<option value="RNJ">与論</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="KTD">北大東</option>
+<option value="MMD">南大東</option>
+<option value="UEO">久米島</option>
+<option value="MMY">宮古</option>
+<option value="TRA">多良間</option>
+<option value="ISG">石垣</option>
+<option value="OGN">与那国</option>
+
+</select></td>
+<td class="arrow"><img src="/common_rn/img/parts_module_arrow.gif" width="40" height="22" alt="→"></td>
+<th>到着地</th>
+<td><select name="APORT" class="sel" id="A" style="width:180px;">
+<option value="HND" selected>東京(羽田)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="CTS">札幌(新千歳)</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="FUK">福岡</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="123">---</option>
+<option value="CTS">札幌(新千歳)</option>
+<option value="OKD">札幌(丘珠)</option>
+<option value="RIS">利尻</option>
+<option value="MMB">女満別</option>
+<option value="AKJ">旭川</option>
+<option value="KUH">釧路</option>
+<option value="OBO">帯広</option>
+<option value="HKD">函館</option>
+<option value="OIR">奥尻</option>
+<option value="AOJ">青森</option>
+<option value="MSJ">三沢</option>
+<option value="AXT">秋田</option>
+<option value="HNA">花巻</option>
+<option value="SDJ">仙台</option>
+<option value="GAJ">山形</option>
+<option value="HND">東京(羽田)</option>
+<option value="NRT">東京(成田)</option>
+<option value="KIJ">新潟</option>
+<option value="MMJ">松本</option>
+<option value="KMQ">小松</option>
+<option value="FSZ">静岡</option>
+<option value="NGO">名古屋(中部)</option>
+<option value="NKM">名古屋(小牧)</option>
+<option value="ITM">大阪(伊丹)</option>
+<option value="KIX">大阪(関西)</option>
+<option value="SHM">南紀白浜</option>
+<option value="TJH">但馬</option>
+<option value="OKI">隠岐</option>
+<option value="OKJ">岡山</option>
+<option value="IZO">出雲</option>
+<option value="HIJ">広島</option>
+<option value="UBJ">山口宇部</option>
+<option value="TKS">徳島</option>
+<option value="TAK">高松</option>
+<option value="KCZ">高知</option>
+<option value="MYJ">松山</option>
+<option value="FUK">福岡</option>
+<option value="KKJ">北九州</option>
+<option value="OIT">大分</option>
+<option value="NGS">長崎</option>
+<option value="KMJ">熊本</option>
+<option value="KMI">宮崎</option>
+<option value="KOJ">鹿児島</option>
+<option value="TNE">種子島</option>
+<option value="KUM">屋久島</option>
+<option value="KKX">喜界島</option>
+<option value="ASJ">奄美大島</option>
+<option value="TKN">徳之島</option>
+<option value="OKE">沖永良部</option>
+<option value="RNJ">与論</option>
+<option value="OKA">沖縄(那覇)</option>
+<option value="KTD">北大東</option>
+<option value="MMD">南大東</option>
+<option value="UEO">久米島</option>
+<option value="MMY">宮古</option>
+<option value="TRA">多良間</option>
+<option value="ISG">石垣</option>
+<option value="OGN">与那国</option>
+
+</select></td>
+<th>出発日</th>
+<td class="nowrap"><select name="DATEFLG" class="sel" id="DATEFLG" style="width:100px;">
+<option value="1">前日</option>
+<option value="" selected>当日</option>
+<option value="2">翌日</option>
+</select></td>
+<td class="fareBtn"><input type="image" class="image linkButtonB" src="/common_rn/img/btn_fare_weather_info.gif" value="" alt="発着情報を見る"></td>
+</tr>
+</table>
+</form>
+</div>
+</div>
+<!-- /[fare940] -->
+<!-- /[運賃モジュール] -->
+<!-- /[ 発着案内 ] -->
+
+
+<div class="weather_info_txtBox mgt20">
+<p>
+<b>≪台風15号の影響による運航便情報について≫</b><br>
+<br>
+<a href="http://weather.jal.co.jp/typh/index.html" target="otherwindow">台風15号</a></span></td>は、日本時間30日3時現在、東シナ海をゆっくりと北東に進んでいます。<br>
+本日30日のJALグループ国内線運航便につきましては、現在のところ平常どおりの運航を予定しております。<br>
+<br>
+なお、今後の台風の進路によっては、状況が変わる可能性もございます。<br>
+ご利用のお客さまは、最新の運航状況を当ページや<b><a href="https://fltinfo.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do">「国内線　発着案内」</a></b>にてご確認ください。</b><br>
+今後も状況が変わり次第、当ページにて最新情報をご案内させていただきます。<br>
+<br>
+<br>
+また、本日30日の遅延、欠航、条件付運航(出発空港への引き返し、他空港への着陸)の可能性がある空港は、以下のとおりです。<br>
+<br>
+　出雲・隠岐（視界不良）<br>
+<br>
+その他は、平常どおりの運航を予定しています。<br>
+<br>
+※上記に空港名の記載がありましても、条件付運航のご案内は、運航する機種によって異なる場合があります。<br>
+<br>
+<br>
+※このページは､機材故障および使用機材の到着遅れによる遅延･欠航などや、他社運航のコードシェア便の情報は含まれておりません｡<br>
+<b>ご利用便の発着状況については、<b><a href="https://fltinfo.5971.jal.co.jp/rsv/ArrivalAndDepartureInput.do">「国内線　発着案内」</a></b>をご確認ください。</b><br>
+<br>
+<br>
+
+</p>
+</div>
+
+<!-- [headlineA01] -->
+<h3 class="headlineA01 clearfix mgt30"><span>発着状況の自動音声によるご案内</span></h3>
+<!-- /[headlineA01] -->
+<p><strong><img src="/common_rn/img/parts_square_001.gif" alt="" width="14" height="11">SKYナビ</strong><br>
+<img src="/information/img/icon_freedial.gif" width="21" height="12" alt="フリーダイヤル"><span class="txTel">0120-747-222</span> （24時間）<br>
+※携帯電話からは 03-5796-9345＜有料＞<br>
+※フリーダイヤルをご利用の場合には、発信者番号を通知いただくか、番号の頭に「186」をつけておかけください。</p>
+
+
+<div class="linkBtnA01 mgt15 pdt20" style="border-top:#CCC solid 1px;">
+<ul class="line clearfix">
+<li><a href="http://www.5971.jal.co.jp/rsv/IrregularFlightListInput.do">欠航・遅延便検索</a></li>
+<li class="iconOther"><a href="/dom/service/irregular_f_certificate.html" target="popup" onClick="JLJS.openWindow(this.href, this.target, 800, 500)">欠航・遅延証明書の発行について</a></li>
+<li><a href="/dom/rates/rule/irregular.html">悪天候などにより、ご予約便が遅延・欠航した場合の変更・払い戻しについて</a></li>
+<li><a href="/dom/mail/info.html">悪天候などによる運航への影響をメールにてお知らせします</a></li>
+<li><a href="http://weather.jal.co.jp/">各地の天候状況について</a></li>
+</ul>
+</div>
+
+
+<!-- [notesField] -->
+<div style="clear:both"></div>
+<div class="clear notesField mgt20">
+<h2>ご注意・ご案内</h2>
+<ul class="textListA01">
+<li>日本トランスオーシャン航空・琉球エアーコミューター便の台風時などの情報については、<a href="/jta/st/st.html" class="inText uline">特別な運航情報</a>をご確認ください。</li>
+</ul>
+
+</div>
+<!-- /contents] --></div>
+
+<!-- [シンプルフッタ] -->
+<!-- [rnSimpleFoot] -->
+<div id="rnSimpleFoot">
+<div id="rnSimpleFootBnr01">&nbsp;
+<!-- [rnSimpleFootBnr01] --></div>
+<p id="rnSimpleFootCopy"><img src="/common_rn/img/txt_footer_copy_001.gif" width="219" height="11" alt="Copyright &copy; Japan Airlines. All rights reserved."></p>
+</div>
+<!-- /[rnSimpleFoot] -->
+<script type="text/javascript" src="/common_rn/js/rtam.js"></script>
+<!-- /[シンプルフッタ] -->
+<!-- /[wrapper] --></div>
+</body>
+</html>

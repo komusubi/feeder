@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.komusubi.feeder</groupId>
     <artifactId>feeder</artifactId>
-    <version>0.0.2</version>
+    <version>0.1</version>
   </parent>
   <artifactId>feeder-aggregator</artifactId>
   <name>feeder-aggregator</name>
@@ -32,6 +32,16 @@
       <groupId>rome</groupId>
       <artifactId>rome-fetcher</artifactId>
       <version>1.0</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging-api</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -44,6 +54,10 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
   </dependencies>
 </project>

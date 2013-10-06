@@ -16,55 +16,55 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.aggregator.scraper;
+package org.komusubi.feeder.aggregator.site;
 
-import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import java.util.Arrays;
+
 import org.komusubi.feeder.model.Site;
+import org.komusubi.feeder.model.Tag;
+import org.komusubi.feeder.model.Tags;
+import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.utils.ResourceBundleMessage;
 
 /**
  * @author jun.ozeki
  */
-public class AbstractWeatherScraper {
+public class RssSite implements Site {
 
-    private WeatherTopicSite site;
-    private HtmlScraper scraper;
-    protected static final String ATTR_VALUE_WEATHER_BOX = "weather_info_txtBox mgt20";
-    protected static final String ATTR_NAME_CLASS = "class";
-
-    /**
-     * create new instance.
-     */
-    public AbstractWeatherScraper() {
-        this(new WeatherTopicSite(), new HtmlScraper());
-    }
-
-    /**
-     * create new instance.
-     * @param site
-     * @param scraper
-     */
-    public AbstractWeatherScraper(WeatherTopicSite site, HtmlScraper scraper) {
-        this.site = site;
-        this.scraper = scraper;
-    }
-
+    private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(RssSite.class);
+    private Url url;
+    private Tags tags;
+                    
     /**
      * 
-     * @return
      */
-    public Site site() {
-        return site;
+    public RssSite(String resourceKey) {
+        this(new Url(RESOURCE.getString(resourceKey)));
     }
-    
+
     /**
-     * 
-     * @return
+     * @param url
      */
-    protected HtmlScraper scraper() {
-        return scraper;
+    public RssSite(Url url, Tag... tags) {
+        this.url = url;
+        this.tags = new Tags();
+        this.tags.addAll(Arrays.asList(tags));
     }
-    
-    protected String urlShorten(String url) {
-        return scraper.urlShorten(url);
+
+    /**
+     * @see org.komusubi.feeder.model.Site#url()
+     */
+    @Override
+    public Url url() {
+        return url;
     }
+
+    /**
+     * @see org.komusubi.feeder.model.Site#tags()
+     */
+    @Override
+    public Tags tags() {
+        return tags;
+    }
+
 }
