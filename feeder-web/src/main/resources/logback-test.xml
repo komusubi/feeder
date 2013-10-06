@@ -45,7 +45,7 @@
   </logger>
   <logger name="org.eclipse.jetty">
     <level value="info" />
-  </logger>    
+  </logger>
   <logger name="org.springframework">
     <level value="info" />
   </logger>
