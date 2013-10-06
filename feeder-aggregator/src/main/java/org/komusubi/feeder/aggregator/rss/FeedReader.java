@@ -177,7 +177,7 @@ public class FeedReader implements Iterable<EntryScript> {
             for (Iterator<SyndEntry> it = (Iterator<SyndEntry>) feed.getEntries().iterator(); it.hasNext(); ) {
                 SyndEntry e = it.next();
                 if (lastModified < e.getPublishedDate().getTime())
-                    scripts.add(new EntryScript(it.next()));
+                    scripts.add(new EntryScript(e));
                 else
                     logger.info("read already entry: {}, {}", e.getPublishedDate(), e.getTitle());
             }
