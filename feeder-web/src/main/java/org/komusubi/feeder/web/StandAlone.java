@@ -32,6 +32,7 @@ import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.HashTag;
 import org.komusubi.feeder.sns.twitter.TweetMessage;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
@@ -55,14 +56,15 @@ public class StandAlone {
         } 
         StandAlone standAlone = new StandAlone();
 
-        Topics<Topic> topics;
-        File storeFile = new File(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
+        Topics<? extends Topic> topics;
         PageCache pageCache;
         if ("scraper".equalsIgnoreCase(args[0])) {
             topics = standAlone.aggregateScraper();
+            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/scraper-store.txt");
             pageCache = new PartialMatchPageCache(storeFile);
         } else if("feeder".equalsIgnoreCase(args[0])) {
             topics = standAlone.aggregateFeeder();
+            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
@@ -72,22 +74,22 @@ public class StandAlone {
         speaker.talk(topics);
     }
 
-    private Topics<Topic> aggregateScraper() {
+    private Topics<? extends Topic> aggregateScraper() {
 
         WeatherTopic weather = new WeatherTopic(new WeatherContentScraper(),
                                                  new WeatherTitleScraper(),
                                                  new WeatherAnnouncementScraper(),
-                                                 new TweetMessage());
+                                                 new TweetMessage(new TimestampFragment("HHmm")));
         HashTag jal = new HashTag("jal");
         weather.addTag(jal);
 
-        Topics<Topic> topics = new Topics<>();
+        Topics<WeatherTopic> topics = new Topics<>();
         topics.add(weather);
         
         return topics;
     }
     
-    private Topics<Topic> aggregateFeeder() {
+    private Topics<? extends Topic> aggregateFeeder() {
         
         HashTag jal = new HashTag("jal");
         FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info"), new TweetMessage());
@@ -96,7 +98,7 @@ public class StandAlone {
         FeedTopic jalDomestic = new FeedTopic(new RssSite("jal.domestic"), new TweetMessage());
         jalDomestic.addTag(jal);
 
-        Topics<Topic> topics = new Topics<>();
+        Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
         topics.add(jalDomestic);
 

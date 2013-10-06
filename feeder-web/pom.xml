@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.komusubi.feeder</groupId>
     <artifactId>feeder</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
   </parent>
   <artifactId>feeder-web</artifactId>
   <packaging>${packaging.type}</packaging>
@@ -104,7 +104,6 @@
         <packaging.type>jar</packaging.type>
       </properties>
       <build>
-        <finalName>feeder-standalone</finalName>
         <resources>
           <resource>
             <directory>${basedir}/src/main/resources</directory>
@@ -116,16 +115,25 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-              <archive>
-                <manifest>
-                  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                  <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                  <mainClass>org.komusubi.feeder.web.StandAlone</mainClass>
-                </manifest>
-              </archive>
-            </configuration>
+            <artifactId>maven-shade-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <finalName>feeder-standalone</finalName>
+                  <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <manifestEntries>
+                        <Main-Class>org.komusubi.feeder.web.StandAlone</Main-Class>
+                      </manifestEntries>
+                    </transformer>
+                  </transformers>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

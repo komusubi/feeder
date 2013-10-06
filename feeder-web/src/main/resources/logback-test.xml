@@ -34,8 +34,11 @@
     </encoder>
   </appender>
   -->
-  <logger name="jp.dip.komusubi">
+  <logger name="org.komusubi">
     <level value="debug" />
+  </logger>
+  <logger name="httpclient.wire.content">
+    <level value="info" />
   </logger>
   <logger name="org.apache.wicket">
     <level value="info" />

@@ -9,7 +9,7 @@ JAR_NAME=feeder-standalone.jar
 
 function usage()
 {
-  echo "usage: ${SCRIPT_NAME}: [-dh] "
+  echo "usage: ${SCRIPT_NAME}: [-dh] [-t scraper|feeder] "
 }
 
 function execute()
@@ -17,7 +17,7 @@ function execute()
   CONSOLE="false"
   ARGERR=0
 
-  while getopts dh OPT; do
+  while getopts dht: OPT; do
     case $OPT in
       d ) 
         CONSOLE="true"
@@ -25,6 +25,9 @@ function execute()
       h ) 
         usage
         exit 0
+        ;;
+      t ) 
+        AGGREGATE_TYPE=$OPTARG
         ;;
       * )
         ARGERR=1
@@ -37,9 +40,13 @@ function execute()
     exit 1
   fi
 
-  #echo "java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME}"
+  if [ -z "$AGGREGATE_TYPE" ]; then
+    usage
+    exit 1
+  fi
+
   cd ${FEEDER_CONF}
-  java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME}
+  java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME} $AGGREGATE_TYPE
 }
 
 function main()

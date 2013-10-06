@@ -103,10 +103,16 @@ public class Url {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Url) {
-            URL another = ((Url) obj).toURL();
-            return url.equals(another);
-        } else {
+        try {
+            if (obj instanceof Url) {
+                // fix findbug report, URL#equals/hashCode blocking domain name resolution.(too slow)
+                // @see http://findbugs.sourceforge.net/bugDescriptions.html#DMI_BLOCKING_METHODS_ON_URL
+                URI uri = ((Url) obj).toURI();
+                return this.url.toURI().equals(uri);
+            } else {
+                return false;
+            }
+        } catch (URISyntaxException e) {
             return false;
         }
     }
@@ -117,7 +123,12 @@ public class Url {
         int result = 1;
         result = prime * result + (shortened ? 1231 : 1237);
         result = prime * result + ((shortening == null) ? 0 : shortening.hashCode());
-        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        try {
+            // fix findbug report, URL#equals/hashCode blocking domain name resolution.(too slow)
+            // @see http://findbugs.sourceforge.net/bugDescriptions.html#DMI_BLOCKING_METHODS_ON_URL
+            result = prime * result + ((url == null) ? 0 : url.toURI().hashCode());
+        } catch (URISyntaxException ignore) {
+        }
         return result;
     }
 
