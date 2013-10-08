@@ -86,15 +86,18 @@ public class Twitter4j implements SocialNetwork {
      */
     public void tweet(Message message) {
         try {
+            Status result = null;
             for (Script script: message) {
                 if (outputConsole) {
-                    System.out.printf("tweet: %s%n", script.trimedLine());
+                    System.out.printf("tweet(length:%d): %s%n", script.codePointCount(), script.trimedLine());
                 } else {
                     StatusUpdate status = new StatusUpdate(script.trimedLine());
-                    logger.info("tweet : {}", status.getStatus());
-                    Status result = twitter.updateStatus(status);
+                    if (result != null) {
+                        status.inReplyToStatusId(result.getId());
+                    }
+                    logger.info("tweet({}) : {}", script.codePointCount(), status.getStatus());
+                    result = twitter.updateStatus(status);
                 }
-                logger.info("script codepoint length: {}", script.codePointCount());
             }
         } catch (TwitterException e) {
             throw new Twitter4jException(e);
