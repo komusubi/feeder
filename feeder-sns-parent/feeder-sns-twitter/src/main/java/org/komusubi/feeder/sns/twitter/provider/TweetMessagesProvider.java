@@ -20,20 +20,20 @@ package org.komusubi.feeder.sns.twitter.provider;
 
 import javax.inject.Provider;
 
-import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
+import org.komusubi.feeder.sns.twitter.TweetMessage;
 
 /**
  * @author jun.ozeki
  */
-public class TweetMessageProvider implements Provider<Message> {
+public class TweetMessagesProvider implements Provider<Messages<TweetMessage>> {
 
     /**
      * @see javax.inject.Provider#get()
      */
     @Override
-    public Message get() {
-//        return new TweetMessage(new TweetScriptProvider("HHmm")); 
-        return null;
+    public Messages<TweetMessage> get() {
+        return new Messages<TweetMessage>();
     }
 
 }
