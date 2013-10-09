@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns.twitter.spi;
+package org.komusubi.feeder.sns.twitter.provider;
 
 import javax.inject.Provider;
 
