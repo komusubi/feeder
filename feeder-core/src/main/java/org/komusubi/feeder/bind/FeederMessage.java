@@ -16,11 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.model;
+package org.komusubi.feeder.bind;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.model.Message.Script;
 
 /**
