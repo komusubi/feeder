@@ -27,6 +27,7 @@ import java.util.Date;
 public interface Topic extends Serializable {
 
     Date createdAt();
-    Message message();
+    @Deprecated Message message();
+    <E extends Message> Messages<E> messages();
     
 }

@@ -21,6 +21,7 @@ package org.komusubi.feeder.sns;
 import javax.inject.Inject;
 
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.slf4j.Logger;
@@ -49,9 +50,8 @@ public class Speaker {
      * @param topics
      */
     public void talk(Topics<? extends Topic> topics) {
-        for (Topic topic: topics) {
-            talk(topic.message());
-        }
+        for (Topic topic: topics) 
+            talk(topic.messages());
     }
 
     /**
@@ -59,7 +59,16 @@ public class Speaker {
      * @param topic
      */
     public void talk(Topic topic) {
-        talk(topic.message());
+        talk(topic.messages());
+    }
+
+    /**
+     * 
+     * @param messages
+     */
+    public void talk(Messages<? extends Message> messages) {
+        for (Message m: messages)
+            talk(m);
     }
 
     /**

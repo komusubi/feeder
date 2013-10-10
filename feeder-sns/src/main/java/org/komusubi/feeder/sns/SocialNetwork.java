@@ -19,6 +19,7 @@
 package org.komusubi.feeder.sns;
 
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 
@@ -42,6 +43,12 @@ public interface SocialNetwork {
      * @param message
      */
     void post(Message message);
+
+    /**
+     * 
+     * @param messages
+     */
+    void post(Messages<? extends Message> messages);
 
     /**
      * @return

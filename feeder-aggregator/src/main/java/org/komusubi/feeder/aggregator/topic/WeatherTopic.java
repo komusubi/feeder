@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.komusubi.feeder.aggregator.scraper.AbstractWeatherScraper;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
@@ -33,9 +34,9 @@ import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.model.FeederMessage;
+import org.komusubi.feeder.bind.FeederMessagesProvider;
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Topic;
@@ -43,7 +44,7 @@ import org.komusubi.feeder.model.Topic;
 /**
  * @author jun.ozeki
  */
-public class WeatherTopic implements Topic, Iterable<Script> {
+public class WeatherTopic implements Topic {
 
     private static final long serialVersionUID = 1L;
     private Date created;
@@ -52,43 +53,44 @@ public class WeatherTopic implements Topic, Iterable<Script> {
     private WeatherTitleScraper titleScraper;
     private WeatherContentScraper contentScraper;
     private Tags tags;
+    private Provider<Messages<Message>> provider;
 
     /**
      * create new instance.
      */
     public WeatherTopic() {
-        this(new WeatherTopicSite(), new HtmlScraper(), new FeederMessage());
+        this(new WeatherTopicSite(), new HtmlScraper(), new FeederMessagesProvider());
     }
     
     /**
      * create new instance.
      * @param site
-     * @param message
+     * @param provider
      */
-    public WeatherTopic(WeatherTopicSite site, Message message) {
-        this(site, new HtmlScraper(), message);
+    public WeatherTopic(WeatherTopicSite site, Provider<Messages<Message>> provider) {
+        this(site, new HtmlScraper(), provider);
     }
 
     /**
      * create new instance.
      * @param scraper
-     * @param message
+     * @param provider
      */
-    public WeatherTopic(HtmlScraper scraper, Message message) {
-        this(new WeatherTopicSite(), scraper, message);
+    public WeatherTopic(HtmlScraper scraper, Provider<Messages<Message>> provider) {
+        this(new WeatherTopicSite(), scraper, provider);
     }
 
     /**
      * create new instance.
      * @param site
      * @param scraper
-     * @param message
+     * @param provider
      */
-    public WeatherTopic(WeatherTopicSite site, HtmlScraper scraper, Message message) {
+    public WeatherTopic(WeatherTopicSite site, HtmlScraper scraper, Provider<Messages<Message>> provider) {
         this(new WeatherContentScraper(site, scraper), 
              new WeatherTitleScraper(site, scraper), 
              new WeatherAnnouncementScraper(site, scraper),
-             message);
+             provider);
     }
 
     /**
@@ -107,6 +109,24 @@ public class WeatherTopic implements Topic, Iterable<Script> {
         this.announceScraper = announceScraper;
         this.created = new Date();
         this.message = message;
+        this.tags = new Tags();
+    }
+
+    /**
+     * create new instance.
+     * @param topicScraper
+     * @param titleScraper
+     * @param announceScraper
+     * @param provider
+     */
+    public WeatherTopic(WeatherContentScraper topicScraper, 
+                        WeatherTitleScraper titleScraper,
+                        WeatherAnnouncementScraper announceScraper, Provider<Messages<Message>> provider) {
+        this.contentScraper = topicScraper;
+        this.titleScraper = titleScraper;
+        this.announceScraper = announceScraper;
+        this.created = new Date();
+        this.provider = provider;
         this.tags = new Tags();
     }
 
@@ -153,6 +173,7 @@ public class WeatherTopic implements Topic, Iterable<Script> {
      * @see org.komusubi.feeder.model.Topic#message()
      */
     @Override
+    @Deprecated
     public Message message() {
 
         for (Announcement announcement: announceScraper.scrape()) {
@@ -199,13 +220,23 @@ public class WeatherTopic implements Topic, Iterable<Script> {
     }
   
     /**
+     * @see org.komusubi.feeder.model.Topic#messages()
+     */
+    @Override
+    public Messages<Message> messages() {
+        Messages<Message> messages = provider.get();
+        messages.add(message());
+        return messages;
+    }
+
+    /*
      * 
      * @see java.lang.Iterable#iterator()
      */
-    @Override
-    public Iterator<Script> iterator() {
-        return message.iterator();
-    }
+//    @Override
+//    public Iterator<Script> iterator() {
+//        return message.iterator();
+//    }
 
     /**
      * @see org.komusubi.feeder.model.Topic#createdAt()

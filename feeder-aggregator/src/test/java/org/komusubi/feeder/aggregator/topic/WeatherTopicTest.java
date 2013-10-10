@@ -38,7 +38,7 @@ import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Status;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.model.FeederMessage;
+import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Region;
 import org.komusubi.feeder.model.Tag;

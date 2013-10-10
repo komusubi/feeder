@@ -20,7 +20,7 @@ package org.komusubi.feeder.spi;
 
 import javax.inject.Provider;
 
-import org.komusubi.feeder.model.FeederMessage;
+import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
 
 /**

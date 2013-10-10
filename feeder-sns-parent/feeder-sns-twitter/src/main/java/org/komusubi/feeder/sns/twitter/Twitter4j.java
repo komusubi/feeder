@@ -20,6 +20,7 @@ package org.komusubi.feeder.sns.twitter;
 
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.History;
@@ -67,13 +68,25 @@ public class Twitter4j implements SocialNetwork {
     }
 
     /**
+     * @see org.komusubi.feeder.sns.SocialNetwork#post(org.komusubi.feeder.model.Messages)
+     */
+    @Override
+    public void post(Messages<? extends Message> messages) {
+        for (Message m: messages)
+            tweet(m);
+    }
+
+    /**
      * @see org.komusubi.feeder.sns.SocialNetwork#post(Topic topic)
      */
     @Override
     public void post(Topic topic) {
-        tweet(topic.message());
+        post(topic.messages());
     }
 
+    /**
+     * @see org.komusubi.feeder.sns.SocialNetwork#post(org.komusubi.feeder.model.Topics)
+     */
     @Override
     public void post(Topics<? extends Topic> topics) {
         for (Topic t: topics) 
@@ -95,7 +108,7 @@ public class Twitter4j implements SocialNetwork {
                     if (result != null) {
                         status.inReplyToStatusId(result.getId());
                     }
-                    logger.info("tweet({}) : {}", script.codePointCount(), status.getStatus());
+                    logger.info("tweet(length:{}): {}", script.codePointCount(), status.getStatus());
                     result = twitter.updateStatus(status);
                 }
             }
