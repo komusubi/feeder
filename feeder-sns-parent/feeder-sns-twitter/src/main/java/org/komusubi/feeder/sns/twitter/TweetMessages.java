@@ -16,43 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns;
+package org.komusubi.feeder.sns.twitter;
+
+import java.util.ArrayList;
 
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Messages;
-import org.komusubi.feeder.model.Topic;
-import org.komusubi.feeder.model.Topics;
+import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
 
 /**
  * @author jun.ozeki
  */
-public interface SocialNetwork {
-    
-    /**
-     * @param topic
-     */
-    void post(Topic topic);
-    
-    /**
-     * 
-     * @param topics
-     */
-    void post(Topics<? extends Topic> topics);
-    
-    /**
-     * @param message
-     */
-    void post(Message message);
+public class TweetMessages extends ArrayList<Message> implements Messages<Message> {
+
+    private static final long serialVersionUID = 1L;
+    private Fragment fragment;
+
+    public TweetMessages() {
+        
+    }
+
+    public TweetMessages(Fragment fragment) {
+        this.fragment = fragment;
+    }
 
     /**
-     * 
-     * @param messages
+     * @see org.komusubi.feeder.model.Messages#newInstance()
      */
-    void post(Messages<? extends Message> messages);
-
-    /**
-     * @return
-     */
-    History history();
+    @SuppressWarnings("unchecked")
+    @Override
+    public TweetMessage newInstance() {
+        TweetMessage m;
+        if (fragment != null)
+            m = new TweetMessage(fragment);
+        else
+            m = new TweetMessage();
+        return m;
+    }
 
 }

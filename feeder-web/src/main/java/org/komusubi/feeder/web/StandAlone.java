@@ -31,9 +31,9 @@ import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.HashTag;
-import org.komusubi.feeder.sns.twitter.TweetMessage;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
+import org.komusubi.feeder.sns.twitter.provider.TweetMessagesProvider;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
@@ -79,7 +79,7 @@ public class StandAlone {
         WeatherTopic weather = new WeatherTopic(new WeatherContentScraper(),
                                                  new WeatherTitleScraper(),
                                                  new WeatherAnnouncementScraper(),
-                                                 new TweetMessage(new TimestampFragment("HHmm")));
+                                                 new TweetMessagesProvider(new TimestampFragment("HHmm")));
         HashTag jal = new HashTag("jal");
         weather.addTag(jal);
 
@@ -92,10 +92,10 @@ public class StandAlone {
     private Topics<? extends Topic> aggregateFeeder() {
         
         HashTag jal = new HashTag("jal");
-        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info"), new TweetMessage());
+        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info"), new TweetMessagesProvider());
         jalInfo.addTag(jal);
         
-        FeedTopic jalDomestic = new FeedTopic(new RssSite("jal.domestic"), new TweetMessage());
+        FeedTopic jalDomestic = new FeedTopic(new RssSite("jal.domestic"), new TweetMessagesProvider());
         jalDomestic.addTag(jal);
 
         Topics<FeedTopic> topics = new Topics<>();

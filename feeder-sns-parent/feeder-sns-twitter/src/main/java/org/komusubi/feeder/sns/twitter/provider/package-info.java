@@ -16,43 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns;
-
-import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.Messages;
-import org.komusubi.feeder.model.Topic;
-import org.komusubi.feeder.model.Topics;
-
 /**
  * @author jun.ozeki
  */
-public interface SocialNetwork {
-    
-    /**
-     * @param topic
-     */
-    void post(Topic topic);
-    
-    /**
-     * 
-     * @param topics
-     */
-    void post(Topics<? extends Topic> topics);
-    
-    /**
-     * @param message
-     */
-    void post(Message message);
-
-    /**
-     * 
-     * @param messages
-     */
-    void post(Messages<? extends Message> messages);
-
-    /**
-     * @return
-     */
-    History history();
-
-}
+package org.komusubi.feeder.sns.twitter.provider;

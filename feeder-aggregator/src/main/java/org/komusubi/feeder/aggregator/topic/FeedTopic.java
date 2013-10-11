@@ -21,10 +21,13 @@ package org.komusubi.feeder.aggregator.topic;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.inject.Provider;
+
 import org.komusubi.feeder.aggregator.rss.FeedReader;
 import org.komusubi.feeder.aggregator.site.RssSite;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
@@ -41,10 +44,12 @@ public class FeedTopic implements Topic {
     private FeedReader reader;
     private Site site;
     private Tags tags;
+    private Provider<Messages<Message>> provider;
     
     /**
      * create new instance.
      */
+    @Deprecated
     public FeedTopic(RssSite site, Message message) {
         created = new Date();
         if (message == null)
@@ -54,6 +59,19 @@ public class FeedTopic implements Topic {
         this.reader = new FeedReader(site);
         this.tags = new Tags();
     }
+
+
+    /**
+     * create new instance.
+     */
+    public FeedTopic(RssSite site, Provider<Messages<Message>> provider) {
+        this.site = site;
+        this.provider = provider;
+        created = new Date();
+        this.reader = new FeedReader(site);
+        this.tags = new Tags();
+    }
+
 
     /**
      * @see org.komusubi.feeder.model.Topic#createdAt()
@@ -67,6 +85,7 @@ public class FeedTopic implements Topic {
      * @see org.komusubi.feeder.model.Topic#message()
      */
     @Override
+    @Deprecated
     public Message message() {
 
         // aggregate Tag from RssSite
@@ -88,6 +107,16 @@ public class FeedTopic implements Topic {
             message.add(script);
         }
         return message;
+    }
+
+    /**
+     * @see org.komusubi.feeder.model.Topic#messages()
+     */
+    @Override
+    public Messages<Message> messages() {
+        Messages<Message> messages = provider.get();
+        messages.add(message());
+        return messages;
     }
 
     /**

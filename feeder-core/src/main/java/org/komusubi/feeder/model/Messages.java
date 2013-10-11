@@ -16,43 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns;
+package org.komusubi.feeder.model;
 
-import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.Messages;
-import org.komusubi.feeder.model.Topic;
-import org.komusubi.feeder.model.Topics;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author jun.ozeki
  */
-public interface SocialNetwork {
-    
-    /**
-     * @param topic
-     */
-    void post(Topic topic);
-    
-    /**
-     * 
-     * @param topics
-     */
-    void post(Topics<? extends Topic> topics);
-    
-    /**
-     * @param message
-     */
-    void post(Message message);
+public interface Messages<E extends Message> extends List<E>, Serializable {
 
-    /**
-     * 
-     * @param messages
-     */
-    void post(Messages<? extends Message> messages);
-
-    /**
-     * @return
-     */
-    History history();
+    @SuppressWarnings("hiding")
+    <E> E newInstance();
 
 }

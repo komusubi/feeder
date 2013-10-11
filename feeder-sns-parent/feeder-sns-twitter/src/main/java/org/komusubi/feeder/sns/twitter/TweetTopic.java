@@ -20,8 +20,9 @@ package org.komusubi.feeder.sns.twitter;
 
 import java.util.Date;
 
-import org.komusubi.feeder.model.FeederMessage;
+import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Topic;
 
 import twitter4j.Status;
@@ -60,6 +61,7 @@ public class TweetTopic implements Topic {
     /**
      * @see org.komusubi.feeder.model.Topic#message()
      */
+    @Deprecated
     public Message message() {
         return message;
     }
@@ -69,5 +71,15 @@ public class TweetTopic implements Topic {
         StringBuilder builder = new StringBuilder();
         builder.append("TweetTopic [status=").append(status).append(", message=").append(message).append("]");
         return builder.toString();
+    }
+
+    /**
+     * @see org.komusubi.feeder.model.Topic#messages()
+     */
+    @Override
+    public Messages<Message> messages() {
+        TweetMessages messages = new TweetMessages();
+        messages.add(message());
+        return messages;
     }
 }
