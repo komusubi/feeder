@@ -18,8 +18,6 @@
  */
 package org.komusubi.feeder.aggregator;
 
-import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
-
 import com.google.inject.AbstractModule;
 
 /**

@@ -300,6 +300,7 @@ public class SleepStrategy implements GateKeeper {
      * 
      * @author jun.ozeki
      */
+    @Deprecated
     public static class TimelinePageCache implements PageCache {
         private static final Logger logger = LoggerFactory.getLogger(SleepStrategy.class);
         private static final long CACHE_DURATION = 60 * 60 * 1000;

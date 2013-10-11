@@ -30,6 +30,7 @@ import org.komusubi.feeder.aggregator.rss.FeedReader.EntryScript;
 import org.komusubi.feeder.aggregator.site.RssSite;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Url;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,6 +144,8 @@ public class FeedReader implements Iterable<EntryScript> {
      * create new instance.
      */
     public FeedReader(RssSite site) {
+        if (site == null)
+            throw new IllegalArgumentException("site must NOT be null");
         this.site = site;
         this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
     }
@@ -199,4 +202,7 @@ public class FeedReader implements Iterable<EntryScript> {
         return retrieve().iterator();
     }
     
+    public Tags tags() {
+        return this.site.tags();
+    }
 }
