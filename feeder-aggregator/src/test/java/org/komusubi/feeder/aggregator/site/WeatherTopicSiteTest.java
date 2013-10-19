@@ -21,6 +21,7 @@ package org.komusubi.feeder.aggregator.site;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Url;
 
 /**
@@ -33,6 +34,6 @@ public class WeatherTopicSiteTest {
     @Test
     public void URL取得() throws Exception {
         WeatherTopicSite site = new WeatherTopicSite();
-        assertEquals(new Url(WEATHER_TOPIC_URL), site.url());
+        assertEquals(new Url(WEATHER_TOPIC_URL, new BitlyUrlShortening()), site.url());
     }
 }

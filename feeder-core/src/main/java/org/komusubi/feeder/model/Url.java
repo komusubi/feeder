@@ -30,7 +30,6 @@ import java.net.URLConnection;
 import javax.inject.Inject;
 
 import org.komusubi.feeder.FeederException;
-import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.spi.UrlShortening;
 
 /**
@@ -55,10 +54,6 @@ public class Url {
         } catch (MalformedURLException e) {
             throw new FeederException(e);
         }
-    }
-
-    public Url(String url) {
-        this(url, new BitlyUrlShortening());
     }
 
     public String getQuery() {

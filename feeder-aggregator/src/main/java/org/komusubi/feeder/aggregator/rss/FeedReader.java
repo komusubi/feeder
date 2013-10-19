@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.komusubi.feeder.aggregator.AggregatorException;
 import org.komusubi.feeder.aggregator.rss.FeedReader.EntryScript;
 import org.komusubi.feeder.aggregator.site.RssSite;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Tags;
@@ -74,7 +75,7 @@ public class FeedReader implements Iterable<EntryScript> {
                     builder.append("\n");
                 builder.append(entry.getDescription().getValue());
             }
-            Url url = new Url(entry.getLink()).shorten();
+            Url url = new Url(entry.getLink(), new BitlyUrlShortening()).shorten();
             if (!builder.toString().endsWith("\n"))
                 builder.append("\n");
             builder.append(url.toExternalForm());

@@ -21,6 +21,7 @@ package org.komusubi.feeder.aggregator.site;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
@@ -40,7 +41,7 @@ public class RssSite implements Site, Serializable {
      * 
      */
     public RssSite(String resourceKey) {
-        this(new Url(RESOURCE.getString(resourceKey)));
+        this(new Url(RESOURCE.getString(resourceKey), new BitlyUrlShortening()));
     }
 
     /**
