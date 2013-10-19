@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,7 +32,11 @@ import org.komusubi.common.util.Resolver;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
+
+import com.twitter.Extractor;
+import com.twitter.Extractor.Entity;
 
 /**
  * @author jun.ozeki
@@ -51,11 +56,10 @@ public class TweetMessage extends ArrayList<Script> implements Message {
      * @author jun.ozeki
      */
     public static class TimestampFragment implements Fragment, Serializable {
-        
+
         private static final long serialVersionUID = 1L;
         private SimpleDateFormat formatter;
         private Resolver<Date> dateResolver;
-        
 
         @Inject
         public TimestampFragment(@Named("fragment format") String fragmentFormat) {
@@ -64,7 +68,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         public TimestampFragment(String fragmentFormat, Resolver<Date> resolver) {
             if (fragmentFormat == null || fragmentFormat.length() == 0)
-                throw new IllegalArgumentException("arguemnt fragmentFormat MUST not be blank"); 
+                throw new IllegalArgumentException("arguemnt fragmentFormat MUST not be blank");
             this.formatter = new SimpleDateFormat(fragmentFormat);
             this.dateResolver = resolver;
         }
@@ -119,6 +123,13 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         }
 
         public TweetScript append(String buffer) {
+            if (this.lengthAfterTweeted() + lengthAfterTweeted(buffer) > TweetScript.MESSAGE_LENGTH_MAX) {
+                throw new Twitter4jException(String.format("max length(%d) over(now:%d append length:%d): %s ",
+                                                TweetScript.MESSAGE_LENGTH_MAX,
+                                                this.lengthAfterTweeted(),
+                                                lengthAfterTweeted(buffer),
+                                                buffer));
+            }
             line.append(buffer);
             return this;
         }
@@ -131,11 +142,26 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             return fragment != null;
         }
 
+        public int lengthAfterTweeted() {
+            return lengthAfterTweeted(line());
+        }
+
+        public static int lengthAfterTweeted(String text) {
+            if (text == null || text.isEmpty())
+                return 0;
+            Extractor extractor = new Extractor();
+            List<Entity> entities = extractor.extractURLsWithIndices(text);
+            // TODO t.co shorten url length is size 1 longer than bit.ly one. (2013.10.15 now.)
+            // if you want correctly attribute value,
+            // refer to https://dev.twitter.com/docs/api/1.1/get/help/configuration
+            return text.length() + entities.size();           
+        }
+
         @Override
         public int codePointCount() {
             return codePointCount(0, line.length());
         }
-        
+
         public int codePointCount(int start, int end) {
             if (line == null)
                 return 0;
@@ -144,9 +170,10 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
         @Override
         public String codePointSubstring(int begin) {
-            // FIXME consider codepoint 
+            // FIXME consider codepoint
             if (begin > line.length())
-                throw new StringIndexOutOfBoundsException("wrong index size: argument is " + begin + " but actual " + line.length());
+                throw new StringIndexOutOfBoundsException("wrong index size: argument is " + begin + " but actual "
+                                + line.length());
             return line.substring(begin);
         }
 
@@ -166,7 +193,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             builder.append("TweetScript [line=").append(line).append("]");
             return builder.toString();
         }
-
     }
 
     private static final long serialVersionUID = 1L;
@@ -187,7 +213,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
     public TweetMessage(Fragment fragment) {
         this.fragment = fragment;
     }
-
 
     /**
      * @see org.komusubi.feeder.model.Message#append(org.komusubi.feeder.model.Message.Script)
@@ -210,24 +235,32 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         if (script instanceof TweetScript) {
             super.add(script);
         } else {
-            if (script.codePointCount() > TweetScript.MESSAGE_LENGTH_MAX) {
-                String line = script.line();
+            String line = script.line();
+            if (TweetScript.lengthAfterTweeted(line) > TweetScript.MESSAGE_LENGTH_MAX) {
+                // FIXME code point count
+                for (int position = TweetScript.MESSAGE_LENGTH_MAX; position >= 0; position--) {
+                    if (line.codePointAt(position) != '\n')
+                        continue;
+                    super.add(new TweetScript(fragment, line.substring(0, position)));
+                    this.add(new ScriptLine(line.substring(position + 1))); // call recursively.
+                    return true; 
+                }
+                // not found line feed '\n'
                 int offset = 0;
-                // FIXME code point count and word wrap.
-                for ( ;
-                      line.codePointCount(offset, line.length()) > TweetScript.MESSAGE_LENGTH_MAX;
-                      offset += TweetScript.MESSAGE_LENGTH_MAX) {
-                    super.add(new TweetScript(line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
+                for (; 
+                       TweetScript.lengthAfterTweeted(line.substring(offset)) > TweetScript.MESSAGE_LENGTH_MAX; 
+                       offset += TweetScript.MESSAGE_LENGTH_MAX) {
+                    super.add(new TweetScript(fragment, line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
                 }
                 if (line.length() - offset > 0)
-                    super.add(new TweetScript(line.substring(offset)));
+                    super.add(new TweetScript(fragment, line.substring(offset)));
             } else {
                 super.add(script);
             }
         }
         return true;
     }
-    
+
     /**
      * @see org.komusubi.feeder.model.Message#append(java.lang.String)
      */
@@ -236,24 +269,24 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         if (line == null)
             throw new Twitter4jException("line must NOT be null");
         // line over max size
-        if (line.codePointCount(0, line.length()) > TweetScript.MESSAGE_LENGTH_MAX) {
+        if (TweetScript.lengthAfterTweeted(line) > TweetScript.MESSAGE_LENGTH_MAX) {
             // FIXME consider code point and word wrap.
             int offset = 0;
-            for ( ; 
-                  line.codePointCount(offset, line.length()) > TweetScript.MESSAGE_LENGTH_MAX; 
-                  offset += TweetScript.MESSAGE_LENGTH_MAX) {
+            for (; 
+                    TweetScript.lengthAfterTweeted(line.substring(offset)) > TweetScript.MESSAGE_LENGTH_MAX; 
+                    offset += TweetScript.MESSAGE_LENGTH_MAX) {
                 super.add(new TweetScript(fragment, line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
             }
-            // append remain 
+            // append remain
             if (line.length() - offset > 0) {
                 super.add(new TweetScript(fragment, line.substring(offset)));
             }
-            
         } else {
             // try append latest script object.
             if (size() > 0) {
                 AbstractScript latest = (AbstractScript) get(size() - 1);
-                if (latest.codePointCount() + line.codePointCount(0, line.length()) <= TweetScript.MESSAGE_LENGTH_MAX) {
+                if (TweetScript.lengthAfterTweeted(latest.line()) 
+                                + TweetScript.lengthAfterTweeted(line) <= TweetScript.MESSAGE_LENGTH_MAX) {
                     latest.append(line);
                 } else {
                     super.add(new TweetScript(fragment, line));
@@ -272,7 +305,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
     public String text() {
         StringBuilder builder = new StringBuilder();
         for (Script script: this) {
-           builder.append(script.line()); 
+            builder.append(script.line());
         }
         return builder.toString();
     }
@@ -284,5 +317,4 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         builder.append(super.toString());
         return builder.toString();
     }
-
 }

@@ -83,22 +83,7 @@ public class FeedTopic implements Topic {
     @Override
     @Deprecated
     public Message message() {
-
-        for (Script script: reader.retrieve()) {
-            boolean tagging = false;
-            for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
-                Tag tag = it.next();
-                if (!tagging && !script.line().endsWith("\n")) {
-                    script.append("\n");
-                    tagging = true;
-                }
-                script.append(tag.label());
-                if (it.hasNext())
-                    script.append(" ");
-            }
-            message.add(script);
-        }
-        return message;
+        return messages().get(0);
     }
 
     /**

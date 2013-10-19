@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.komusubi.feeder.aggregator.scraper.AbstractWeatherScraper;
@@ -48,7 +47,7 @@ public class WeatherTopic implements Topic {
 
     private static final long serialVersionUID = 1L;
     private Date created;
-    private Message message;
+//    private Message message;
     private WeatherAnnouncementScraper announceScraper;
     private WeatherTitleScraper titleScraper;
     private WeatherContentScraper contentScraper;
@@ -93,24 +92,24 @@ public class WeatherTopic implements Topic {
              provider);
     }
 
-    /**
+    /*
      * create new instance.
      * @param topicScraper
      * @param titleScraper
      * @param announceScraper
      * @param provider
      */
-    @Inject
-    public WeatherTopic(WeatherContentScraper topicScraper, 
-                        WeatherTitleScraper titleScraper,
-                        WeatherAnnouncementScraper announceScraper, Message message) {
-        this.contentScraper = topicScraper;
-        this.titleScraper = titleScraper;
-        this.announceScraper = announceScraper;
-        this.created = new Date();
-        this.message = message;
-        this.tags = new Tags();
-    }
+//    @Inject
+//    public WeatherTopic(WeatherContentScraper topicScraper, 
+//                        WeatherTitleScraper titleScraper,
+//                        WeatherAnnouncementScraper announceScraper, Message message) {
+//        this.contentScraper = topicScraper;
+//        this.titleScraper = titleScraper;
+//        this.announceScraper = announceScraper;
+//        this.created = new Date();
+//        this.message = message;
+//        this.tags = new Tags();
+//    }
 
     /**
      * create new instance.
@@ -145,11 +144,6 @@ public class WeatherTopic implements Topic {
                 return false;
         } else if (!created.equals(other.created))
             return false;
-        if (message == null) {
-            if (other.message != null)
-                return false;
-        } else if (!message.equals(other.message))
-            return false;
         return true;
     }
 
@@ -158,7 +152,6 @@ public class WeatherTopic implements Topic {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((created == null) ? 0 : created.hashCode());
-        result = prime * result + ((message == null) ? 0 : message.hashCode());
         return result;
     }
 
@@ -175,6 +168,16 @@ public class WeatherTopic implements Topic {
     @Override
     @Deprecated
     public Message message() {
+        return messages().get(0);
+    }
+  
+    /**
+     * @see org.komusubi.feeder.model.Topic#messages()
+     */
+    @Override
+    public Messages<Message> messages() {
+        Messages<Message> messages = provider.get();
+        Message message = messages.newInstance();
 
         for (Announcement announcement: announceScraper.scrape()) {
             message.append(announcement)
@@ -200,43 +203,9 @@ public class WeatherTopic implements Topic {
             if (it.hasNext())
                 message.append(" ");
         }
-/*
-        // check duplicate tag
-        Tags exists = new Tags();
-        for (AbstractWeatherScraper scraper: Arrays.asList(announceScraper, titleScraper, contentScraper)) {
-            Tags tags = scraper.site().tags();
-            for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
-                Tag tag = it.next();
-                if (exists.contains(tag))
-                    continue;
-                message.append(tag.label());
-                if (it.hasNext())
-                    message.append(" ");
-                exists.add(tag);
-            }
-        }
-*/
-        return message;
-    }
-  
-    /**
-     * @see org.komusubi.feeder.model.Topic#messages()
-     */
-    @Override
-    public Messages<Message> messages() {
-        Messages<Message> messages = provider.get();
-        messages.add(message());
+        messages.add(message);
         return messages;
     }
-
-    /*
-     * 
-     * @see java.lang.Iterable#iterator()
-     */
-//    @Override
-//    public Iterator<Script> iterator() {
-//        return message.iterator();
-//    }
 
     /**
      * @see org.komusubi.feeder.model.Topic#createdAt()
@@ -249,7 +218,10 @@ public class WeatherTopic implements Topic {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("WeatherTopic [created=").append(created).append(", message=").append(message).append("]");
+        builder.append("WeatherTopic [created=").append(created).append(", announceScraper=").append(announceScraper)
+                        .append(", titleScraper=").append(titleScraper).append(", contentScraper=")
+                        .append(contentScraper).append(", tags=").append(tags).append(", provider=").append(provider)
+                        .append("]");
         return builder.toString();
     }
 

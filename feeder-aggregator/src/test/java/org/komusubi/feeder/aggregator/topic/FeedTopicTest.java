@@ -65,4 +65,13 @@ public class FeedTopicTest {
         verify(mockReader, times(3)).retrieve();
     }
 
+    public static void main(String[] args) {
+        String a = "パウダースノーの北海道。おトクがいっぱいのJAL SKI発売中！\n"
++ "北海道のスキーツアーをご紹介。JALSKIならではのサービス・サポートでどなたでも安心快適なスキーツアーをお楽しみいただけます。国内ツアー・旅行ならJALパック。\n"
++ "http://bit.ly/1gyKAed\n"
++ "#j";
+        
+        System.out.printf("length: %d%n", a.codePointCount(0, a.length()));
+
+    }
 }

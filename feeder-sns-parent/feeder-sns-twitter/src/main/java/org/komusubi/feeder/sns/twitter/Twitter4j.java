@@ -21,10 +21,12 @@ package org.komusubi.feeder.sns.twitter;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Messages;
+import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.History;
 import org.komusubi.feeder.sns.SocialNetwork;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,22 +100,28 @@ public class Twitter4j implements SocialNetwork {
      * @param message
      */
     public void tweet(Message message) {
+        Script current = new ScriptLine("");
         try {
             Status result = null;
             for (Script script: message) {
+                current = script; // mark current script for when exception occurred.
                 if (outputConsole) {
-                    System.out.printf("tweet(length:%d): %s%n", script.codePointCount(), script.trimedLine());
+                    System.out.printf("tweet(length:%d): %s%n",
+                                        TweetScript.lengthAfterTweeted(script.trimedLine()), script.trimedLine());
                 } else {
                     StatusUpdate status = new StatusUpdate(script.trimedLine());
                     if (result != null) {
                         status.inReplyToStatusId(result.getId());
                     }
-                    logger.info("tweet(length:{}): {}", script.codePointCount(), status.getStatus());
+                    logger.info("tweet(length:{}): {}", TweetScript.lengthAfterTweeted(status.getStatus()),
+                                                        status.getStatus());
                     result = twitter.updateStatus(status);
                 }
             }
         } catch (TwitterException e) {
-            throw new Twitter4jException(e);
+            throw new Twitter4jException(String.format("tweet(length:%d): %s",  
+                                            TweetScript.lengthAfterTweeted(current.trimedLine()),
+                                            current.trimedLine()));
         }
     }
 

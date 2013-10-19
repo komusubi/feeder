@@ -39,11 +39,7 @@ public abstract class AbstractScript implements Script {
         if (obj == null)
             return false;
         if (obj instanceof Script) {
-            if (this.line().equals(((Script) obj).line())) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.line().equals(((Script) obj).line());
         } else {
             return false;
         }
