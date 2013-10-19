@@ -61,6 +61,7 @@ public class TweetMessageTest {
             // exercise and verify
             assertThat(target.trimedLine(), is(expected));
         }
+        
     }
 
     public static class TweetMessageParentTest {
@@ -190,9 +191,26 @@ public class TweetMessageTest {
             target.add(new ScriptLine(line));
             
             // verify
-            assertThat(2, is(target.size()));
-            assertThat(expected1, is(target.get(0).line()));
-            assertThat(expected2, is(target.get(1).line()));
+            assertThat(target.size(), is(2));
+            assertThat(target.get(0).line(), is(expected1));
+            assertThat(target.get(1).line(), is(expected2));
+        }
+        
+        @Test
+        public void splitOfLineFeedInScript() {
+            // setup
+            String expected1 = "パウダースノーの北海道。おトクがいっぱいのJAL SKI発売中！\n"
+                            + "北海道のスキーツアーをご紹介。JALSKIならではのサービス・サポートでどなたでも安心快適なスキーツアーをお楽しみいただけます。国内ツアー・旅行ならJALパック。\n"
+                            + "http://bit.ly/1gyKAed \n";
+            String expected2 = "#jal";
+            
+            // exercise
+            target.add(new ScriptLine(expected1 + expected2));
+
+            // verify
+            assertThat(target.size(), is(2));
+            assertThat(target.get(0).line(), is(expected1)); 
+            assertThat(target.get(1).line(), is(expected2)); 
         }
     }
 }
