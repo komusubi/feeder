@@ -201,11 +201,11 @@ public class TweetMessageTest {
             // setup
             String expected1 = "パウダースノーの北海道。おトクがいっぱいのJAL SKI発売中！\n"
                             + "北海道のスキーツアーをご紹介。JALSKIならではのサービス・サポートでどなたでも安心快適なスキーツアーをお楽しみいただけます。国内ツアー・旅行ならJALパック。\n"
-                            + "http://bit.ly/1gyKAed \n";
+                            + "http://bit.ly/1gyKAed";
             String expected2 = "#jal";
             
             // exercise
-            target.add(new ScriptLine(expected1 + expected2));
+            target.add(new ScriptLine(expected1 + "\n" + expected2));
 
             // verify
             assertThat(target.size(), is(2));
