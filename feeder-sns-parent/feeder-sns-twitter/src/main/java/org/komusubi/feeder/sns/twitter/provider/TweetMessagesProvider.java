@@ -16,24 +16,48 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.spi;
+package org.komusubi.feeder.sns.twitter.provider;
 
 import javax.inject.Provider;
 
-import org.komusubi.feeder.model.FeederMessage;
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
+import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
+import org.komusubi.feeder.sns.twitter.TweetMessages;
 
 /**
  * @author jun.ozeki
  */
-public class FeederMessageProvider implements Provider<Message> {
+public class TweetMessagesProvider implements Provider<Messages<Message>> {
+
+
+    private Fragment fragment;
+
+    /**
+     * create new instance.
+     */
+    public TweetMessagesProvider() {
+
+    }
+
+    /**
+     * create new instance.
+     */
+    public TweetMessagesProvider(Fragment fragment) {
+        this.fragment = fragment;
+    }
 
     /**
      * @see javax.inject.Provider#get()
      */
     @Override
-    public Message get() {
-        return new FeederMessage();
+    public TweetMessages get() {
+        TweetMessages m;
+        if (fragment != null)
+            m = new TweetMessages(fragment);
+        else
+            m = new TweetMessages();
+        return m;
     }
 
 }

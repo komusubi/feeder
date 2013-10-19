@@ -21,6 +21,7 @@ package org.komusubi.feeder.aggregator.site;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
@@ -50,7 +51,7 @@ public class WeatherTopicSite implements Site {
      * @throws MalformedURLException
      */
     public WeatherTopicSite(String resourceKey, Tag... tags) {
-        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey));
+        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey), new BitlyUrlShortening());
         this.tags = new Tags();
         this.tags.addAll(Arrays.asList(tags));
     }

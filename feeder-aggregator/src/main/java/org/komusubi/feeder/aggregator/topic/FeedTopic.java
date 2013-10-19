@@ -21,11 +21,14 @@ package org.komusubi.feeder.aggregator.topic;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.inject.Provider;
+
 import org.komusubi.feeder.aggregator.rss.FeedReader;
 import org.komusubi.feeder.aggregator.site.RssSite;
+import org.komusubi.feeder.bind.FeederMessagesProvider;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
-import org.komusubi.feeder.model.Site;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Topic;
@@ -39,20 +42,31 @@ public class FeedTopic implements Topic {
     private Date created;
     private Message message;
     private FeedReader reader;
-    private Site site;
     private Tags tags;
+    private Provider<Messages<Message>> provider;
     
     /**
      * create new instance.
      */
-    public FeedTopic(RssSite site, Message message) {
+    public FeedTopic(RssSite site) {
+        this(site, new FeederMessagesProvider());
+    }
+
+    /**
+     * create new instance.
+     */
+    public FeedTopic(RssSite site, Provider<Messages<Message>> provider) {
+        this(new FeedReader(site), provider);
+    }
+
+    /**
+     * create new instance. 
+     */
+    public FeedTopic(FeedReader reader, Provider<Messages<Message>> provider) {
+        this.reader = reader;
+        this.provider = provider;
         created = new Date();
-        if (message == null)
-            throw new IllegalArgumentException("message must NOT be null.");
-        this.message = message;
-        this.site = site;
-        this.reader = new FeedReader(site);
-        this.tags = new Tags();
+        this.tags = reader.tags();
     }
 
     /**
@@ -67,13 +81,20 @@ public class FeedTopic implements Topic {
      * @see org.komusubi.feeder.model.Topic#message()
      */
     @Override
+    @Deprecated
     public Message message() {
+        return messages().get(0);
+    }
 
-        // aggregate Tag from RssSite
-        for (Tag t: site.tags())
-            this.tags.add(t);
+    /**
+     * @see org.komusubi.feeder.model.Topic#messages()
+     */
+    @Override
+    public Messages<Message> messages() {
+        Messages<Message> messages = provider.get();
 
         for (Script script: reader.retrieve()) {
+            Message m = messages.newInstance();
             boolean tagging = false;
             for (Iterator<Tag> it = tags.iterator(); it.hasNext(); ) {
                 Tag tag = it.next();
@@ -85,13 +106,14 @@ public class FeedTopic implements Topic {
                 if (it.hasNext())
                     script.append(" ");
             }
-            message.add(script);
+            m.add(script);
+            messages.add(m);
         }
-        return message;
+        return messages;
     }
 
     /**
-     * @param jal
+     * @param tags
      */
     public FeedTopic addTag(Tag... tags) {
         for (Tag t: tags)

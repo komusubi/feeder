@@ -28,6 +28,7 @@ import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.spi.UrlShortening;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -46,7 +47,7 @@ public class UrlTest {
 
     @Test
     public void delegationMethods() throws Exception {
-        Url shorten = new Url("http://bit.ly/1do2OxD");
+        Url shorten = new Url("http://bit.ly/1do2OxD", new BitlyUrlShortening());
         assertThat(shorten.getHost(), equalTo("bit.ly"));
         assertThat(shorten.getAuthority(), equalTo("bit.ly"));
         assertThat(shorten.getPort(), equalTo(-1));

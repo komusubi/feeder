@@ -16,24 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns.twitter.spi;
+package org.komusubi.feeder.sns.twitter;
 
-import javax.inject.Provider;
+import java.util.ArrayList;
 
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
+import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
 
 /**
  * @author jun.ozeki
  */
-public class TweetMessageProvider implements Provider<Message> {
+public class TweetMessages extends ArrayList<Message> implements Messages<Message> {
+
+    private static final long serialVersionUID = 1L;
+    private Fragment fragment;
+
+    public TweetMessages() {
+        
+    }
+
+    public TweetMessages(Fragment fragment) {
+        this.fragment = fragment;
+    }
 
     /**
-     * @see javax.inject.Provider#get()
+     * @see org.komusubi.feeder.model.Messages#newInstance()
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public Message get() {
-//        return new TweetMessage(new TweetScriptProvider("HHmm")); 
-        return null;
+    public TweetMessage newInstance() {
+        TweetMessage m;
+        if (fragment != null)
+            m = new TweetMessage(fragment);
+        else
+            m = new TweetMessage();
+        return m;
     }
 
 }

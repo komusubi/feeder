@@ -16,24 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.aggregator.site;
+package org.komusubi.feeder.model;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.komusubi.feeder.bind.BitlyUrlShortening;
-import org.komusubi.feeder.model.Url;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author jun.ozeki
  */
-public class WeatherTopicSiteTest {
+public interface Messages<E extends Message> extends List<E>, Serializable {
 
-    private static final String WEATHER_TOPIC_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
+    @SuppressWarnings("hiding")
+    <E> E newInstance();
 
-    @Test
-    public void URL取得() throws Exception {
-        WeatherTopicSite site = new WeatherTopicSite();
-        assertEquals(new Url(WEATHER_TOPIC_URL, new BitlyUrlShortening()), site.url());
-    }
 }

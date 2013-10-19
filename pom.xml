@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.komusubi.feeder</groupId>
   <artifactId>feeder</artifactId>
-  <version>0.1</version>
+  <version>0.1.1</version>
   <packaging>pom</packaging>
   <inceptionYear>2012</inceptionYear>
   <name>feeder</name>
@@ -124,6 +124,11 @@
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
         <version>1.7.5</version>
+      </dependency>
+      <dependency>
+        <groupId>com.twitter</groupId>
+        <artifactId>twitter-text</artifactId>
+        <version>1.6.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

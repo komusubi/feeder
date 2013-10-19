@@ -41,8 +41,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Status;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Region;
 import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -55,7 +57,8 @@ public class WeatherContentScraperTest {
     @Rule public ExpectedException expectedException = ExpectedException.none();
     @Mock private HtmlScraper scraper; 
     @DataPoints public static Class<?>[] VALUES = new Class<?>[]{ Region.class, Status.class };
-    
+    private UrlShortening urlShortern = new BitlyUrlShortening();
+
     @Before
     public void before() {
         MockitoAnnotations.initMocks(this);
@@ -75,7 +78,7 @@ public class WeatherContentScraperTest {
     public void スクレイプ処理引数の検証(Class<?> clazz) throws Exception {
         // setup
         String url = "http://localhost";
-        WeatherTopicSite site = new WeatherTopicSite(new Url(url));
+        WeatherTopicSite site = new WeatherTopicSite(new Url(url, urlShortern));
         NodeFilter filter = new WeatherContentScraper().filter();
         when(scraper.scrape(url, filter)).thenReturn(null);
         WeatherContentScraper target = new WeatherContentScraper(site, scraper);
@@ -88,7 +91,7 @@ public class WeatherContentScraperTest {
     @Test
     public void Regionを指定時にTableHeaderでスクレイプ出来る事() throws Exception {
         // setup
-        Url url = new Url("http://localhost");
+        Url url = new Url("http://localhost", urlShortern);
         WeatherTopicSite site = new WeatherTopicSite(url);
         final NodeFilter filter = new WeatherContentScraper().filter();
         // build html node list
@@ -111,7 +114,7 @@ public class WeatherContentScraperTest {
     @Test
     public void WeatherStatus指定時にTableColumnでスクレイプ出来る事() throws Exception {
                 // setup
-        Url url = new Url("http://localhost");
+        Url url = new Url("http://localhost", urlShortern);
         WeatherTopicSite site = new WeatherTopicSite(url);
         final NodeFilter filter = new WeatherContentScraper().filter();
         // build html node list
@@ -134,7 +137,7 @@ public class WeatherContentScraperTest {
     @Test
     public void WeatherStausの値はリターンコードがスペースに変換されている事() throws Exception {
         // setup
-        Url url = new Url("http://localhost");
+        Url url = new Url("http://localhost", urlShortern);
         WeatherTopicSite site = new WeatherTopicSite(url);
         final NodeFilter filter = new WeatherContentScraper().filter();
         NodeList returnNode = new NodeList();

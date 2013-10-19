@@ -18,8 +18,10 @@
  */
 package org.komusubi.feeder.aggregator.site;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
@@ -29,8 +31,8 @@ import org.komusubi.feeder.utils.ResourceBundleMessage;
 /**
  * @author jun.ozeki
  */
-public class RssSite implements Site {
-
+public class RssSite implements Site, Serializable {
+    private static final long serialVersionUID = 1L;
     private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(RssSite.class);
     private Url url;
     private Tags tags;
@@ -39,7 +41,7 @@ public class RssSite implements Site {
      * 
      */
     public RssSite(String resourceKey) {
-        this(new Url(RESOURCE.getString(resourceKey)));
+        this(new Url(RESOURCE.getString(resourceKey), new BitlyUrlShortening()));
     }
 
     /**

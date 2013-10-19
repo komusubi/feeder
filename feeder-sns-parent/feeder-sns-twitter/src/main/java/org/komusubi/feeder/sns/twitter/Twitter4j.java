@@ -20,10 +20,13 @@ package org.komusubi.feeder.sns.twitter;
 
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Messages;
+import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.History;
 import org.komusubi.feeder.sns.SocialNetwork;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,13 +70,25 @@ public class Twitter4j implements SocialNetwork {
     }
 
     /**
+     * @see org.komusubi.feeder.sns.SocialNetwork#post(org.komusubi.feeder.model.Messages)
+     */
+    @Override
+    public void post(Messages<? extends Message> messages) {
+        for (Message m: messages)
+            tweet(m);
+    }
+
+    /**
      * @see org.komusubi.feeder.sns.SocialNetwork#post(Topic topic)
      */
     @Override
     public void post(Topic topic) {
-        tweet(topic.message());
+        post(topic.messages());
     }
 
+    /**
+     * @see org.komusubi.feeder.sns.SocialNetwork#post(org.komusubi.feeder.model.Topics)
+     */
     @Override
     public void post(Topics<? extends Topic> topics) {
         for (Topic t: topics) 
@@ -85,19 +100,28 @@ public class Twitter4j implements SocialNetwork {
      * @param message
      */
     public void tweet(Message message) {
+        Script current = new ScriptLine("");
         try {
+            Status result = null;
             for (Script script: message) {
+                current = script; // mark current script for when exception occurred.
                 if (outputConsole) {
-                    System.out.printf("tweet: %s%n", script.trimedLine());
+                    System.out.printf("tweet(length:%d): %s%n",
+                                        TweetScript.lengthAfterTweeted(script.trimedLine()), script.trimedLine());
                 } else {
                     StatusUpdate status = new StatusUpdate(script.trimedLine());
-                    logger.info("tweet : {}", status.getStatus());
-                    Status result = twitter.updateStatus(status);
+                    if (result != null) {
+                        status.inReplyToStatusId(result.getId());
+                    }
+                    logger.info("tweet(length:{}): {}", TweetScript.lengthAfterTweeted(status.getStatus()),
+                                                        status.getStatus());
+                    result = twitter.updateStatus(status);
                 }
-                logger.info("script codepoint length: {}", script.codePointCount());
             }
         } catch (TwitterException e) {
-            throw new Twitter4jException(e);
+            throw new Twitter4jException(String.format("tweet(length:%d): %s",  
+                                            TweetScript.lengthAfterTweeted(current.trimedLine()),
+                                            current.trimedLine()));
         }
     }
 

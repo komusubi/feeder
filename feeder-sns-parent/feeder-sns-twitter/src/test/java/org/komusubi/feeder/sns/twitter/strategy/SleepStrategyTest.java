@@ -39,7 +39,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.komusubi.common.util.Resolver;
-import org.komusubi.feeder.model.FeederMessage;
+import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;

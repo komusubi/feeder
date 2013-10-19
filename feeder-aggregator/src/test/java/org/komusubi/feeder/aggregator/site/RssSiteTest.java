@@ -22,6 +22,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Url;
 
 /**
@@ -32,7 +33,7 @@ public class RssSiteTest {
     @Test
     public void compareToUrl() {
         RssSite site = new RssSite("jal.info");
-        assertThat(site.url(), equalTo(new Url("http://rss.jal.co.jp/f4728/index.rdf")));
+        assertThat(site.url(), equalTo(new Url("http://rss.jal.co.jp/f4728/index.rdf", new BitlyUrlShortening())));
     }
 
 }

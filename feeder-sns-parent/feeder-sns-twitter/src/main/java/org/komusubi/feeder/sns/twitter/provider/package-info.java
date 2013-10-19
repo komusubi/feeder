@@ -16,24 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.aggregator.site;
-
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.komusubi.feeder.bind.BitlyUrlShortening;
-import org.komusubi.feeder.model.Url;
-
 /**
  * @author jun.ozeki
  */
-public class WeatherTopicSiteTest {
-
-    private static final String WEATHER_TOPIC_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
-
-    @Test
-    public void URL取得() throws Exception {
-        WeatherTopicSite site = new WeatherTopicSite();
-        assertEquals(new Url(WEATHER_TOPIC_URL, new BitlyUrlShortening()), site.url());
-    }
-}
+package org.komusubi.feeder.sns.twitter.provider;

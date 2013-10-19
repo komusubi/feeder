@@ -28,8 +28,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.komusubi.feeder.aggregator.AggregatorException;
 import org.komusubi.feeder.aggregator.rss.FeedReader.EntryScript;
 import org.komusubi.feeder.aggregator.site.RssSite;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Url;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,13 +75,11 @@ public class FeedReader implements Iterable<EntryScript> {
                     builder.append("\n");
                 builder.append(entry.getDescription().getValue());
             }
-            Url url = new Url(entry.getLink()).shorten();
+            Url url = new Url(entry.getLink(), new BitlyUrlShortening()).shorten();
             if (!builder.toString().endsWith("\n"))
                 builder.append("\n");
-            builder.append(url.toExternalForm());
-            // FIXME bitly shortening url length 21, but to.co's 22, adjust length
-            builder.append(" ");
 
+            builder.append(url.toExternalForm());
             return builder;
         }
 
@@ -143,6 +143,8 @@ public class FeedReader implements Iterable<EntryScript> {
      * create new instance.
      */
     public FeedReader(RssSite site) {
+        if (site == null)
+            throw new IllegalArgumentException("site must NOT be null");
         this.site = site;
         this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
     }
@@ -199,4 +201,7 @@ public class FeedReader implements Iterable<EntryScript> {
         return retrieve().iterator();
     }
     
+    public Tags tags() {
+        return this.site.tags();
+    }
 }
