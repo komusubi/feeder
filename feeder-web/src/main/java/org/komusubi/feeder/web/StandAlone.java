@@ -70,7 +70,8 @@ public class StandAlone {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
         }
         // topic topic 
-        Speaker speaker = new Speaker(new Twitter4j(), new SleepStrategy(1L, pageCache));
+        // TODO first argument of SleepStrategy set "0L". it does not bad affect and refactoring near future.
+        Speaker speaker = new Speaker(new Twitter4j(), new SleepStrategy(0L, pageCache));
         speaker.talk(topics);
     }
 
