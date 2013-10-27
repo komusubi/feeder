@@ -25,8 +25,10 @@ import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.site.RssSite;
+import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.aggregator.topic.FeedTopic;
 import org.komusubi.feeder.aggregator.topic.WeatherTopic;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.Speaker;
@@ -38,70 +40,129 @@ import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
+import org.komusubi.feeder.utils.Types.AggregateType;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 
 /**
  * @author jun.ozeki
  */
-public class StandAlone {
+public final class StandAlone {
 //    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
 
+    // hide default constructor.
+    private StandAlone() {
+        
+    }
+
+    protected ScrapeType parseScrapeType(String[] args) {
+        ScrapeType type = null;
+        for (int i = 0; i < args.length; i++) {
+            try {
+                type = ScrapeType.valueOf(args[i].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // ignore
+            }
+        }
+        return type;
+    }
+
+    private AggregateType parseAggregateType(String[] args) {
+        AggregateType type = null;
+        for (int i = 0; i < args.length; i++) {
+            try {
+                type = AggregateType.valueOf(args[i].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // ignore
+            }
+        }
+        return type;
+    }
+
     private static void usage(PrintStream stream) {
-        stream.printf("arguments must be \"scraper\" or \"feeder\"");
+        stream.printf("arguments must be \"scraper\" or \"feeder\" and \"jal5971\" or \"jal5931\"");
     }
 
     public static void main(String[] args) {
-        if (args.length < 1) {
+        if (args.length < 2) {
             usage(System.err);
             return;
         } 
         StandAlone standAlone = new StandAlone();
+        ScrapeType scrapeType = standAlone.parseScrapeType(args); 
+        AggregateType aggregateType = standAlone.parseAggregateType(args); 
+        if (scrapeType == null || aggregateType == null) {
+            usage(System.err);
+            return;
+        }
 
         Topics<? extends Topic> topics;
         PageCache pageCache;
-        if ("scraper".equalsIgnoreCase(args[0])) {
-            topics = standAlone.aggregateScraper();
-            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/scraper-store.txt");
+        String tmpDirname = System.getProperty("java.io.tmpdir");
+
+        if (AggregateType.SCRAPER.equals(aggregateType)) {
+            topics = standAlone.aggregateScraper(scrapeType);
+            File storeFile = new File(tmpDirname + "/scraper-store.txt");
             pageCache = new PartialMatchPageCache(storeFile);
-        } else if("feeder".equalsIgnoreCase(args[0])) {
-            topics = standAlone.aggregateFeeder();
-            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
+        } else if(AggregateType.FEEDER.equals(aggregateType)) {
+            topics = standAlone.aggregateFeeder(scrapeType);
+            File storeFile = new File(tmpDirname + "/feeder-store.txt");
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
         }
-        // topic topic 
-        // TODO first argument of SleepStrategy set "0L". it does not bad affect and refactoring near future.
-        Speaker speaker = new Speaker(new Twitter4j(), new SleepStrategy(0L, pageCache));
+        // topic 
+        Speaker speaker = new Speaker(new Twitter4j(scrapeType.name().toLowerCase()), new SleepStrategy(pageCache));
         speaker.talk(topics);
     }
 
-    private Topics<? extends Topic> aggregateScraper() {
+    private Topics<? extends Topic> aggregateScraper(ScrapeType scrapeType) {
 
-        WeatherTopic weather = new WeatherTopic(new WeatherContentScraper(),
-                                                 new WeatherTitleScraper(),
-                                                 new WeatherAnnouncementScraper(),
-                                                 new TweetMessagesProvider(new TimestampFragment("HHmm")));
-        HashTag jal = new HashTag("jal");
-        weather.addTag(jal);
+        WeatherTopic weather = null;
+        if (ScrapeType.JAL5971.equals(scrapeType)) {
+            WeatherTopicSite domestic = new WeatherTopicSite("domestic", scrapeType);
+            weather = new WeatherTopic(new WeatherContentScraper(domestic),
+                                                     new WeatherTitleScraper(domestic),
+                                                     new WeatherAnnouncementScraper(domestic),
+                                                     new TweetMessagesProvider(new TimestampFragment("HHmm")));
+        } else if (ScrapeType.JAL5931.equals(scrapeType)) {
+            WeatherTopicSite international = new WeatherTopicSite("internatinal", scrapeType);
+            weather = new WeatherTopic(new WeatherContentScraper(international),
+                                                        new WeatherTitleScraper(international),
+                                                        new WeatherAnnouncementScraper(international),
+                                                        new TweetMessagesProvider(new TimestampFragment("HHmm")));
+        } else {
+            throw new IllegalArgumentException("unknown ScrapType");
+        }
 
         Topics<WeatherTopic> topics = new Topics<>();
+        weather.addTag(new HashTag("jal"));
         topics.add(weather);
         
         return topics;
     }
     
-    private Topics<? extends Topic> aggregateFeeder() {
+    private Topics<? extends Topic> aggregateFeeder(ScrapeType scrapeType) {
         
+        RssSite site = null;
+        BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
+        if (ScrapeType.JAL5971.equals(scrapeType)) {
+            site = new RssSite("jal.domestic", urlShorten);
+        } else if (ScrapeType.JAL5931.equals(scrapeType)) {
+            site = new RssSite("jal.international", urlShorten);
+        } else {
+            throw new IllegalArgumentException("unknown ScrapeType");
+        }
+
         HashTag jal = new HashTag("jal");
-        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info"), new TweetMessagesProvider());
+        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info", urlShorten), new TweetMessagesProvider());
         jalInfo.addTag(jal);
-        
-        FeedTopic jalDomestic = new FeedTopic(new RssSite("jal.domestic"), new TweetMessagesProvider());
-        jalDomestic.addTag(jal);
+
+        FeedTopic feedTopic = new FeedTopic(site, new TweetMessagesProvider());
+        feedTopic.addTag(jal);
 
         Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
-        topics.add(jalDomestic);
+        topics.add(feedTopic);
 
         return topics;
     }

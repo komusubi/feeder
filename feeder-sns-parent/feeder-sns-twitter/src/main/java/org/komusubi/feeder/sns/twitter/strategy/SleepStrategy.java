@@ -400,13 +400,22 @@ public class SleepStrategy implements GateKeeper {
      * create new instance.
      */
     public SleepStrategy() {
-        this(1);
+        this(new FilePageCache(new File(System.getProperty("java.io.tmpdir") + SleepStrategy.class.getCanonicalName() + ".txt")));
+    }
+
+    /**
+     * create new instance. 
+     * @param pageCache
+     */
+    public SleepStrategy(PageCache pageCache) {
+        this.cache = pageCache;
     }
 
     /**
      * create new instance.
      * @param sleepSecond
      */
+    @Deprecated
     public SleepStrategy(long sleepSecond) {
         this(sleepSecond, new TimelinePageCache());
     }
@@ -417,18 +426,11 @@ public class SleepStrategy implements GateKeeper {
      * @param cache
      */
     @Inject
+    @Deprecated
     public SleepStrategy(@Named("tweet sleep interval") long sleepSecond, PageCache cache) {
         this.milliSecond = sleepSecond * 1000;
         this.cache = cache;
     }
-
-    // PageCache is NOT static class, because access to twitter4j instance.
-//    private void init(PageCache cache) {
-//        if (cache == null)
-//            this.cache = new PageCache();
-//        else
-//            this.cache = cache;
-//    }
 
     /**
      * @see org.komusubi.feeder.sns.GateKeeper#available()
@@ -439,11 +441,6 @@ public class SleepStrategy implements GateKeeper {
         cache.refresh();
         if (!cache.exists(message))
             result = true;
-        try {
-            Thread.sleep(milliSecond);
-        } catch (InterruptedException ignore) {
-            result = true;
-        }
         return result;
     }
 
