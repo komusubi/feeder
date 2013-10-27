@@ -74,7 +74,7 @@ public class SleepStrategy implements GateKeeper {
         private static final Logger logger = LoggerFactory.getLogger(SleepStrategy.class);
         private static final String CHARSET = "UTF-8";
         private File file;
-        private ArrayList<String> items;
+        private List<String> items;
         private String lineSeparator = System.lineSeparator();
 
         /**
@@ -122,7 +122,8 @@ public class SleepStrategy implements GateKeeper {
                 throw new Twitter4jException(e);
             }
             // replace file
-            tmp.renameTo(file);
+            if (!tmp.renameTo(file))
+                logger.warn("rename file failure:{}", tmp.getAbsolutePath());
             items.clear();
         }
 
@@ -395,6 +396,7 @@ public class SleepStrategy implements GateKeeper {
 
     private long milliSecond;
     private PageCache cache;
+    private boolean outputConsole = Boolean.getBoolean("tweet.console");
 
     /**
      * create new instance.
@@ -449,7 +451,8 @@ public class SleepStrategy implements GateKeeper {
      */
     @Override
     public void store(Message message) {
-        cache.store(message);
+        if (!outputConsole) 
+            cache.store(message);
     }
 
 }
