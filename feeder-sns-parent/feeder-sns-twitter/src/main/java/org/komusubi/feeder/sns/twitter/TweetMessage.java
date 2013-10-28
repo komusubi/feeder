@@ -115,6 +115,11 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             }
             if (fragment != null) {
                 this.fragment = fragment.get() + "\n";
+                // length check again.
+                int length = line.codePointCount(0, line.length()) + this.fragment.codePointCount(0, this.fragment.length());
+                if (length > MESSAGE_LENGTH_MAX) {
+                    throw new Twitter4jException("over max length of line and fragment: " + length);
+                }
                 this.line = new StringBuilder(this.fragment);
                 this.line.append(line);
             } else {
@@ -154,7 +159,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             // TODO t.co shorten url length is size 1 longer than bit.ly one. (2013.10.15 now.)
             // if you want correctly attribute value,
             // refer to https://dev.twitter.com/docs/api/1.1/get/help/configuration
-            return text.length() + entities.size();           
+            return text.codePointCount(0, text.length()) + entities.size();           
         }
 
         @Override
