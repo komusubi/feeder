@@ -39,6 +39,7 @@ import javax.json.stream.JsonParserFactory;
 import org.komusubi.feeder.FeederException;
 import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.ResourceBundleMessage;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class BitlyUrlShortening implements UrlShortening {
 
     private static final Logger logger = LoggerFactory.getLogger(BitlyUrlShortening.class);
     private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(BitlyUrlShortening.class);
-    private static final String ACCESS_KEY_VALUE = "bitly.access_token";
+    private static final String ACCESS_KEY_VALUE = ".bitly.access_token";
     private static final Properties PROPERTIES;
     private static final String PROPERTY_FILE_NAME = "accessKey.properties";
 
@@ -77,11 +78,21 @@ public class BitlyUrlShortening implements UrlShortening {
         }
     }
 
+    private ScrapeType scrapeType;
+
     /**
      * create new instance.
      */
     public BitlyUrlShortening() {
+        this(ScrapeType.KOMUSUBI);
+    }
 
+    /**
+     * create new instance.
+     * @param accountName
+     */
+    public BitlyUrlShortening(ScrapeType scrapeType) {
+        this.scrapeType = scrapeType;
     }
 
     /**
@@ -96,7 +107,7 @@ public class BitlyUrlShortening implements UrlShortening {
                 urlBuilder.append("?");
             }
             urlBuilder.append("access_token=")
-                        .append(PROPERTIES.getProperty(ACCESS_KEY_VALUE))
+                        .append(PROPERTIES.getProperty(scrapeType.name().toLowerCase() + ACCESS_KEY_VALUE))
                         .append("&")
                         .append(RESOURCE.getString("shorten.param.longUrl"))
                         .append("=")
@@ -148,4 +159,11 @@ public class BitlyUrlShortening implements UrlShortening {
         }
     }
 
+    /**
+     * get this url shorten account prefix.
+     * @return
+     */
+    public ScrapeType scrapeType() {
+        return scrapeType;
+    }
 }

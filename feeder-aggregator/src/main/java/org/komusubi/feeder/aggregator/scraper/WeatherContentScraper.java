@@ -37,6 +37,7 @@ import org.htmlparser.tags.TableHeader;
 import org.htmlparser.util.NodeList;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Region;
 import org.slf4j.Logger;
@@ -211,7 +212,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
      * @param site
      */
     public WeatherContentScraper(WeatherTopicSite site) {
-        this(site, new HtmlScraper());
+        this(site, new HtmlScraper(true, new BitlyUrlShortening(site.scrapeType())));
     }
 
     /**

@@ -32,8 +32,8 @@ public class WeatherTopicSiteTest {
     private static final String WEATHER_TOPIC_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
 
     @Test
-    public void URL取得() throws Exception {
-        WeatherTopicSite site = new WeatherTopicSite();
+    public void domesticUrl取得() throws Exception {
+        WeatherTopicSite site = new WeatherTopicSite("domestic");
         assertEquals(new Url(WEATHER_TOPIC_URL, new BitlyUrlShortening()), site.url());
     }
 }

@@ -19,6 +19,7 @@
 package org.komusubi.feeder.aggregator.rss;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,7 +33,8 @@ import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Tags;
-import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,7 @@ import com.sun.syndication.io.FeedException;
  */
 public class FeedReader implements Iterable<EntryScript> {
     private static final Logger logger = LoggerFactory.getLogger(FeedReader.class);
+
     /**
      * 
      * @author jun.ozeki
@@ -59,12 +62,32 @@ public class FeedReader implements Iterable<EntryScript> {
 
         private static final long serialVersionUID = 1L;
         private StringBuilder builder;
+        private UrlShortening urlShorten;
 
         /**
          * @param entry
          */
         public EntryScript(SyndEntry entry) {
+            this(entry, new BitlyUrlShortening());
+        }
+
+        /**
+         * create new instance.
+         * @param entry
+         * @param urlShorten
+         */
+        public EntryScript(SyndEntry entry, UrlShortening urlShorten) {
             this.builder = line(entry); // initialize configure "line"
+            this.urlShorten = urlShorten;
+        }
+        
+        /**
+         * create new instance.
+         * @param entry
+         * @param scrapeType
+         */
+        public EntryScript(SyndEntry entry, ScrapeType scrapeType) {
+            this(entry, new BitlyUrlShortening(scrapeType));
         }
 
         private StringBuilder line(SyndEntry entry) {
@@ -75,10 +98,10 @@ public class FeedReader implements Iterable<EntryScript> {
                     builder.append("\n");
                 builder.append(entry.getDescription().getValue());
             }
-            Url url = new Url(entry.getLink(), new BitlyUrlShortening()).shorten();
             if (!builder.toString().endsWith("\n"))
                 builder.append("\n");
 
+            URL url = urlShorten.shorten(entry.getLink());
             builder.append(url.toExternalForm());
             return builder;
         }
@@ -180,7 +203,7 @@ public class FeedReader implements Iterable<EntryScript> {
             for (Iterator<SyndEntry> it = (Iterator<SyndEntry>) feed.getEntries().iterator(); it.hasNext(); ) {
                 SyndEntry e = it.next();
                 if (lastModified < e.getPublishedDate().getTime())
-                    scripts.add(new EntryScript(e));
+                    scripts.add(new EntryScript(e, site.scrapeType())); 
                 else
                     logger.info("read already entry: {}, {}", e.getPublishedDate(), e.getTitle());
             }

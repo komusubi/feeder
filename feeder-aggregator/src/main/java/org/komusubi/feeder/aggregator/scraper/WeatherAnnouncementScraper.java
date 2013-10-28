@@ -33,6 +33,7 @@ import org.htmlparser.tags.ParagraphTag;
 import org.htmlparser.util.NodeList;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announcement;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +133,7 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
      * @param site
      */
     public WeatherAnnouncementScraper(WeatherTopicSite site) {
-        this(site, new HtmlScraper());
+        this(site, new HtmlScraper(true, new BitlyUrlShortening(site.scrapeType())));
     }
     
     /**

@@ -53,10 +53,17 @@ public class Twitter4j implements SocialNetwork {
     }
 
     /**
+     * 
+     * @param prefix in property key
+     */
+    public Twitter4j(String prefix) {
+        this(new TwitterFactory(prefix).getInstance());
+    }
+    /**
      * create new instance for unit test
      * @param twitter
      */
-    // package
+    // package scope 
     Twitter4j(Twitter twitter) {
         this.twitter = twitter;
     }

@@ -26,7 +26,9 @@ import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.ResourceBundleMessage;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 
 /**
  * @author jun.ozeki
@@ -36,19 +38,40 @@ public class RssSite implements Site, Serializable {
     private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(RssSite.class);
     private Url url;
     private Tags tags;
+    private ScrapeType scrapeType;
                     
     /**
-     * 
+     * create new instance.
+     * @param resourceKey
      */
     public RssSite(String resourceKey) {
-        this(new Url(RESOURCE.getString(resourceKey), new BitlyUrlShortening()));
+        this(resourceKey, new BitlyUrlShortening());
+    }
+
+    /**
+     * create new instance.
+     * @param resourceKey
+     * @param scrapeType
+     */
+    public RssSite(String resourceKey, ScrapeType scrapeType) {
+        this(resourceKey, new BitlyUrlShortening(scrapeType));
+    }
+
+    /**
+     * create new instance.
+     * @param resourceKey
+     * @param urlShorten
+     */
+    public RssSite(String resourceKey, UrlShortening urlShorten) {
+        this(new Url(RESOURCE.getString(resourceKey), urlShorten), urlShorten.scrapeType());
     }
 
     /**
      * @param url
      */
-    public RssSite(Url url, Tag... tags) {
+    public RssSite(Url url, ScrapeType scrapeType, Tag... tags) {
         this.url = url;
+        this.scrapeType = scrapeType;
         this.tags = new Tags();
         this.tags.addAll(Arrays.asList(tags));
     }
@@ -69,4 +92,7 @@ public class RssSite implements Site, Serializable {
         return tags;
     }
 
+    public ScrapeType scrapeType() {
+        return scrapeType;
+    }
 }
