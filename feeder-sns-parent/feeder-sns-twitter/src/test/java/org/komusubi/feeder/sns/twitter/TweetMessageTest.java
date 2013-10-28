@@ -20,6 +20,7 @@ package org.komusubi.feeder.sns.twitter;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,6 +29,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.komusubi.feeder.model.ScriptLine;
+import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 
 /**
@@ -60,6 +63,36 @@ public class TweetMessageTest {
             
             // exercise and verify
             assertThat(target.trimedLine(), is(expected));
+        }
+        
+        @Test(expected = Twitter4jException.class)
+        public void overMaxLengthMessage() {
+            // setup
+            String text = "abcdefghijklmnopqrstuvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz";
+            // exercise
+            new TweetScript(text);
+            // verify
+            fail("expect throw exception");
+        }
+        
+        @Test(expected = Twitter4jException.class)
+        public void overMaxLengthMessageWithFragment() {
+            // setup
+            String text = "abcdefghijklmnopqrstuvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz";
+            Fragment fragment = new TimestampFragment("yyyy/MM/dd HH:mm");
+            // exercise
+            new TweetScript(fragment, text);
+            // verify
+            fail("expect throw exception");
         }
         
     }
