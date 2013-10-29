@@ -69,7 +69,7 @@ public class BitlyUrlShortening implements UrlShortening {
         } catch (MalformedURLException e) {
             throw new FeederException(e);
         }
-        logger.debug("property file path: %s\n", url.toExternalForm());
+        logger.debug("property file path: {}", url.toExternalForm());
         try (InputStream in = url.openStream()) {
             PROPERTIES.load(in);
         } catch (Exception e) {
