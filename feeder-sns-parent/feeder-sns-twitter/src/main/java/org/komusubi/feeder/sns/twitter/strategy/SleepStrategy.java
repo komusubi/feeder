@@ -192,7 +192,7 @@ public class SleepStrategy implements GateKeeper {
                 String stripped = strip(script.trimedLine());
                 for (String item: cache()) {
                     if (stripped.equals(strip(item))) {
-                        logger.info("duplicated script found: {}", script.line());
+                        logger.info("duplicated script found: from cache:{}, script:{}", item, script.line());
                         it.remove();
                         break;
                     }
