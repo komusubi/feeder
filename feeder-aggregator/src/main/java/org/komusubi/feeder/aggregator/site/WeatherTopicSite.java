@@ -25,6 +25,7 @@ import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.ResourceBundleMessage;
 import org.komusubi.feeder.utils.Types.ScrapeType;
 
@@ -53,8 +54,18 @@ public class WeatherTopicSite implements Site {
      * @param tags
      */
     public WeatherTopicSite(String resourceKey, ScrapeType scrapeType, Tag... tags) {
-        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey), new BitlyUrlShortening(scrapeType));
-        this.scrapeType = scrapeType;
+        this(resourceKey, new BitlyUrlShortening(scrapeType), tags);
+    }
+
+    /**
+     * create new instance.
+     * @param resourceKey
+     * @param urlShorten
+     * @param tags
+     */
+    public WeatherTopicSite(String resourceKey, UrlShortening urlShorten, Tag... tags) {
+        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey), urlShorten);
+        this.scrapeType = urlShorten.scrapeType();
         this.tags = new Tags();
         this.tags.addAll(Arrays.asList(tags));
     }

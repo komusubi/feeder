@@ -41,9 +41,10 @@ import org.slf4j.LoggerFactory;
  * @author jun.ozeki
  */
 public class HtmlScraper {
+    private static final Logger logger = LoggerFactory.getLogger(HtmlScraper.class);
     private Parser parser;
     private boolean cacheable;
-    private Map<String, NodeList> cachedNodes;
+    private Map<String, String> cachedHtml;
     private UrlShortening urlShortening;
 
     /**
@@ -61,7 +62,7 @@ public class HtmlScraper {
         this.cacheable = cacheable;
         this.urlShortening = urlShortening;
         parser = newParser();
-        cachedNodes = new HashMap<String, NodeList>();
+        cachedHtml = new HashMap<>();
         configure(parser, Parser.getConnectionManager());
     }
 
@@ -92,14 +93,19 @@ public class HtmlScraper {
      */
     protected NodeList scrape(String resource, NodeFilter filter) {
         try {
-            if (cachedNodes.containsKey(resource))
-                return cachedNodes.get(resource);
-            // parser can handle html string or URL
-            parser.setResource(resource);
+            String html;
+            if (cachedHtml.containsKey(resource)) {
+                html = cachedHtml.get(resource);
+                logger.debug("html from cache: {}", resource);
+                // parser can handle html string or URL
+                parser.setResource(html);
+            } else {
+                parser.setResource(resource);
+            }
             NodeList nodes = parser.parse(filter);
-            // FIXME It is not proper cache of Node as parsed resource.
-            if (cacheable) {
-//                cachedNodes.put(resource, nodes);
+            if (cacheable && !cachedHtml.containsKey(resource)) {
+                html = parser.getLexer().getPage().getText();
+                cachedHtml.put(resource, html);
             }
             
             return nodes;

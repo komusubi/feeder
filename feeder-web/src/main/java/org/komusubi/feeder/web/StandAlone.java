@@ -21,6 +21,7 @@ package org.komusubi.feeder.web;
 import java.io.File;
 import java.io.PrintStream;
 
+import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
@@ -40,6 +41,7 @@ import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
+import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.komusubi.feeder.utils.Types.ScrapeType;
 
@@ -118,17 +120,19 @@ public final class StandAlone {
     private Topics<? extends Topic> aggregateScraper(ScrapeType scrapeType) {
 
         WeatherTopic weather = null;
+        UrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
+        HtmlScraper scraper = new HtmlScraper(true, urlShorten);
         if (ScrapeType.JAL5971.equals(scrapeType)) {
-            WeatherTopicSite domestic = new WeatherTopicSite("domestic", scrapeType);
-            weather = new WeatherTopic(new WeatherContentScraper(domestic),
-                                                     new WeatherTitleScraper(domestic),
-                                                     new WeatherAnnouncementScraper(domestic),
+            WeatherTopicSite domestic = new WeatherTopicSite("domestic", urlShorten);
+            weather = new WeatherTopic(new WeatherContentScraper(domestic, scraper),
+                                                     new WeatherTitleScraper(domestic, scraper),
+                                                     new WeatherAnnouncementScraper(domestic, scraper),
                                                      new TweetMessagesProvider(new TimestampFragment("HHmm")));
         } else if (ScrapeType.JAL5931.equals(scrapeType)) {
-            WeatherTopicSite international = new WeatherTopicSite("internatinal", scrapeType);
-            weather = new WeatherTopic(new WeatherContentScraper(international),
-                                                        new WeatherTitleScraper(international),
-                                                        new WeatherAnnouncementScraper(international),
+            WeatherTopicSite international = new WeatherTopicSite("international", urlShorten);
+            weather = new WeatherTopic(new WeatherContentScraper(international, scraper),
+                                                        new WeatherTitleScraper(international, scraper),
+                                                        new WeatherAnnouncementScraper(international, scraper),
                                                         new TweetMessagesProvider(new TimestampFragment("HHmm")));
         } else {
             throw new IllegalArgumentException("unknown ScrapType");
