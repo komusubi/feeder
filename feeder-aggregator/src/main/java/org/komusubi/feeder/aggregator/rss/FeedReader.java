@@ -77,8 +77,8 @@ public class FeedReader implements Iterable<EntryScript> {
          * @param urlShorten
          */
         public EntryScript(SyndEntry entry, UrlShortening urlShorten) {
-            this.builder = line(entry); // initialize configure "line"
             this.urlShorten = urlShorten;
+            this.builder = line(entry); // initialize configure "line"
         }
         
         /**
@@ -98,11 +98,13 @@ public class FeedReader implements Iterable<EntryScript> {
                     builder.append("\n");
                 builder.append(entry.getDescription().getValue());
             }
-            if (!builder.toString().endsWith("\n"))
-                builder.append("\n");
+            if (StringUtils.isNotBlank(entry.getLink())) {
+                if (!builder.toString().endsWith("\n"))
+                    builder.append("\n");
 
-            URL url = urlShorten.shorten(entry.getLink());
-            builder.append(url.toExternalForm());
+                URL url = urlShorten.shorten(entry.getLink());
+                builder.append(url.toExternalForm());
+            }
             return builder;
         }
 
@@ -161,19 +163,36 @@ public class FeedReader implements Iterable<EntryScript> {
 
     private RssSite site;
     private FeedFetcherCache feedInfoCache;
+    private boolean outputConsole = Boolean.getBoolean("tweet.console");
+    private UrlShortening urlShorten;
 
     /**
      * create new instance.
      */
     public FeedReader(RssSite site) {
+        this(site, site.urlShortening());
+    }
+    
+    /**
+     * carete new instance.
+     * @param site
+     * @param urlShorten
+     */
+    public FeedReader(RssSite site, UrlShortening urlShorten) {
         if (site == null)
             throw new IllegalArgumentException("site must NOT be null");
+        if (urlShorten == null)
+            throw new IllegalArgumentException("urlShorten must NOT be null");
         this.site = site;
-        this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
+        this.urlShorten = urlShorten;
+        if (!outputConsole)
+            this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
     }
 
     public List<EntryScript> retrieve() {
-        SyndFeedInfo feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
+        SyndFeedInfo feedInfo = null;
+        if (!outputConsole)
+            feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
         long lastModified = 0L;
         if (feedInfo != null && feedInfo.getSyndFeed().getEntries().size() > 0) {
             // get first entry feed publish date because it was wrong in lastModified date in http header.
@@ -203,7 +222,7 @@ public class FeedReader implements Iterable<EntryScript> {
             for (Iterator<SyndEntry> it = (Iterator<SyndEntry>) feed.getEntries().iterator(); it.hasNext(); ) {
                 SyndEntry e = it.next();
                 if (lastModified < e.getPublishedDate().getTime())
-                    scripts.add(new EntryScript(e, site.scrapeType())); 
+                    scripts.add(new EntryScript(e, urlShorten));
                 else
                     logger.info("read already entry: {}, {}", e.getPublishedDate(), e.getTitle());
             }

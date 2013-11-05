@@ -38,7 +38,7 @@ public class RssSite implements Site, Serializable {
     private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(RssSite.class);
     private Url url;
     private Tags tags;
-    private ScrapeType scrapeType;
+    private UrlShortening urlShorten;
                     
     /**
      * create new instance.
@@ -63,15 +63,18 @@ public class RssSite implements Site, Serializable {
      * @param urlShorten
      */
     public RssSite(String resourceKey, UrlShortening urlShorten) {
-        this(new Url(RESOURCE.getString(resourceKey), urlShorten), urlShorten.scrapeType());
+        this(new Url(RESOURCE.getString(resourceKey), urlShorten), urlShorten);
     }
 
     /**
+     * create new instance.
      * @param url
+     * @param urlShorten
+     * @param tags
      */
-    public RssSite(Url url, ScrapeType scrapeType, Tag... tags) {
+    public RssSite(Url url, UrlShortening urlShorten, Tag... tags) {
         this.url = url;
-        this.scrapeType = scrapeType;
+        this.urlShorten = urlShorten;
         this.tags = new Tags();
         this.tags.addAll(Arrays.asList(tags));
     }
@@ -92,7 +95,7 @@ public class RssSite implements Site, Serializable {
         return tags;
     }
 
-    public ScrapeType scrapeType() {
-        return scrapeType;
+    public UrlShortening urlShortening() {
+        return urlShorten;
     }
 }

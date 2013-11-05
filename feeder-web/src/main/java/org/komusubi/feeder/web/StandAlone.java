@@ -100,20 +100,20 @@ public final class StandAlone {
         Topics<? extends Topic> topics;
         PageCache pageCache;
         String tmpDirname = System.getProperty("java.io.tmpdir");
-
+        String suffix = scrapeType.name().toLowerCase();
         if (AggregateType.SCRAPER.equals(aggregateType)) {
             topics = standAlone.aggregateScraper(scrapeType);
-            File storeFile = new File(tmpDirname + "/scraper-store.txt");
+            File storeFile = new File(tmpDirname + "/scraper-" + suffix + ".txt");
             pageCache = new PartialMatchPageCache(storeFile);
         } else if(AggregateType.FEEDER.equals(aggregateType)) {
             topics = standAlone.aggregateFeeder(scrapeType);
-            File storeFile = new File(tmpDirname + "/feeder-store.txt");
+            File storeFile = new File(tmpDirname + "/feeder-" + suffix + ".txt");
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
         }
         // topic 
-        Speaker speaker = new Speaker(new Twitter4j(scrapeType.name().toLowerCase()), new SleepStrategy(pageCache));
+        Speaker speaker = new Speaker(new Twitter4j(scrapeType), new SleepStrategy(pageCache));
         speaker.talk(topics);
     }
 
@@ -147,15 +147,17 @@ public final class StandAlone {
     
     private Topics<? extends Topic> aggregateFeeder(ScrapeType scrapeType) {
         
-        RssSite site = null;
-        BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
+        String resourceKey = null;
         if (ScrapeType.JAL5971.equals(scrapeType)) {
-            site = new RssSite("jal.domestic", urlShorten);
+            resourceKey = "jal.domestic";
         } else if (ScrapeType.JAL5931.equals(scrapeType)) {
-            site = new RssSite("jal.international", urlShorten);
+            resourceKey = "jal.international";
         } else {
             throw new IllegalArgumentException("unknown ScrapeType");
         }
+
+        BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
+        RssSite site = new RssSite(resourceKey, urlShorten);
 
         HashTag jal = new HashTag("jal");
         FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info", urlShorten), new TweetMessagesProvider());
