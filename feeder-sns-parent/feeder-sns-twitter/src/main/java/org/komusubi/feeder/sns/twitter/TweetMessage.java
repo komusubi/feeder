@@ -241,9 +241,13 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             super.add(script);
         } else {
             String line = script.line();
+            // FIXME code point count
             if (TweetScript.lengthAfterTweeted(line) > TweetScript.MESSAGE_LENGTH_MAX) {
-                // FIXME code point count
-                for (int position = TweetScript.MESSAGE_LENGTH_MAX; position >= 0; position--) {
+                // lengthAfterTweeted size different from script.codePointCount by url shortening.
+                // adjust position when match max length. 
+                int adjust = script.codePointCount() == TweetScript.MESSAGE_LENGTH_MAX ? 1 : 0;
+                // edit value to 140 character
+                for (int position = TweetScript.MESSAGE_LENGTH_MAX - adjust; position >= 0; position--) {
                     if (line.codePointAt(position) != '\n')
                         continue;
                     super.add(new TweetScript(fragment, line.substring(0, position)));
