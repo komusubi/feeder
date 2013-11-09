@@ -163,7 +163,9 @@ public class FeedReader implements Iterable<EntryScript> {
 
     private RssSite site;
     private FeedFetcherCache feedInfoCache;
-    private boolean outputConsole = Boolean.getBoolean("tweet.console");
+    private static final String CACHEABLE_PROPERTY = "feeder.history";
+    // cacheable default is true
+    private boolean cacheable = System.getProperty(CACHEABLE_PROPERTY) == null ? true : Boolean.getBoolean(CACHEABLE_PROPERTY);
     private UrlShortening urlShorten;
 
     /**
@@ -185,13 +187,13 @@ public class FeedReader implements Iterable<EntryScript> {
             throw new IllegalArgumentException("urlShorten must NOT be null");
         this.site = site;
         this.urlShorten = urlShorten;
-        if (!outputConsole)
+        if (cacheable)
             this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
     }
 
     public List<EntryScript> retrieve() {
         SyndFeedInfo feedInfo = null;
-        if (!outputConsole)
+        if (cacheable)
             feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
         long lastModified = 0L;
         if (feedInfo != null && feedInfo.getSyndFeed().getEntries().size() > 0) {
