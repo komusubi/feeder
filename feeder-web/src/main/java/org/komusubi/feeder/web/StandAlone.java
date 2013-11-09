@@ -167,7 +167,7 @@ public final class StandAlone {
 
         FeedTopic feedTopic = new FeedTopic(site, new TweetMessagesProvider());
         feedTopic.addTag(jal);
-        jalInfo.addTag(feed);
+        feedTopic.addTag(feed);
 
         Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
