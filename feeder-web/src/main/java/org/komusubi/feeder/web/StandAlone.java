@@ -160,11 +160,14 @@ public final class StandAlone {
         RssSite site = new RssSite(resourceKey, urlShorten);
 
         HashTag jal = new HashTag("jal");
+        HashTag feed = new HashTag("rss");
         FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info", urlShorten), new TweetMessagesProvider());
         jalInfo.addTag(jal);
+        jalInfo.addTag(feed);
 
         FeedTopic feedTopic = new FeedTopic(site, new TweetMessagesProvider());
         feedTopic.addTag(jal);
+        jalInfo.addTag(feed);
 
         Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
