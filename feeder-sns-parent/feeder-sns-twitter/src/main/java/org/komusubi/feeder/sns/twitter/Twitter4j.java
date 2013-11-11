@@ -130,7 +130,7 @@ public class Twitter4j implements SocialNetwork {
         } catch (TwitterException e) {
             throw new Twitter4jException(String.format("tweet(length:%d): %s",  
                                             TweetScript.lengthAfterTweeted(current.trimedLine()),
-                                            current.trimedLine()));
+                                            current.trimedLine()), e);
         }
     }
 
