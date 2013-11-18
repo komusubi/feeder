@@ -21,6 +21,9 @@ package org.komusubi.feeder.web;
 import java.io.File;
 import java.io.PrintStream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.komusubi.feeder.aggregator.rss.FeedReader;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
@@ -156,16 +159,18 @@ public final class StandAlone {
             throw new IllegalArgumentException("unknown ScrapeType");
         }
 
+        File cacheDir = new File(normalize(System.getProperty("java.io.tmpdir"), scrapeType.name().toLowerCase()));
         BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
         RssSite site = new RssSite(resourceKey, urlShorten);
 
         HashTag jal = new HashTag("jal");
         HashTag feed = new HashTag("rss");
-        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info", urlShorten), new TweetMessagesProvider());
+        FeedTopic jalInfo = new FeedTopic(new FeedReader(new RssSite("jal.info", urlShorten), cacheDir),
+        								  new TweetMessagesProvider());
         jalInfo.addTag(jal);
         jalInfo.addTag(feed);
 
-        FeedTopic feedTopic = new FeedTopic(site, new TweetMessagesProvider());
+        FeedTopic feedTopic = new FeedTopic(new FeedReader(site, cacheDir), new TweetMessagesProvider());
         feedTopic.addTag(jal);
         feedTopic.addTag(feed);
 
@@ -175,5 +180,16 @@ public final class StandAlone {
 
         return topics;
     }
-
+    
+    private String normalize(String parent, String child) {
+    	Validate.isTrue(StringUtils.isEmpty(parent), "Must not empty.");
+    	String path;
+    	if (parent.endsWith(File.separator)) {
+    		path = parent.concat(child);
+    	} else {
+    		path = parent.concat(File.separator).concat(child);
+    	}
+    	return path;
+    	
+    }
 }
