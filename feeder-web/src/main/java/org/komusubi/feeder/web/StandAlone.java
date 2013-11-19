@@ -47,12 +47,14 @@ import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCa
 import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.komusubi.feeder.utils.Types.ScrapeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
  */
 public final class StandAlone {
-//    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
+    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
 
     // hide default constructor.
     private StandAlone() {
@@ -102,15 +104,15 @@ public final class StandAlone {
 
         Topics<? extends Topic> topics;
         PageCache pageCache;
-        String tmpDirname = System.getProperty("java.io.tmpdir");
+        File tmpDir = standAlone.cacheDirectory();
         String suffix = scrapeType.name().toLowerCase();
         if (AggregateType.SCRAPER.equals(aggregateType)) {
             topics = standAlone.aggregateScraper(scrapeType);
-            File storeFile = new File(tmpDirname + "/scraper-" + suffix + ".txt");
+            File storeFile = standAlone.normalize(tmpDir, "/scraper-".concat(suffix).concat(".txt"));
             pageCache = new PartialMatchPageCache(storeFile);
         } else if(AggregateType.FEEDER.equals(aggregateType)) {
             topics = standAlone.aggregateFeeder(scrapeType);
-            File storeFile = new File(tmpDirname + "/feeder-" + suffix + ".txt");
+            File storeFile = standAlone.normalize(tmpDir, "/feeder-".concat(suffix).concat(".txt"));
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
@@ -159,7 +161,7 @@ public final class StandAlone {
             throw new IllegalArgumentException("unknown ScrapeType");
         }
 
-        File cacheDir = new File(normalize(System.getProperty("java.io.tmpdir"), scrapeType.name().toLowerCase()));
+        File cacheDir = normalize(cacheDirectory(), scrapeType.name().toLowerCase());
         BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
         RssSite site = new RssSite(resourceKey, urlShorten);
 
@@ -181,15 +183,22 @@ public final class StandAlone {
         return topics;
     }
     
-    private String normalize(String parent, String child) {
-    	Validate.isTrue(StringUtils.isEmpty(parent), "Must not empty.");
-    	String path;
-    	if (parent.endsWith(File.separator)) {
-    		path = parent.concat(child);
-    	} else {
-    		path = parent.concat(File.separator).concat(child);
-    	}
-    	return path;
-    	
+    private File normalize(File parent, String child) {
+        Validate.isTrue(parent != null, "normalize path parent must NOT be null.");
+        return new File(parent, child);
+    }
+
+    private File cacheDirectory() {
+        String dirname = System.getProperty("feeder.home");
+        if (dirname == null)
+            dirname = System.getProperty("java.io.tmpdir");
+        File cacheDir = new File(dirname);
+        if (!cacheDir.exists()) {
+            if (!cacheDir.mkdirs())
+                logger.error("failed mkdir path:{}", cacheDir.getAbsolutePath());
+        } else if (cacheDir.isFile()) {
+            throw new IllegalStateException();
+        }
+        return cacheDir;
     }
 }
