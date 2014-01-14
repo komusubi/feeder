@@ -122,6 +122,8 @@ public class SleepStrategy implements GateKeeper {
                 throw new Twitter4jException(e);
             }
             // replace file
+            if (System.getProperty("os.name").contains("Windows"))
+                file.delete();
             if (!tmp.renameTo(file))
                 logger.warn("rename file failure:{}", tmp.getAbsolutePath());
             items.clear();
