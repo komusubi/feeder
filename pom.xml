@@ -15,6 +15,7 @@
     <module>feeder-aggregator</module>
     <module>feeder-sns</module>
     <module>feeder-sns-parent</module>
+    <module>feeder-storage</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
