@@ -18,13 +18,15 @@
  */
 package org.komusubi.feeder.model.airline;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
  *
  * @author jun.ozeki 2013/11/27
  */
-public class FlightNumber {
+public class FlightNumber implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final Pattern pattern = Pattern.compile("[\\d]{3,}");
     private String number;
 
