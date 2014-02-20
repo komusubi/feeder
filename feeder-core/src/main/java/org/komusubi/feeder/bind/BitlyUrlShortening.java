@@ -98,7 +98,6 @@ public class BitlyUrlShortening implements UrlShortening {
     /**
      * @see org.komusubi.feeder.spi.UrlShortening#shorten()
      */
-    @SuppressWarnings("incomplete-switch")
     @Override
     public URL shorten(URL url) {
         try {
@@ -133,6 +132,19 @@ public class BitlyUrlShortening implements UrlShortening {
                         map.put(key, parser.getString());
                         logger.trace("value: {}", parser.getString());
                         break;
+                    case END_ARRAY:
+                    case END_OBJECT:
+                    case START_ARRAY:
+                    case START_OBJECT:
+                    case VALUE_FALSE:
+                    case VALUE_NULL:
+                    case VALUE_NUMBER:
+                    case VALUE_TRUE:
+                    	// nothing to do
+                    	break;
+                    default:
+                    	// nothing to do
+                    	break;
                     }
                 }
                 URL shortened;
