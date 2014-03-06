@@ -163,6 +163,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 			return this;
 		}
 
+		@Override
 		public String fragment() {
 			return this.fragment;
 		}
