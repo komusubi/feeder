@@ -41,6 +41,7 @@ import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.sns.GateKeeper;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
+import org.komusubi.feeder.sns.twitter.spi.PageCache;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.Twitter4jException;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
@@ -51,19 +52,6 @@ import org.slf4j.LoggerFactory;
  * @author jun.ozeki
  */
 public class SleepStrategy implements GateKeeper {
-
-    /**
-     * 
-     * @author jun.ozeki
-     */
-    public interface PageCache {
-
-        void refresh();
-
-        boolean exists(Message message);
-
-        void store(Message message);
-    }
 
     /**
      * 

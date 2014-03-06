@@ -19,5 +19,9 @@
       <groupId>org.komusubi.feeder</groupId>
       <artifactId>feeder-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.komusubi.feeder</groupId>
+      <artifactId>feeder-storage</artifactId>
+    </dependency>
   </dependencies>
 </project>

@@ -16,39 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.utils;
+package org.komusubi.feeder.sns.twitter.spi;
 
-import java.util.Date;
-
-import org.komusubi.common.util.Resolver;
+import org.komusubi.feeder.model.Message;
 
 /**
+ *  
  * @author jun.ozeki
  */
-public class ResolverUtils {
-
-    /**
-     * 
-     * @author jun.ozeki
-     */
-	@Deprecated //
-    public static class DateResolver implements Resolver<Date> {
-
-        /**
-         * @see org.komusubi.common.util.Resolver#resolve()
-         */
-        @Override
-        public Date resolve() {
-            return new Date();
-        }
-
-        /**
-         * @see org.komusubi.common.util.Resolver#resolve(java.lang.Object)
-         */
-        @Override
-        public Date resolve(Date value) {
-            return value;
-        }
-        
-    }
+public interface PageCache {
+    void refresh();
+    boolean exists(Message message);
+    void store(Message message);
 }

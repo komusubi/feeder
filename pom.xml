@@ -51,6 +51,11 @@
       </dependency>
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
+        <artifactId>feeder-storage</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-web</artifactId>
         <version>${project.version}</version>
         <type>war</type>
