@@ -41,8 +41,8 @@ import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
 import org.komusubi.feeder.spi.PageCache;
+import org.komusubi.feeder.storage.cache.PartialMatchPageCache;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.komusubi.feeder.web.scheduler.QuartzModule;
 

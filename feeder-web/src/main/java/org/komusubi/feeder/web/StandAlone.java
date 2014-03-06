@@ -38,10 +38,10 @@ import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.provider.TweetMessagesProvider;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
 import org.komusubi.feeder.spi.PageCache;
 import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.storage.cache.FilePageCache;
+import org.komusubi.feeder.storage.cache.PartialMatchPageCache;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.komusubi.feeder.utils.Types.ScrapeType;
 

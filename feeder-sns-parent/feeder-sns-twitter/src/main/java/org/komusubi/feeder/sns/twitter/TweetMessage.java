@@ -167,6 +167,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 			return this.fragment;
 		}
 
+		@Override
 		public boolean isFragment() {
 			return fragment != null;
 		}

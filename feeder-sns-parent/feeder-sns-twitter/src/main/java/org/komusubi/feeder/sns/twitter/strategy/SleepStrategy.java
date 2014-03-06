@@ -30,7 +30,6 @@ import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Page;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.sns.GateKeeper;
-import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.spi.PageCache;
 import org.komusubi.feeder.storage.cache.FilePageCache;
@@ -44,76 +43,6 @@ import org.slf4j.LoggerFactory;
 public class SleepStrategy implements GateKeeper {
 
     /**
-     * 
-     * @author jun.ozeki
-     */
-    public static class PartialMatchPageCache extends FilePageCache implements PageCache {
-
-        private static final Logger logger = LoggerFactory.getLogger(PartialMatchPageCache.class);
-
-        /**
-         * @param path
-         */
-        @Inject
-        public PartialMatchPageCache(@Named("tweet store file") String path) {
-            super(path);
-        }
-
-        /**
-         * @param file
-         */
-        public PartialMatchPageCache(File file) {
-            super(file);
-        }
-
-        /**
-         * @see org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache#exists(org.komusubi.feeder.model.Message)
-         */
-        @Override
-        public boolean exists(Message message) {
-            if (message == null || message.size() <= 0)
-                return false; // this right ?
-            // compare to first script only.
-            Script script = message.get(0);
-            String comparison;
-            if (script instanceof TweetScript) {
-                TweetScript ts = (TweetScript) script;
-                if (ts.isFragment()) {
-                    comparison = ts.trimedLine().substring(ts.fragment().length());
-                } else {
-                    comparison = ts.trimedLine();
-                }
-            } else {
-                comparison = message.get(0).trimedLine();
-            }
-            for (String item: cache()) {
-                if (comparison.equals(item)) {
-                    logger.info("duplicated message: {}", comparison);
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        @Override
-        public String line(Script script) {
-            String line;
-            if (script instanceof TweetScript) {
-                TweetScript ts = (TweetScript) script;
-                if (ts.isFragment()) {
-                    line = ts.trimedLine().substring(ts.fragment().length());
-                } else {
-                    line = ts.trimedLine();
-                }
-            } else {
-                line = script.trimedLine();
-            }
-            return line;
-        }
-    }
-
-    /**
-     * 
      * @author jun.ozeki
      */
     @Deprecated
