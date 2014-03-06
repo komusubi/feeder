@@ -36,13 +36,13 @@ import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.sns.GateKeeper;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.Speaker;
-import org.komusubi.feeder.sns.spi.PageCache;
 import org.komusubi.feeder.sns.twitter.TweetMessage;
 import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
+import org.komusubi.feeder.spi.PageCache;
 import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.komusubi.feeder.web.scheduler.QuartzModule;
 

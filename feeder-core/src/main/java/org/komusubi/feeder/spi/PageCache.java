@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.sns.spi;
+package org.komusubi.feeder.spi;
 
 import org.komusubi.feeder.model.Message;
 
