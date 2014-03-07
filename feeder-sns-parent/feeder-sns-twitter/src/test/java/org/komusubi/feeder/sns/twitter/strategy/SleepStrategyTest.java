@@ -67,6 +67,7 @@ public class SleepStrategyTest {
     public static class TimelinePageCacheTest {
         @Mock private Twitter4j mockTwitter4j;
         @Mock private Resolver<Date> mockResolver;
+        @Mock private Provider<Date> mockProvider;
         @Mock private History mockHistory;
         @Mock private Page mockPage;
         @Mock private Topics<? extends Topic> mockTopics;
@@ -82,25 +83,25 @@ public class SleepStrategyTest {
         public void overOutdated() throws Exception {
             // setup
             Date date = DateUtils.parseDate("2013/08/01 10:11:35", new String[] { "yyyy/MM/dd HH:mm:ss" });
-            when(mockResolver.resolve()).thenReturn(date);
+            when(mockProvider.get()).thenReturn(date);
             when(mockTwitter4j.history()).thenReturn(mockHistory);
             when(mockHistory.next()).thenReturn(mockPage);
             when(mockPage.topics()).thenReturn(null);
 
             // exercise
 //            SleepStrategy parent = new SleepStrategy(mockTwitter4j, 1L);
-            TimelinePageCache cache = new TimelinePageCache(mockTwitter4j, mockResolver, 36000L);
+            TimelinePageCache cache = new TimelinePageCache(mockTwitter4j, mockProvider, 36000L);
 
             // verify
             assertFalse(cache.outdated());
-            verify(mockResolver, times(2)).resolve();
+            verify(mockProvider, times(2)).get();
         }
 
         @Test
         public void upToDate() throws Exception {
            // setup 
 
-           when(mockResolver.resolve()).thenAnswer(new Answer<Date>() {
+           when(mockProvider.get()).thenAnswer(new Answer<Date>() {
 
                private int count = 0;
                @Override
@@ -119,11 +120,11 @@ public class SleepStrategyTest {
            when(mockPage.topics()).thenReturn(null);
            
            // exercise
-           TimelinePageCache target = new TimelinePageCache(mockTwitter4j, mockResolver, 36000L);
+           TimelinePageCache target = new TimelinePageCache(mockTwitter4j, mockProvider, 36000L);
            
            // verify
            assertTrue(target.outdated());
-           verify(mockResolver, times(2)).resolve();
+           verify(mockProvider, times(2)).get();
         }
 
         @Test

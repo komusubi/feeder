@@ -83,7 +83,7 @@ public class SleepStrategy implements GateKeeper {
         @Deprecated
         public TimelinePageCache(Twitter4j twitter4j, Resolver<Date> resolver, @Named("cache duration") long duration) {
             this.twitter4j = twitter4j;
-//            this.resolver = resolver;
+            this.provider = DATE_PROVIDER;
             this.cacheDuration = duration;
             init();
         }
