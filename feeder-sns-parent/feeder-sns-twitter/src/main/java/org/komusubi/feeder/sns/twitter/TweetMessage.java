@@ -264,36 +264,39 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 	}
 
 	@Override
-	public boolean add(Script script) {
-		if (script instanceof TweetScript) {
-			super.add(script);
-		} else {
-			String line = script.line();
-			if (TweetScript.lengthAfterTweeted(line) > TweetScript.MESSAGE_LENGTH_MAX) {
-				// FIXME code point count
-				for (int position = TweetScript.MESSAGE_LENGTH_MAX; position >= 0; position--) {
-					if (line.codePointAt(position) != '\n')
-						continue;
-					super.add(new TweetScript(fragment, line.substring(0,
-							position)));
-					this.add(new ScriptLine(line.substring(position + 1))); // call
-																			// recursively.
-					return true;
-				}
-				// not found line feed '\n'
-				int offset = 0;
-				for (; TweetScript.lengthAfterTweeted(line.substring(offset)) > TweetScript.MESSAGE_LENGTH_MAX; offset += TweetScript.MESSAGE_LENGTH_MAX) {
-					super.add(new TweetScript(fragment, line.substring(offset,
-							TweetScript.MESSAGE_LENGTH_MAX)));
-				}
-				if (line.length() - offset > 0)
-					super.add(new TweetScript(fragment, line.substring(offset)));
-			} else {
-				super.add(script);
-			}
-		}
-		return true;
-	}
+    public boolean add(Script script) {
+        if (script instanceof TweetScript) {
+            super.add(script);
+        } else {
+            String line = script.line();
+            // FIXME code point count
+            if (TweetScript.lengthAfterTweeted(line) > TweetScript.MESSAGE_LENGTH_MAX) {
+                // lengthAfterTweeted size different from script.codePointCount by url shortening.
+                // adjust position when match max length. 
+                int adjust = script.codePointCount() == TweetScript.MESSAGE_LENGTH_MAX ? 1 : 0;
+                // edit value to 140 character
+                for (int position = TweetScript.MESSAGE_LENGTH_MAX - adjust; position >= 0; position--) {
+                    if (line.codePointAt(position) != '\n')
+                        continue;
+                    super.add(new TweetScript(fragment, line.substring(0, position)));
+                    this.add(new ScriptLine(line.substring(position + 1))); // call recursively.
+                    return true; 
+                }
+                // not found line feed '\n'
+                int offset = 0;
+                for (; 
+                       TweetScript.lengthAfterTweeted(line.substring(offset)) > TweetScript.MESSAGE_LENGTH_MAX; 
+                       offset += TweetScript.MESSAGE_LENGTH_MAX) {
+                    super.add(new TweetScript(fragment, line.substring(offset, TweetScript.MESSAGE_LENGTH_MAX)));
+                }
+                if (line.length() - offset > 0)
+                    super.add(new TweetScript(fragment, line.substring(offset)));
+            } else {
+                super.add(script);
+            }
+        }
+        return true;
+    }
 
 	/**
 	 * @see org.komusubi.feeder.model.Message#append(java.lang.String)
