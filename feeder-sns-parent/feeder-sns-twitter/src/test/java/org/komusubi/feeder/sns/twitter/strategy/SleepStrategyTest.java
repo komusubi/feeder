@@ -28,6 +28,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
+import javax.inject.Provider;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +47,6 @@ import org.komusubi.feeder.sns.twitter.TweetTopics;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.TimelinePageCache;
 import org.komusubi.feeder.spi.PageCache;
-import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -146,7 +147,13 @@ public class SleepStrategyTest {
             message.append(msg);
 
             // exercise
-            TimelinePageCache cache = new TimelinePageCache(mockTwitter4j, new DateResolver(), 36000L);
+            Provider<Date> provider = new Provider<Date>() {
+                @Override
+                public Date get() {
+                    return new Date();
+                }
+            };
+            TimelinePageCache cache = new TimelinePageCache(mockTwitter4j, provider, 36000L);
            
             // verify
             assertTrue(cache.exists(message));

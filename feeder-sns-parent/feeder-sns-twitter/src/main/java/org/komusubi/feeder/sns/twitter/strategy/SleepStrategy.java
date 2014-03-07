@@ -23,6 +23,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.komusubi.common.util.Resolver;
 import org.komusubi.feeder.model.Message;
@@ -33,7 +34,6 @@ import org.komusubi.feeder.sns.GateKeeper;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.spi.PageCache;
 import org.komusubi.feeder.storage.cache.FilePageCache;
-import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,17 +49,23 @@ public class SleepStrategy implements GateKeeper {
     public static class TimelinePageCache implements PageCache {
         private static final Logger logger = LoggerFactory.getLogger(SleepStrategy.class);
         private static final long CACHE_DURATION = 60 * 60 * 1000;
+        private static final Provider<Date> DATE_PROVIDER = new Provider<Date>() {
+            @Override
+            public Date get() {
+                return new Date();
+            }
+        };
         private Date date;
         private Page page;
-        private Resolver<Date> resolver;
         private long cacheDuration;
         private Twitter4j twitter4j;
+        private Provider<Date> provider;
 
         /**
          * create new instance.
          */
         public TimelinePageCache() {
-            this(new Twitter4j(), new DateResolver(), CACHE_DURATION);
+            this(new Twitter4j(), DATE_PROVIDER, CACHE_DURATION);
         }
 
         /**
@@ -67,17 +73,25 @@ public class SleepStrategy implements GateKeeper {
          * @param twitter4j
          */
         public TimelinePageCache(Twitter4j twitter4j) {
-            this(twitter4j, new DateResolver(), CACHE_DURATION);
+            this(twitter4j, DATE_PROVIDER, CACHE_DURATION);
         }
 
         /**
          * create new instance.
          * @param date
          */
-        @Inject
+        @Deprecated
         public TimelinePageCache(Twitter4j twitter4j, Resolver<Date> resolver, @Named("cache duration") long duration) {
             this.twitter4j = twitter4j;
-            this.resolver = resolver;
+//            this.resolver = resolver;
+            this.cacheDuration = duration;
+            init();
+        }
+
+        @Inject
+        public TimelinePageCache(Twitter4j twitter4j, Provider<Date> provider, @Named("cache duration") long duration) {
+            this.twitter4j = twitter4j;
+            this.provider = provider;
             this.cacheDuration = duration;
             init();
         }
@@ -91,12 +105,12 @@ public class SleepStrategy implements GateKeeper {
         }
 
         private void init() {
-            this.date = resolver.resolve();
+            this.date = provider.get();
             page = twitter4j.history().next();
         }
 
         public boolean outdated() {
-            Date current = resolver.resolve();
+            Date current = provider.get();
             if (current.getTime() - date.getTime() > cacheDuration) {
                 return true;
             }
