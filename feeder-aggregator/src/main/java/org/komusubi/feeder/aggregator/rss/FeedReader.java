@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.aggregator.rss;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -163,7 +164,9 @@ public class FeedReader implements Iterable<EntryScript> {
 
     private RssSite site;
     private FeedFetcherCache feedInfoCache;
-    private boolean outputConsole = Boolean.getBoolean("tweet.console");
+    private static final String CACHEABLE_PROPERTY = "feeder.history";
+    // cacheable default is true
+    private boolean cacheable = System.getProperty(CACHEABLE_PROPERTY) == null ? true : Boolean.getBoolean(CACHEABLE_PROPERTY);
     private UrlShortening urlShorten;
 
     /**
@@ -174,24 +177,50 @@ public class FeedReader implements Iterable<EntryScript> {
     }
     
     /**
-     * carete new instance.
+     * create new instance.
      * @param site
      * @param urlShorten
      */
     public FeedReader(RssSite site, UrlShortening urlShorten) {
-        if (site == null)
-            throw new IllegalArgumentException("site must NOT be null");
-        if (urlShorten == null)
-            throw new IllegalArgumentException("urlShorten must NOT be null");
-        this.site = site;
-        this.urlShorten = urlShorten;
-        if (!outputConsole)
-            this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
+    	this(site, urlShorten, new File(System.getProperty("java.io.tmpdir")));
+    }
+
+    /**
+     * create new instance.
+     * @param site
+     * @param cacheDir
+     */
+    public FeedReader(RssSite site, File cacheDir) {
+    	this(site, site.urlShortening(), cacheDir);
+    }
+
+    /**
+     * create new instance.
+     * @param site
+     * @param urlShorten
+     * @param cacheDir
+     */
+    public FeedReader(RssSite site, UrlShortening urlShorten, File cacheDir) {
+    	if (site == null)
+    		throw new IllegalArgumentException("site must NOT be null");
+    	if (urlShorten == null)
+    		throw new IllegalArgumentException("urlShorten must NOT be null");
+    	if (cacheDir == null)
+    		cacheDir = new File(System.getProperty("java.io.tmpdir"));
+    	if (!cacheDir.exists()) {
+    		cacheDir.mkdirs();
+    	} else if (cacheDir.isFile()) {
+    		throw new IllegalStateException("cache dir is NOT directory: " + cacheDir.getAbsolutePath());
+    	}
+    	this.site = site;
+    	this.urlShorten = urlShorten;
+        if (cacheable)
+            this.feedInfoCache = new DiskFeedInfoCache(cacheDir.getAbsolutePath());
     }
 
     public List<EntryScript> retrieve() {
         SyndFeedInfo feedInfo = null;
-        if (!outputConsole)
+        if (cacheable)
             feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
         long lastModified = 0L;
         if (feedInfo != null && feedInfo.getSyndFeed().getEntries().size() > 0) {

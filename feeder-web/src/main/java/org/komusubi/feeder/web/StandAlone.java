@@ -21,6 +21,9 @@ package org.komusubi.feeder.web;
 import java.io.File;
 import java.io.PrintStream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.komusubi.feeder.aggregator.rss.FeedReader;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
@@ -44,12 +47,14 @@ import org.komusubi.feeder.storage.cache.FilePageCache;
 import org.komusubi.feeder.storage.cache.PartialMatchPageCache;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.komusubi.feeder.utils.Types.ScrapeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
  */
 public final class StandAlone {
-//    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
+    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
 
     // hide default constructor.
     private StandAlone() {
@@ -99,15 +104,15 @@ public final class StandAlone {
 
         Topics<? extends Topic> topics;
         PageCache pageCache;
-        String tmpDirname = System.getProperty("java.io.tmpdir");
+        File tmpDir = standAlone.cacheDirectory();
         String suffix = scrapeType.name().toLowerCase();
         if (AggregateType.SCRAPER.equals(aggregateType)) {
             topics = standAlone.aggregateScraper(scrapeType);
-            File storeFile = new File(tmpDirname + "/scraper-" + suffix + ".txt");
+            File storeFile = standAlone.normalize(tmpDir, "/scraper-".concat(suffix).concat(".txt"));
             pageCache = new PartialMatchPageCache(storeFile);
         } else if(AggregateType.FEEDER.equals(aggregateType)) {
             topics = standAlone.aggregateFeeder(scrapeType);
-            File storeFile = new File(tmpDirname + "/feeder-" + suffix + ".txt");
+            File storeFile = standAlone.normalize(tmpDir, "/feeder-".concat(suffix).concat(".txt"));
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
@@ -156,15 +161,20 @@ public final class StandAlone {
             throw new IllegalArgumentException("unknown ScrapeType");
         }
 
+        File cacheDir = normalize(cacheDirectory(), scrapeType.name().toLowerCase());
         BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
         RssSite site = new RssSite(resourceKey, urlShorten);
 
         HashTag jal = new HashTag("jal");
-        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info", urlShorten), new TweetMessagesProvider());
+        HashTag feed = new HashTag("rss");
+        FeedTopic jalInfo = new FeedTopic(new FeedReader(new RssSite("jal.info", urlShorten), cacheDir),
+        								  new TweetMessagesProvider());
         jalInfo.addTag(jal);
+        jalInfo.addTag(feed);
 
-        FeedTopic feedTopic = new FeedTopic(site, new TweetMessagesProvider());
+        FeedTopic feedTopic = new FeedTopic(new FeedReader(site, cacheDir), new TweetMessagesProvider());
         feedTopic.addTag(jal);
+        feedTopic.addTag(feed);
 
         Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
@@ -172,5 +182,23 @@ public final class StandAlone {
 
         return topics;
     }
+    
+    private File normalize(File parent, String child) {
+        Validate.isTrue(parent != null, "normalize path parent must NOT be null.");
+        return new File(parent, child);
+    }
 
+    private File cacheDirectory() {
+        String dirname = System.getProperty("feeder.home");
+        if (dirname == null)
+            dirname = System.getProperty("java.io.tmpdir");
+        File cacheDir = new File(dirname);
+        if (!cacheDir.exists()) {
+            if (!cacheDir.mkdirs())
+                logger.error("failed mkdir path:{}", cacheDir.getAbsolutePath());
+        } else if (cacheDir.isFile()) {
+            throw new IllegalStateException();
+        }
+        return cacheDir;
+    }
 }

@@ -154,7 +154,8 @@ public class SleepStrategy implements GateKeeper {
 
     private long milliSecond;
     private PageCache cache;
-    private boolean outputConsole = Boolean.getBoolean("tweet.console");
+    private static final String STORAGE_PROPERTY = "message.storage";
+    private boolean cacheable = System.getProperty(STORAGE_PROPERTY) == null ? true : Boolean.getBoolean(STORAGE_PROPERTY);
 
     /**
      * create new instance.
@@ -209,7 +210,7 @@ public class SleepStrategy implements GateKeeper {
      */
     @Override
     public void store(Message message) {
-        if (!outputConsole) 
+        if (cacheable) 
             cache.store(message);
     }
 
