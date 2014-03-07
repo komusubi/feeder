@@ -7,6 +7,7 @@
     <version>0.2-SNAPSHOT</version>
   </parent>
   <artifactId>feeder-storage</artifactId>
+  <name>feeder-storage</name>
   <properties>
     <hibernate-version>4.3.0.CR1</hibernate-version>
   </properties>
