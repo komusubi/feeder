@@ -28,6 +28,10 @@ import org.komusubi.feeder.model.Message.Script;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * cache message and match partial of message.
+ * @author jun.ozeki
+ */
 public class PartialMatchPageCache extends FilePageCache {
 
     private static final Logger logger = LoggerFactory.getLogger(PartialMatchPageCache.class);
