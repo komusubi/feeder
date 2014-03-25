@@ -13,7 +13,7 @@ Source3:  %{name}.sh
 
 BuildRequires: java >= 1:1.7.0
 # TODO configure maven 
-#BuildRequires: maven
+BuildRequires: maven
 
 Requires: java >= 1:1.7.0
 
@@ -37,14 +37,24 @@ Requires: java >= 1:1.7.0
 %description
 scrape html or rss and tweet.
 
-#%prep
+%prep
+%if 0%{?fedora}
+  mvn clean
+%endif
+%if 0%{?centos}
+  /opt/apache/maven/bin/mvn clean
+%endif
 
-#%%setup 
-#%setup -T -q -c -n %{name}-%{version}
-#%{__unzip} -q ../%{archive}
+%setup -T -q -D -n .
+%{nil}
 
 %build
-/opt/apache/maven/bin/mvn -Dmaven.test.skip=true package
+%if 0%{?fedora}
+  mvn -Dmaven.test.skip=true package
+%endif
+%if 0%{?centos}
+  /opt/apache/maven/bin/mvn -Dmaven.test.skip=true package
+%endif
 
 %install
 %{__install} -dm 755 %{buildroot}%{homedir}

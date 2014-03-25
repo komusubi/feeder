@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rpmbuild --define "_topdir /home/jun/workspace/feeder/rpmbuild" \
-         --define "_builddir /home/jun/workspace/feeder" \
-         -bi SPECS/feeder.spec
+BUILD_HOME=$(cd $(dirname $0);pwd)
+
+rpmbuild --define "_topdir "${BUILD_HOME}"" \
+         --define "_builddir "${BUILD_HOME}/.."" \
+         -bi ${BUILD_HOME}/SPECS/feeder.spec
 
