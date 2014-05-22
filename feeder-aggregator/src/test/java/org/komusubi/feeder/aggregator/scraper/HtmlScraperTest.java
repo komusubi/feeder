@@ -58,7 +58,7 @@ public class HtmlScraperTest {
      */
     public static class スクレイプ処理呼び出し {
         @Rule public ExternalFileResource fileResource = new ExternalFileResource(HtmlScraperTest.class,
-                        "HtmlScraperTestスクレイプ処理呼び出し.html");
+                        "HtmlScraperTestCallScraper.html");
 
         private HtmlScraper target;
 

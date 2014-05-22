@@ -4,15 +4,14 @@ FEEDER_HOME=$(cd $(dirname $0)/..;pwd)
 FEEDER_LIB=${FEEDER_HOME}/lib
 FEEDER_LOGS=${FEEDER_HOME}/logs
 FEEDER_CONF=${FEEDER_HOME}/conf
-SCRIPT_NAME=$(basename $0)
 JAR_NAME=feeder-standalone.jar
 
-function usage()
+usage()
 {
-  echo "usage: ${SCRIPT_NAME}: [-dh] [-t scraper|feeder] "
+  echo "$(basename $0): [-dh] [-t scraper|feeder] "
 }
 
-function execute()
+execute()
 {
   CONSOLE="false"
   ARGERR=0
@@ -49,7 +48,7 @@ function execute()
   java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME} $AGGREGATE_TYPE
 }
 
-function main()
+main()
 {
   execute $@
 }
