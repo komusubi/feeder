@@ -11,7 +11,9 @@ Source0:  %{name}.sh
 #Source3:  %{name}.service
 
 BuildRequires: java >= 1:1.7.0
-BuildRequires: apache-maven
+%if 0%{?centos}
+  BuildRequires: apache-maven
+%endif
 
 Requires: java >= 1:1.7.0
 
