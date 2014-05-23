@@ -62,7 +62,8 @@ mvn -P standalone package
 %{__ln_s} %{bindir}/%{name} %{buildroot}%{userbin}/%{name}
 %{__ln_s} %{confdir}        %{buildroot}%{homedir}/conf
 
-#sed -e "s|@@SCRIPT_PATH@@|%{homedir}/bin/%{hostarch}/sonar.sh|g" %{SOURCE2} > %{name}.service
+sed -i -e "s|^\(FEEDER_HOME\)=.*$|\1=%{homedir}|" %{buildroot}%{userbin}/%{name}
+
 #sed -e "s|@@LOG_FILE_PATH@@|%{logdir}/sonar.log|g" %{SOURCE0}
 #install -pm 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 #sed -e "s|^\(sonar.jdbc.url\)=.*$|\1=http:\/\/localhost|" 
@@ -84,8 +85,8 @@ mvn -P standalone package
 %files
 %defattr(-,root,root,-)
 %{homedir}
-%{tmpdir}
-%{logdir}
+%attr(755,jun,jun) %{tmpdir}
+%attr(755,jun,jun) %{logdir}
 %{confdir}
 %{userbin}/%{name}
 %{_sysconfdir}/logrotate.d/%{name}
