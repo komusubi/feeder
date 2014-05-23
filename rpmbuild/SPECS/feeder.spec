@@ -12,7 +12,7 @@ Source3:  twitter4j.properties
 
 BuildRequires: java >= 1:1.7.0
 %if 0%{?centos}
-  BuildRequires: apache-maven
+BuildRequires: apache-maven
 %endif
 
 Requires: java >= 1:1.7.0
