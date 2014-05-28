@@ -4,20 +4,26 @@ FEEDER_HOME=$(cd $(dirname $0)/..;pwd)
 FEEDER_LIB=${FEEDER_HOME}/lib
 FEEDER_LOGS=${FEEDER_HOME}/logs
 FEEDER_CONF=${FEEDER_HOME}/conf
+SCRIPT_NAME=$(basename $0)
 JAR_NAME=feeder-standalone.jar
 
-usage()
+function usage()
 {
-  echo "$(basename $0): [-dh] [-t scraper|feeder] "
+  echo "usage: ${SCRIPT_NAME}: [-cdhs] [-t scraper|feeder] [-u jal5971|jal5931]"
 }
 
-execute()
+function execute()
 {
   CONSOLE="false"
+  FEEDER_CACHE="true"
+  STORAGE="true"
   ARGERR=0
 
-  while getopts dht: OPT; do
+  while getopts cdhst:u: OPT; do
     case $OPT in
+      c )
+        FEEDER_CACHE="false"
+        ;;
       d ) 
         CONSOLE="true"
         ;;
@@ -25,9 +31,15 @@ execute()
         usage
         exit 0
         ;;
+      s )
+        STORAGE="false"
+        ;;
       t ) 
         AGGREGATE_TYPE=$OPTARG
         ;;
+      u )
+        SCRAPE_TYPE=$OPTARG
+        ;; 
       * )
         ARGERR=1
         ;;
@@ -39,16 +51,18 @@ execute()
     exit 1
   fi
 
-  if [ -z "$AGGREGATE_TYPE" ]; then
+  if [ -z "${AGGREGATE_TYPE}" ] || [ -z "${SCRAPE_TYPE}" ]; then
     usage
     exit 1
   fi
 
   cd ${FEEDER_CONF}
-  java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} -jar ${FEEDER_LIB}/${JAR_NAME} $AGGREGATE_TYPE
+  java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} \
+       -Dmessage.storage=${STORAGE} -Dfeeder.history=${FEEDER_CACHE} \
+       -jar ${FEEDER_LIB}/${JAR_NAME} ${AGGREGATE_TYPE} ${SCRAPE_TYPE}
 }
 
-main()
+function main()
 {
   execute $@
 }
