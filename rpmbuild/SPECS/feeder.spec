@@ -87,7 +87,6 @@ sed -i -e "s|^\(FEEDER_HOME\)=.*$|\1=%{homedir}|" %{buildroot}%{bindir}/%{name}
 %{homedir}
 %attr(755,jun,jun) %{tmpdir}
 %attr(755,jun,jun) %{logdir}
-%{confdir}
 %{userbin}/%{name}
 %{_sysconfdir}/logrotate.d/%{name}
 %{_sysconfdir}/sysconfig/%{name}
