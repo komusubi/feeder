@@ -62,7 +62,7 @@ mvn -P standalone package
 %{__ln_s} %{bindir}/%{name} %{buildroot}%{userbin}/%{name}
 %{__ln_s} %{confdir}        %{buildroot}%{homedir}/conf
 
-sed -i -e "s|^\(FEEDER_HOME\)=.*$|\1=%{homedir}|" %{buildroot}%{userbin}/%{name}
+sed -i -e "s|^\(FEEDER_HOME\)=.*$|\1=%{homedir}|" %{buildroot}%{bindir}/%{name}
 
 #sed -e "s|@@LOG_FILE_PATH@@|%{logdir}/sonar.log|g" %{SOURCE0}
 #install -pm 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
