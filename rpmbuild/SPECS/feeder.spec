@@ -1,6 +1,6 @@
 Name:     feeder
-Version:  0.2
-Release:  2%{?dist}
+Version:  0.3
+Release:  1%{?dist}
 Summary:  feed from site.
 
 Group:    Applications/Internet
