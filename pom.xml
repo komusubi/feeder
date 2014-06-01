@@ -511,5 +511,11 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>versions-maven-plugin</artifactId>
+      <version>2.1</version>
+      <type>maven-plugin</type>
+    </dependency>
   </dependencies>
 </project>
