@@ -1,5 +1,5 @@
 Name:     feeder
-Version:  0.2
+Version:  0.3
 Release:  2%{?dist}
 Summary:  feed from site.
 
