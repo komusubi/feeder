@@ -18,7 +18,9 @@
  */
 package org.komusubi.feeder.aggregator.rss;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,7 +34,8 @@ import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Tags;
-import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +54,7 @@ import com.sun.syndication.io.FeedException;
  */
 public class FeedReader implements Iterable<EntryScript> {
     private static final Logger logger = LoggerFactory.getLogger(FeedReader.class);
+
     /**
      * 
      * @author jun.ozeki
@@ -59,12 +63,32 @@ public class FeedReader implements Iterable<EntryScript> {
 
         private static final long serialVersionUID = 1L;
         private StringBuilder builder;
+        private UrlShortening urlShorten;
 
         /**
          * @param entry
          */
         public EntryScript(SyndEntry entry) {
+            this(entry, new BitlyUrlShortening());
+        }
+
+        /**
+         * create new instance.
+         * @param entry
+         * @param urlShorten
+         */
+        public EntryScript(SyndEntry entry, UrlShortening urlShorten) {
+            this.urlShorten = urlShorten;
             this.builder = line(entry); // initialize configure "line"
+        }
+        
+        /**
+         * create new instance.
+         * @param entry
+         * @param scrapeType
+         */
+        public EntryScript(SyndEntry entry, ScrapeType scrapeType) {
+            this(entry, new BitlyUrlShortening(scrapeType));
         }
 
         private StringBuilder line(SyndEntry entry) {
@@ -75,11 +99,13 @@ public class FeedReader implements Iterable<EntryScript> {
                     builder.append("\n");
                 builder.append(entry.getDescription().getValue());
             }
-            Url url = new Url(entry.getLink(), new BitlyUrlShortening()).shorten();
-            if (!builder.toString().endsWith("\n"))
-                builder.append("\n");
+            if (StringUtils.isNotBlank(entry.getLink())) {
+                if (!builder.toString().endsWith("\n"))
+                    builder.append("\n");
 
-            builder.append(url.toExternalForm());
+                URL url = urlShorten.shorten(entry.getLink());
+                builder.append(url.toExternalForm());
+            }
             return builder;
         }
 
@@ -138,19 +164,64 @@ public class FeedReader implements Iterable<EntryScript> {
 
     private RssSite site;
     private FeedFetcherCache feedInfoCache;
+    private static final String CACHEABLE_PROPERTY = "feeder.history";
+    // cacheable default is true
+    private boolean cacheable = System.getProperty(CACHEABLE_PROPERTY) == null ? true : Boolean.getBoolean(CACHEABLE_PROPERTY);
+    private UrlShortening urlShorten;
 
     /**
      * create new instance.
      */
     public FeedReader(RssSite site) {
-        if (site == null)
-            throw new IllegalArgumentException("site must NOT be null");
-        this.site = site;
-        this.feedInfoCache = new DiskFeedInfoCache(System.getProperty("java.io.tmpdir"));
+        this(site, site.urlShortening());
+    }
+    
+    /**
+     * create new instance.
+     * @param site
+     * @param urlShorten
+     */
+    public FeedReader(RssSite site, UrlShortening urlShorten) {
+    	this(site, urlShorten, new File(System.getProperty("java.io.tmpdir")));
+    }
+
+    /**
+     * create new instance.
+     * @param site
+     * @param cacheDir
+     */
+    public FeedReader(RssSite site, File cacheDir) {
+    	this(site, site.urlShortening(), cacheDir);
+    }
+
+    /**
+     * create new instance.
+     * @param site
+     * @param urlShorten
+     * @param cacheDir
+     */
+    public FeedReader(RssSite site, UrlShortening urlShorten, File cacheDir) {
+    	if (site == null)
+    		throw new IllegalArgumentException("site must NOT be null");
+    	if (urlShorten == null)
+    		throw new IllegalArgumentException("urlShorten must NOT be null");
+    	if (cacheDir == null)
+    		cacheDir = new File(System.getProperty("java.io.tmpdir"));
+    	if (!cacheDir.exists()) {
+    		cacheDir.mkdirs();
+    	} else if (cacheDir.isFile()) {
+    		throw new IllegalStateException("cache dir is NOT directory: " + cacheDir.getAbsolutePath());
+    	}
+    	this.site = site;
+    	this.urlShorten = urlShorten;
+        if (cacheable)
+            this.feedInfoCache = new DiskFeedInfoCache(cacheDir.getAbsolutePath());
     }
 
     public List<EntryScript> retrieve() {
-        SyndFeedInfo feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
+        SyndFeedInfo feedInfo = null;
+        if (cacheable)
+            feedInfo = this.feedInfoCache.getFeedInfo(this.site.url().toURL());
         long lastModified = 0L;
         if (feedInfo != null && feedInfo.getSyndFeed().getEntries().size() > 0) {
             // get first entry feed publish date because it was wrong in lastModified date in http header.
@@ -180,7 +251,7 @@ public class FeedReader implements Iterable<EntryScript> {
             for (Iterator<SyndEntry> it = (Iterator<SyndEntry>) feed.getEntries().iterator(); it.hasNext(); ) {
                 SyndEntry e = it.next();
                 if (lastModified < e.getPublishedDate().getTime())
-                    scripts.add(new EntryScript(e));
+                    scripts.add(new EntryScript(e, urlShorten));
                 else
                     logger.info("read already entry: {}, {}", e.getPublishedDate(), e.getTitle());
             }

@@ -20,6 +20,7 @@ package org.komusubi.feeder.sns.twitter;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,6 +29,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.komusubi.feeder.model.ScriptLine;
+import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
+import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
 
 /**
@@ -60,6 +63,36 @@ public class TweetMessageTest {
             
             // exercise and verify
             assertThat(target.trimedLine(), is(expected));
+        }
+        
+        @Test(expected = Twitter4jException.class)
+        public void overMaxLengthMessage() {
+            // setup
+            String text = "abcdefghijklmnopqrstuvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz";
+            // exercise
+            new TweetScript(text);
+            // verify
+            fail("expect throw exception");
+        }
+        
+        @Test(expected = Twitter4jException.class)
+        public void overMaxLengthMessageWithFragment() {
+            // setup
+            String text = "abcdefghijklmnopqrstuvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz"
+                        + "abcdefghijklmnopqurstvwxyz";
+            Fragment fragment = new TimestampFragment("yyyy/MM/dd HH:mm");
+            // exercise
+            new TweetScript(fragment, text);
+            // verify
+            fail("expect throw exception");
         }
         
     }
@@ -197,20 +230,42 @@ public class TweetMessageTest {
         }
         
         @Test
-        public void splitOfLineFeedInScript() {
+        public void splitOfLineFeedOverBoundaryValue() {
             // setup
             String expected1 = "パウダースノーの北海道。おトクがいっぱいのJAL SKI発売中！\n"
                             + "北海道のスキーツアーをご紹介。JALSKIならではのサービス・サポートでどなたでも安心快適なスキーツアーをお楽しみいただけます。国内ツアー・旅行ならJALパック。\n"
                             + "http://bit.ly/1gyKAed";
             String expected2 = "#jal";
-            
+            String line = expected1 + "\n" + expected2;
+
             // exercise
-            target.add(new ScriptLine(expected1 + "\n" + expected2));
+            target.add(new ScriptLine(line));
 
             // verify
+            assertThat(line.length(), is(141)); // over max length;
             assertThat(target.size(), is(2));
             assertThat(target.get(0).line(), is(expected1)); 
             assertThat(target.get(1).line(), is(expected2)); 
+        }
+        
+        @Test
+        public void splitOfLineFeedMatchBoundaryValue() {
+            // setup
+            String expected1 = "日本の冬を楽しもう！北海道・奄美の冬旅情報をご紹介！\n"
+                             + "今年の冬は、おトクに自由に、空の旅へ！冬の旅行なら、JALのおトクな運賃をぜひご利用ください。「四季めぐり 冬」では北海道・奄美群島のとっておき旅情報が満載です！\n"
+                             + "http://bit.ly/1aq68De";
+            String expected2 = "#rss #jal";
+            
+            String line = expected1 + "\n" + expected2;
+
+            // exercise
+            target.add(new ScriptLine(line));
+
+            // verify
+            assertThat(line.length(), is(140));
+            assertThat(target.size(), is(2));
+            assertThat(target.get(0).line(), is(expected1));
+            assertThat(target.get(1).line(), is(expected2));
         }
     }
 }

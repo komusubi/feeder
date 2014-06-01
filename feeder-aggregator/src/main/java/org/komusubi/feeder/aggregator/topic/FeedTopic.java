@@ -40,7 +40,6 @@ public class FeedTopic implements Topic {
 
     private static final long serialVersionUID = 1L;
     private Date created;
-    private Message message;
     private FeedReader reader;
     private Tags tags;
     private Provider<Messages<Message>> provider;
@@ -54,9 +53,11 @@ public class FeedTopic implements Topic {
 
     /**
      * create new instance.
+     * @param site
+     * @param provider
      */
     public FeedTopic(RssSite site, Provider<Messages<Message>> provider) {
-        this(new FeedReader(site), provider);
+        this(new FeedReader(site, site.urlShortening()), provider);
     }
 
     /**

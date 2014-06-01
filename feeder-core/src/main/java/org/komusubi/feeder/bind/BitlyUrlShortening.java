@@ -39,6 +39,7 @@ import javax.json.stream.JsonParserFactory;
 import org.komusubi.feeder.FeederException;
 import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.ResourceBundleMessage;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class BitlyUrlShortening implements UrlShortening {
 
     private static final Logger logger = LoggerFactory.getLogger(BitlyUrlShortening.class);
     private static final ResourceBundleMessage RESOURCE = new ResourceBundleMessage(BitlyUrlShortening.class);
-    private static final String ACCESS_KEY_VALUE = "bitly.access_token";
+    private static final String ACCESS_KEY_VALUE = ".bitly.access_token";
     private static final Properties PROPERTIES;
     private static final String PROPERTY_FILE_NAME = "accessKey.properties";
 
@@ -68,7 +69,7 @@ public class BitlyUrlShortening implements UrlShortening {
         } catch (MalformedURLException e) {
             throw new FeederException(e);
         }
-        logger.debug("property file path: %s\n", url.toExternalForm());
+        logger.debug("property file path: {}", url.toExternalForm());
         try (InputStream in = url.openStream()) {
             PROPERTIES.load(in);
         } catch (Exception e) {
@@ -77,17 +78,26 @@ public class BitlyUrlShortening implements UrlShortening {
         }
     }
 
+    private ScrapeType scrapeType;
+
     /**
      * create new instance.
      */
     public BitlyUrlShortening() {
+        this(ScrapeType.KOMUSUBI);
+    }
 
+    /**
+     * create new instance.
+     * @param accountName
+     */
+    public BitlyUrlShortening(ScrapeType scrapeType) {
+        this.scrapeType = scrapeType;
     }
 
     /**
      * @see org.komusubi.feeder.spi.UrlShortening#shorten()
      */
-    @SuppressWarnings("incomplete-switch")
     @Override
     public URL shorten(URL url) {
         try {
@@ -96,7 +106,7 @@ public class BitlyUrlShortening implements UrlShortening {
                 urlBuilder.append("?");
             }
             urlBuilder.append("access_token=")
-                        .append(PROPERTIES.getProperty(ACCESS_KEY_VALUE))
+                        .append(PROPERTIES.getProperty(scrapeType.name().toLowerCase() + ACCESS_KEY_VALUE))
                         .append("&")
                         .append(RESOURCE.getString("shorten.param.longUrl"))
                         .append("=")
@@ -122,6 +132,19 @@ public class BitlyUrlShortening implements UrlShortening {
                         map.put(key, parser.getString());
                         logger.trace("value: {}", parser.getString());
                         break;
+                    case END_ARRAY:
+                    case END_OBJECT:
+                    case START_ARRAY:
+                    case START_OBJECT:
+                    case VALUE_FALSE:
+                    case VALUE_NULL:
+                    case VALUE_NUMBER:
+                    case VALUE_TRUE:
+                    	// nothing to do
+                    	break;
+                    default:
+                    	// nothing to do
+                    	break;
                     }
                 }
                 URL shortened;
@@ -148,4 +171,11 @@ public class BitlyUrlShortening implements UrlShortening {
         }
     }
 
+    /**
+     * get this url shorten account prefix.
+     * @return
+     */
+    public ScrapeType scrapeType() {
+        return scrapeType;
+    }
 }

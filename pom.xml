@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.komusubi.feeder</groupId>
   <artifactId>feeder</artifactId>
-  <version>0.1.1</version>
+  <version>0.3</version>
   <packaging>pom</packaging>
   <inceptionYear>2012</inceptionYear>
   <name>feeder</name>
@@ -15,6 +15,7 @@
     <module>feeder-aggregator</module>
     <module>feeder-sns</module>
     <module>feeder-sns-parent</module>
+    <module>feeder-storage</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,6 +47,11 @@
       <dependency>
         <groupId>org.komusubi.feeder</groupId>
         <artifactId>feeder-sns</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.komusubi.feeder</groupId>
+        <artifactId>feeder-storage</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -178,7 +184,7 @@
         <plugin>
           <groupId>org.codehaus.sonar</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.7.2</version>
+          <version>4.3</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -496,4 +502,14 @@
       <id>standalone</id>
     </profile>
   </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+    </dependency>
+  </dependencies>
 </project>

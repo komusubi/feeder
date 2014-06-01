@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.komusubi.feeder</groupId>
     <artifactId>feeder</artifactId>
-    <version>0.1.1</version>
+    <version>0.3</version>
   </parent>
   <artifactId>feeder-aggregator</artifactId>
   <name>feeder-aggregator</name>

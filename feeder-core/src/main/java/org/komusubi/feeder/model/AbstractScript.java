@@ -28,6 +28,14 @@ public abstract class AbstractScript implements Script {
 
     private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 * @author jun.ozeki
+	 */
+//	public interface Fragment {
+//		String get();
+//	}
+
     /**
      * compare script that call the each line method.
      * @see java.lang.Object#equals(java.lang.Object)
@@ -63,5 +71,15 @@ public abstract class AbstractScript implements Script {
     @Override
     public String trimedLine() {
         return StringUtils.strip(line());
+    }
+    
+    @Override
+    public boolean isFragment() {
+        return false;
+    }
+    
+    @Override
+    public String fragment() {
+        return null;
     }
 }

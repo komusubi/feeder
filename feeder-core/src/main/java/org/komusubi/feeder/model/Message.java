@@ -35,6 +35,8 @@ public interface Message extends List<Script>, Serializable {
     public interface Script extends Serializable {
         String line();
         String trimedLine();
+        boolean isFragment();
+        String fragment();
         int codePointCount();
 //        codePointAt(int index)
         Script append(String str);

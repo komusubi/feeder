@@ -27,6 +27,7 @@ import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.History;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +54,18 @@ public class Twitter4j implements SocialNetwork {
     }
 
     /**
+     * 
+     * @param prefix in property key
+     */
+    public Twitter4j(ScrapeType scrapeType) {
+        this(new TwitterFactory(scrapeType.name().toLowerCase()).getInstance());
+    }
+
+    /**
      * create new instance for unit test
      * @param twitter
      */
-    // package
+    // package scope 
     Twitter4j(Twitter twitter) {
         this.twitter = twitter;
     }
@@ -121,7 +130,7 @@ public class Twitter4j implements SocialNetwork {
         } catch (TwitterException e) {
             throw new Twitter4jException(String.format("tweet(length:%d): %s",  
                                             TweetScript.lengthAfterTweeted(current.trimedLine()),
-                                            current.trimedLine()));
+                                            current.trimedLine()), e);
         }
     }
 

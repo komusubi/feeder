@@ -21,12 +21,18 @@ package org.komusubi.feeder.web;
 import java.io.File;
 import java.io.PrintStream;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.komusubi.feeder.aggregator.rss.FeedReader;
+import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.site.RssSite;
+import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.aggregator.topic.FeedTopic;
 import org.komusubi.feeder.aggregator.topic.WeatherTopic;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Topic;
 import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.Speaker;
@@ -35,75 +41,164 @@ import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.provider.TweetMessagesProvider;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.FilePageCache;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
+import org.komusubi.feeder.spi.PageCache;
+import org.komusubi.feeder.spi.UrlShortening;
+import org.komusubi.feeder.storage.cache.FilePageCache;
+import org.komusubi.feeder.storage.cache.PartialMatchPageCache;
+import org.komusubi.feeder.utils.Types.AggregateType;
+import org.komusubi.feeder.utils.Types.ScrapeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jun.ozeki
  */
-public class StandAlone {
-//    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
+public final class StandAlone {
+    private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
+
+    // hide default constructor.
+    private StandAlone() {
+        
+    }
+
+    protected ScrapeType parseScrapeType(String[] args) {
+        ScrapeType type = null;
+        for (int i = 0; i < args.length; i++) {
+            try {
+                type = ScrapeType.valueOf(args[i].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // ignore
+            }
+        }
+        return type;
+    }
+
+    private AggregateType parseAggregateType(String[] args) {
+        AggregateType type = null;
+        for (int i = 0; i < args.length; i++) {
+            try {
+                type = AggregateType.valueOf(args[i].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // ignore
+            }
+        }
+        return type;
+    }
 
     private static void usage(PrintStream stream) {
-        stream.printf("arguments must be \"scraper\" or \"feeder\"");
+        stream.printf("arguments must be \"scraper\" or \"feeder\" and \"jal5971\" or \"jal5931\"");
     }
 
     public static void main(String[] args) {
-        if (args.length < 1) {
+        if (args.length < 2) {
             usage(System.err);
             return;
         } 
         StandAlone standAlone = new StandAlone();
+        ScrapeType scrapeType = standAlone.parseScrapeType(args); 
+        AggregateType aggregateType = standAlone.parseAggregateType(args); 
+        if (scrapeType == null || aggregateType == null) {
+            usage(System.err);
+            return;
+        }
 
         Topics<? extends Topic> topics;
         PageCache pageCache;
-        if ("scraper".equalsIgnoreCase(args[0])) {
-            topics = standAlone.aggregateScraper();
-            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/scraper-store.txt");
+        File tmpDir = standAlone.cacheDirectory();
+        String suffix = scrapeType.name().toLowerCase();
+        if (AggregateType.SCRAPER.equals(aggregateType)) {
+            topics = standAlone.aggregateScraper(scrapeType);
+            File storeFile = standAlone.normalize(tmpDir, "/scraper-".concat(suffix).concat(".txt"));
             pageCache = new PartialMatchPageCache(storeFile);
-        } else if("feeder".equalsIgnoreCase(args[0])) {
-            topics = standAlone.aggregateFeeder();
-            File storeFile = new File(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
+        } else if(AggregateType.FEEDER.equals(aggregateType)) {
+            topics = standAlone.aggregateFeeder(scrapeType);
+            File storeFile = standAlone.normalize(tmpDir, "/feeder-".concat(suffix).concat(".txt"));
             pageCache = new FilePageCache(storeFile);
         } else {
             throw new IllegalArgumentException("arguments must be \"scraper\" or \"feeder\"");
         }
-        // topic topic 
-        // TODO first argument of SleepStrategy set "0L". it does not bad affect and refactoring near future.
-        Speaker speaker = new Speaker(new Twitter4j(), new SleepStrategy(0L, pageCache));
+        // topic 
+        Speaker speaker = new Speaker(new Twitter4j(scrapeType), new SleepStrategy(pageCache));
         speaker.talk(topics);
     }
 
-    private Topics<? extends Topic> aggregateScraper() {
+    private Topics<? extends Topic> aggregateScraper(ScrapeType scrapeType) {
 
-        WeatherTopic weather = new WeatherTopic(new WeatherContentScraper(),
-                                                 new WeatherTitleScraper(),
-                                                 new WeatherAnnouncementScraper(),
-                                                 new TweetMessagesProvider(new TimestampFragment("HHmm")));
-        HashTag jal = new HashTag("jal");
-        weather.addTag(jal);
+        WeatherTopic weather = null;
+        UrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
+        HtmlScraper scraper = new HtmlScraper(true, urlShorten);
+        if (ScrapeType.JAL5971.equals(scrapeType)) {
+            WeatherTopicSite domestic = new WeatherTopicSite("domestic", urlShorten);
+            weather = new WeatherTopic(new WeatherContentScraper(domestic, scraper),
+                                                     new WeatherTitleScraper(domestic, scraper),
+                                                     new WeatherAnnouncementScraper(domestic, scraper),
+                                                     new TweetMessagesProvider(new TimestampFragment("HHmm")));
+        } else if (ScrapeType.JAL5931.equals(scrapeType)) {
+            WeatherTopicSite international = new WeatherTopicSite("international", urlShorten);
+            weather = new WeatherTopic(new WeatherContentScraper(international, scraper),
+                                                        new WeatherTitleScraper(international, scraper),
+                                                        new WeatherAnnouncementScraper(international, scraper),
+                                                        new TweetMessagesProvider(new TimestampFragment("HHmm")));
+        } else {
+            throw new IllegalArgumentException("unknown ScrapType");
+        }
 
         Topics<WeatherTopic> topics = new Topics<>();
+        weather.addTag(new HashTag("jal"));
         topics.add(weather);
         
         return topics;
     }
     
-    private Topics<? extends Topic> aggregateFeeder() {
+    private Topics<? extends Topic> aggregateFeeder(ScrapeType scrapeType) {
         
+        String resourceKey = null;
+        if (ScrapeType.JAL5971.equals(scrapeType)) {
+            resourceKey = "jal.domestic";
+        } else if (ScrapeType.JAL5931.equals(scrapeType)) {
+            resourceKey = "jal.international";
+        } else {
+            throw new IllegalArgumentException("unknown ScrapeType");
+        }
+
+        File cacheDir = normalize(cacheDirectory(), scrapeType.name().toLowerCase());
+        BitlyUrlShortening urlShorten = new BitlyUrlShortening(scrapeType);
+        RssSite site = new RssSite(resourceKey, urlShorten);
+
         HashTag jal = new HashTag("jal");
-        FeedTopic jalInfo = new FeedTopic(new RssSite("jal.info"), new TweetMessagesProvider());
+        HashTag feed = new HashTag("rss");
+        FeedTopic jalInfo = new FeedTopic(new FeedReader(new RssSite("jal.info", urlShorten), cacheDir),
+        								  new TweetMessagesProvider());
         jalInfo.addTag(jal);
-        
-        FeedTopic jalDomestic = new FeedTopic(new RssSite("jal.domestic"), new TweetMessagesProvider());
-        jalDomestic.addTag(jal);
+        jalInfo.addTag(feed);
+
+        FeedTopic feedTopic = new FeedTopic(new FeedReader(site, cacheDir), new TweetMessagesProvider());
+        feedTopic.addTag(jal);
+        feedTopic.addTag(feed);
 
         Topics<FeedTopic> topics = new Topics<>();
         topics.add(jalInfo);
-        topics.add(jalDomestic);
+        topics.add(feedTopic);
 
         return topics;
     }
+    
+    private File normalize(File parent, String child) {
+        Validate.isTrue(parent != null, "normalize path parent must NOT be null.");
+        return new File(parent, child);
+    }
 
+    private File cacheDirectory() {
+        String dirname = System.getProperty("feeder.home");
+        if (dirname == null)
+            dirname = System.getProperty("java.io.tmpdir");
+        File cacheDir = new File(dirname);
+        if (!cacheDir.exists()) {
+            if (!cacheDir.mkdirs())
+                logger.error("failed mkdir path:{}", cacheDir.getAbsolutePath());
+        } else if (cacheDir.isFile()) {
+            throw new IllegalStateException();
+        }
+        return cacheDir;
+    }
 }

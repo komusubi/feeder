@@ -18,13 +18,11 @@
  */
 package org.komusubi.feeder.web;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Singleton;
 
-import org.komusubi.common.util.Resolver;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper;
@@ -41,15 +39,13 @@ import org.komusubi.feeder.sns.twitter.TweetMessage.Fragment;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TimestampFragment;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PageCache;
-import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy.PartialMatchPageCache;
-import org.komusubi.feeder.utils.ResolverUtils.DateResolver;
+import org.komusubi.feeder.spi.PageCache;
+import org.komusubi.feeder.storage.cache.PartialMatchPageCache;
 import org.komusubi.feeder.web.scheduler.QuartzModule;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -114,7 +110,7 @@ public class Bootstrap extends GuiceServletContextListener {
                 .toInstance(System.getProperty("java.io.tmpdir") + "/feeder-store.txt");
             bind(PageCache.class).to(PartialMatchPageCache.class);
             bind(GateKeeper.class).to(SleepStrategy.class);
-            bind(new TypeLiteral<Resolver<Date>>(){}).to(DateResolver.class);
+//            bind(new TypeLiteral<Resolver<Date>>(){}).to(DateResolver.class);
             bind(WeatherContentScraper.class);
             bind(WeatherAnnouncementScraper.class);
             bind(String.class).annotatedWith(Names.named("fragment format")).toInstance("HHmm");

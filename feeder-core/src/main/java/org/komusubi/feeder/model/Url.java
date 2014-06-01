@@ -20,6 +20,7 @@ package org.komusubi.feeder.model;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URI;
@@ -35,8 +36,9 @@ import org.komusubi.feeder.spi.UrlShortening;
 /**
  * @author jun.ozeki
  */
-public class Url {
+public class Url implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private URL url;
     private UrlShortening shortening;
     private boolean shortened;

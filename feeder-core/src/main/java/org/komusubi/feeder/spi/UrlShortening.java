@@ -20,6 +20,8 @@ package org.komusubi.feeder.spi;
 
 import java.net.URL;
 
+import org.komusubi.feeder.utils.Types.ScrapeType;
+
 /**
  * @author jun.ozeki
  */
@@ -27,4 +29,5 @@ public interface UrlShortening {
 
     URL shorten(URL url);
     URL shorten(String url);
+    ScrapeType scrapeType();
 }

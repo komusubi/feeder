@@ -18,7 +18,6 @@
  */
 package org.komusubi.feeder.aggregator.site;
 
-import java.net.MalformedURLException;
 import java.util.Arrays;
 
 import org.komusubi.feeder.bind.BitlyUrlShortening;
@@ -26,7 +25,9 @@ import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.ResourceBundleMessage;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 
 /**
  * @author jun.ozeki
@@ -37,23 +38,45 @@ public class WeatherTopicSite implements Site {
     private static final String URL_RESOURCE_KEY = "site.url";
     private Url siteUrl;
     private Tags tags;
+    private ScrapeType scrapeType;
 
     /**
      * create new instance.
      */
     public WeatherTopicSite() {
-        this(URL_RESOURCE_KEY, new Tag[0]);
+        this(URL_RESOURCE_KEY, ScrapeType.KOMUSUBI, new Tag[0]);
     }
 
     /**
      * create new instance.
-     * @param spec
-     * @throws MalformedURLException
+     * @param resourceKey
+     * @param scrapeType
+     * @param tags
      */
-    public WeatherTopicSite(String resourceKey, Tag... tags) {
-        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey), new BitlyUrlShortening());
+    public WeatherTopicSite(String resourceKey, ScrapeType scrapeType, Tag... tags) {
+        this(resourceKey, new BitlyUrlShortening(scrapeType), tags);
+    }
+
+    /**
+     * create new instance.
+     * @param resourceKey
+     * @param urlShorten
+     * @param tags
+     */
+    public WeatherTopicSite(String resourceKey, UrlShortening urlShorten, Tag... tags) {
+        this.siteUrl = new Url(BUNDLE_MESSAGE.getString(resourceKey), urlShorten);
+        this.scrapeType = urlShorten.scrapeType();
         this.tags = new Tags();
         this.tags.addAll(Arrays.asList(tags));
+    }
+
+    /**
+     * create new instance.
+     * @param resourceKey
+     * @param tags
+     */
+    public WeatherTopicSite(String resourceKey, Tag... tags) {
+        this(resourceKey, ScrapeType.KOMUSUBI, tags);
     }
 
     /**
@@ -130,4 +153,7 @@ public class WeatherTopicSite implements Site {
         return siteUrl;
     }
 
+    public ScrapeType scrapeType() {
+        return scrapeType;
+    }
 }
