@@ -9,6 +9,7 @@ URL:      http://www.komusubi.org
 Source0:  %{name}.sh
 Source2:  %{name}.logrotate
 Source3:  twitter4j.properties
+Source4:  accessKey.properties
 
 BuildRequires: java >= 1:1.7.0
 %if 0%{?centos}
@@ -55,6 +56,7 @@ mvn -P standalone package
 %{__install} -pm 755 %{SOURCE0} %{buildroot}%{bindir}/%{name}
 %{__install} -pm 644 %{SOURCE2} %{buildroot}%{logrotate}/%{name}
 %{__install} -pm 644 %{SOURCE3} %{buildroot}%{confdir}/
+%{__install} -pm 644 %{SOURCE4} %{buildroot}%{confdir}/
 %{__install} -pm 644 %{artifactdir}/%{jar01} %{buildroot}%{libdir}
 
 %{__ln_s} %{logdir}         %{buildroot}%{homedir}/logs
@@ -64,23 +66,8 @@ mvn -P standalone package
 
 sed -i -e "s|^\(FEEDER_HOME\)=.*$|\1=%{homedir}|" %{buildroot}%{bindir}/%{name}
 
-#sed -e "s|@@LOG_FILE_PATH@@|%{logdir}/sonar.log|g" %{SOURCE0}
-#install -pm 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-#sed -e "s|^\(sonar.jdbc.url\)=.*$|\1=http:\/\/localhost|" 
-
-#%{__sed} -i -e "s|@@SCRIPT_PATH@@|%{homedir}/bin/%{hostarch}/sonar.sh|g" %{unit}
-
 %clean
 %{__rm} -rf %{buildroot}
-
-%post
-#%systemd_post %{name}
-
-%preun
-#%systemd_preun %{name}
-
-%postun
-#%systemd_postun_with_restart %{name}
 
 %files
 %defattr(-,root,root,-)
@@ -89,7 +76,8 @@ sed -i -e "s|^\(FEEDER_HOME\)=.*$|\1=%{homedir}|" %{buildroot}%{bindir}/%{name}
 %attr(755,jun,jun) %{logdir}
 %{userbin}/%{name}
 %{_sysconfdir}/logrotate.d/%{name}
-%{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}/twitter4j.properties
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}/accessKey.properties
 
 %changelog
 
