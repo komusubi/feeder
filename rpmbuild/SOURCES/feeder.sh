@@ -58,7 +58,7 @@ function execute()
 
   cd ${FEEDER_CONF}
   java -Dlogdir=${FEEDER_LOGS} -Dtweet.console=${CONSOLE} \
-       -Dmessage.storage=${STORAGE} -Dfeeder.history=${FEEDER_CACHE} \
+       -Dmessage.storage=${STORAGE} -Dfeeder.history=${FEEDER_CACHE} -Dfeeder.home=${FEEDER_HOME} \
        -jar ${FEEDER_LIB}/${JAR_NAME} ${AGGREGATE_TYPE} ${SCRAPE_TYPE}
 }
 
