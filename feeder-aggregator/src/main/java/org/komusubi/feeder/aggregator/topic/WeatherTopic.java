@@ -158,8 +158,6 @@ public class WeatherTopic implements Topic {
     public Messages<Message> messages() {
         Message message = messages.newInstance();
 
-        message.setTopic(this);
-
         for (Announcement announcement: announceScraper.scrape()) {
             message.append(announcement)
                     .append("\n");
