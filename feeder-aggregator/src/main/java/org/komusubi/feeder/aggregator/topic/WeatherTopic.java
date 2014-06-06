@@ -48,9 +48,9 @@ public class WeatherTopic implements Topic {
     private static final long serialVersionUID = 1L;
     private Date created;
     private Messages<Message> messages;
-    private WeatherAnnouncementScraper announceScraper;
-    private WeatherTitleScraper titleScraper;
-    private WeatherContentScraper contentScraper;
+    private transient WeatherAnnouncementScraper announceScraper;
+    private transient WeatherTitleScraper titleScraper;
+    private transient WeatherContentScraper contentScraper;
     private Tags tags;
 
     /**
@@ -156,6 +156,8 @@ public class WeatherTopic implements Topic {
      */
     @Override
     public Messages<Message> messages() {
+        if (messages.size() > 0)
+        	return messages;
         Message message = messages.newInstance();
 
         for (Announcement announcement: announceScraper.scrape()) {
