@@ -42,7 +42,7 @@ public class Providers {
 
         @Override
         public Date get() {
-            return date;
+            return (Date) date.clone();
         }
         
     };
