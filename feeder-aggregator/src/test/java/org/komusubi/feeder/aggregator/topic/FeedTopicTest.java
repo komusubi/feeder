@@ -62,7 +62,7 @@ public class FeedTopicTest {
         assertThat(target.messages().get(0).get(0).trimedLine(), is(text));
         // verify
         verify(mockScript, times(1)).trimedLine();
-        verify(mockReader, times(3)).retrieve();
+        verify(mockReader, times(1)).retrieve();
     }
 
     public static void main(String[] args) {
