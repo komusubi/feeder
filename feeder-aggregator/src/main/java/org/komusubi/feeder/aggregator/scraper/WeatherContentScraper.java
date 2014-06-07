@@ -160,8 +160,6 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
          */
         @Override
         public int codePointCount() {
-            if (line() == null)
-                return 0;
             return line().codePointCount(0, line().length());
         }
 
@@ -171,8 +169,6 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
         @Override
         public String codePointSubstring(int begin, int end) {
             // FIXME code point substring.
-            if (line() == null)
-                return null;
             return line().substring(begin, end);
         }
 
@@ -181,8 +177,6 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
          */
         @Override
         public String codePointSubstring(int begin) {
-            if (line() == null)
-                return null;
             return codePointSubstring(begin, line().length());
         }
 

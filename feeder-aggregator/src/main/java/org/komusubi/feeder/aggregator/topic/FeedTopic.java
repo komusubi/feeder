@@ -40,9 +40,9 @@ public class FeedTopic implements Topic {
 
     private static final long serialVersionUID = 1L;
     private Date created;
-    private FeedReader reader;
+    private transient FeedReader reader;
     private Tags tags;
-    private Provider<Messages<Message>> provider;
+    private Messages<Message> messages;
     
     /**
      * create new instance.
@@ -65,8 +65,8 @@ public class FeedTopic implements Topic {
      */
     public FeedTopic(FeedReader reader, Provider<Messages<Message>> provider) {
         this.reader = reader;
-        this.provider = provider;
-        created = new Date();
+        this.messages = provider.get();
+        this.created = new Date();
         this.tags = reader.tags();
     }
 
@@ -92,8 +92,9 @@ public class FeedTopic implements Topic {
      */
     @Override
     public Messages<Message> messages() {
-        Messages<Message> messages = provider.get();
-
+    	if (messages.size() > 0) 
+    		return messages;
+    	
         for (Script script: reader.retrieve()) {
             Message m = messages.newInstance();
             boolean tagging = false;

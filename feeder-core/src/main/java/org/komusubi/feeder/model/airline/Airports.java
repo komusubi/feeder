@@ -56,7 +56,7 @@ public class Airports extends ArrayList<Airport> {
             return map;
         Map<String, Airport> map = new HashMap<String, Airport>();
         for (Airport a: this) {
-            map.put(a.getCode(), a);
+            map.put(a.code(), a);
         }
         return map;
     }

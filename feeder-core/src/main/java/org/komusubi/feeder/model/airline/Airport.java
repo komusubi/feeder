@@ -64,7 +64,7 @@ public class Airport implements Serializable {
      * 
      * @author jun.ozeki 2013/11/27
      */
-    public class Gate implements Serializable {
+    public static class Gate implements Serializable {
         private static final long serialVersionUID = 1L;
         private String name;
 
@@ -72,7 +72,7 @@ public class Airport implements Serializable {
             this.name = name;
         }
 
-        public String getName() {
+        public String name() {
             return name;
         }
     }
@@ -97,12 +97,12 @@ public class Airport implements Serializable {
     public Attribute getAttribute() {
         return attribute;
     }
-    
-    public String getName() {
+  
+    public String name() {
         return name;
     }
 
-    public String getCode() {
+    public String code() {
         return code;
     }
 

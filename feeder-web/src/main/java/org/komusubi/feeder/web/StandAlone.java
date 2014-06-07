@@ -21,7 +21,6 @@ package org.komusubi.feeder.web;
 import java.io.File;
 import java.io.PrintStream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.komusubi.feeder.aggregator.rss.FeedReader;
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
@@ -57,7 +56,7 @@ public final class StandAlone {
     private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
 
     // hide default constructor.
-    private StandAlone() {
+    /* package */ StandAlone() {
         
     }
 
@@ -188,10 +187,16 @@ public final class StandAlone {
         return new File(parent, child);
     }
 
-    private File cacheDirectory() {
+    protected File cacheDirectory() {
         String dirname = System.getProperty("feeder.home");
-        if (dirname == null)
+        if (dirname != null) {
+        	if (!dirname.endsWith("/"))
+        		dirname += "/";
+        	dirname += "temp";
+        }
+        else {
             dirname = System.getProperty("java.io.tmpdir");
+        }
         File cacheDir = new File(dirname);
         if (!cacheDir.exists()) {
             if (!cacheDir.mkdirs())

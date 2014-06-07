@@ -47,12 +47,11 @@ public class WeatherTopic implements Topic {
 
     private static final long serialVersionUID = 1L;
     private Date created;
-//    private Message message;
-    private WeatherAnnouncementScraper announceScraper;
-    private WeatherTitleScraper titleScraper;
-    private WeatherContentScraper contentScraper;
+    private Messages<Message> messages;
+    private transient WeatherAnnouncementScraper announceScraper;
+    private transient WeatherTitleScraper titleScraper;
+    private transient WeatherContentScraper contentScraper;
     private Tags tags;
-    private Provider<Messages<Message>> provider;
 
     /**
      * create new instance.
@@ -92,25 +91,6 @@ public class WeatherTopic implements Topic {
              provider);
     }
 
-    /*
-     * create new instance.
-     * @param topicScraper
-     * @param titleScraper
-     * @param announceScraper
-     * @param provider
-     */
-//    @Inject
-//    public WeatherTopic(WeatherContentScraper topicScraper, 
-//                        WeatherTitleScraper titleScraper,
-//                        WeatherAnnouncementScraper announceScraper, Message message) {
-//        this.contentScraper = topicScraper;
-//        this.titleScraper = titleScraper;
-//        this.announceScraper = announceScraper;
-//        this.created = new Date();
-//        this.message = message;
-//        this.tags = new Tags();
-//    }
-
     /**
      * create new instance.
      * @param topicScraper
@@ -125,7 +105,7 @@ public class WeatherTopic implements Topic {
         this.titleScraper = titleScraper;
         this.announceScraper = announceScraper;
         this.created = new Date();
-        this.provider = provider;
+        this.messages = provider.get();
         this.tags = new Tags();
     }
 
@@ -176,7 +156,8 @@ public class WeatherTopic implements Topic {
      */
     @Override
     public Messages<Message> messages() {
-        Messages<Message> messages = provider.get();
+        if (messages.size() > 0)
+        	return messages;
         Message message = messages.newInstance();
 
         for (Announcement announcement: announceScraper.scrape()) {
@@ -216,13 +197,15 @@ public class WeatherTopic implements Topic {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("WeatherTopic [created=").append(created).append(", announceScraper=").append(announceScraper)
-                        .append(", titleScraper=").append(titleScraper).append(", contentScraper=")
-                        .append(contentScraper).append(", tags=").append(tags).append(", provider=").append(provider)
-                        .append("]");
-        return builder.toString();
-    }
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("WeatherTopic [created=").append(created)
+				.append(", messages=").append(messages)
+				.append(", announceScraper=").append(announceScraper)
+				.append(", titleScraper=").append(titleScraper)
+				.append(", contentScraper=").append(contentScraper)
+				.append(", tags=").append(tags).append("]");
+		return builder.toString();
+	}
 
 }
