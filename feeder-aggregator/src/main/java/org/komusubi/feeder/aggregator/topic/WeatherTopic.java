@@ -156,7 +156,7 @@ public class WeatherTopic implements Topic {
      */
     @Override
     public Messages<Message> messages() {
-        if (messages.size() > 0)
+        if (!messages.isEmpty())
         	return messages;
         Message message = messages.newInstance();
 
