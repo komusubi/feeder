@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 rpmbuild/RPMS
 rpmbuild/SRPMS
 rpmbuild/BUILDROOT
+/bin

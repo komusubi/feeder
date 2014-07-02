@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class StandAlone {
     private static final Logger logger = LoggerFactory.getLogger(StandAlone.class);
-
+    
     // hide default constructor.
     /* package */ StandAlone() {
         

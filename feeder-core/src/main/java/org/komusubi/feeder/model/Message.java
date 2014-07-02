@@ -29,6 +29,8 @@ import org.komusubi.feeder.model.Message.Script;
 public interface Message extends List<Script>, Serializable {
 
     String text();
+//    Topic topic();
+//    void setTopic(Topic topic);
     Message append(Script script);
     Message append(String line);
     
@@ -43,4 +45,6 @@ public interface Message extends List<Script>, Serializable {
         String codePointSubstring(int begin, int end);
         String codePointSubstring(int begin);
     }
+
+
 }
