@@ -346,15 +346,15 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         return builder.toString();
     }
 
-    @Override
-    public Topic topic() {
-        return this.topic;
-    }
-
-    @Override
-    public void setTopic(Topic topic) {
-        this.topic = topic;
-    }
+//    @Override
+//    public Topic topic() {
+//        return this.topic;
+//    }
+//
+//    @Override
+//    public void setTopic(Topic topic) {
+//        this.topic = topic;
+//    }
 
     @Override
     public String toString() {
