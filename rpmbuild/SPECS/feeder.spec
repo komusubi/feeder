@@ -11,12 +11,12 @@ Source2:  %{name}.logrotate
 Source3:  twitter4j.properties
 Source4:  accessKey.properties
 
-BuildRequires: java >= 1:1.8.0
+BuildRequires: java >= 1:1.7.0
 %if 0%{?centos}
 BuildRequires: apache-maven
 %endif
 
-Requires: java >= 1:1.8.0
+Requires: java >= 1:1.7.0
 
 %define homedir  %{_datadir}/%{name}
 %define bindir   %{homedir}/bin

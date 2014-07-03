@@ -19,7 +19,7 @@
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <compileSource>1.8</compileSource>
+    <compileSource>1.7</compileSource>
   </properties>
   <dependencyManagement>
     <dependencies>
