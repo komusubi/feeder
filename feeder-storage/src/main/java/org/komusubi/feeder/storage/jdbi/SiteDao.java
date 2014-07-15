@@ -19,10 +19,14 @@
 package org.komusubi.feeder.storage.jdbi;
 
 import org.komusubi.feeder.model.WebSite;
+import org.komusubi.feeder.storage.mapper.WebSiteMapper;
+import org.komusubi.feeder.utils.Types.AggregateType;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+@RegisterMapper(WebSiteMapper.class)
 public interface SiteDao {
     @SqlUpdate("create table sites ( id int auto_increment," 
                                   + "name varchar(255),"
@@ -36,8 +40,12 @@ public interface SiteDao {
                                   + "foreign key (category) references categories(id)")
     void createSiteTable();
 
-    @SqlQuery("select id, name, feed, channel, category, url from sites where id = :id")
-    WebSite findById(@Bind("id") int id);
+    @SqlQuery("select s.id, s.name, f.name, c.name, s.category, s.url from sites s, channels c, feeds f "
+                    + "where s.id = :id and s.channel = c.id and s.feed = f.id")
+    WebSite findById(@Bind("id") Integer id);
+
+    @SqlQuery("select id, name, feed, channel, category, url from sites where feed = :feed")
+    WebSite findByFeed(@Bind("feed") AggregateType type);
 
     void close();
 }
