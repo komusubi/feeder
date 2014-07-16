@@ -28,6 +28,16 @@ public class Types {
     }
 
     public static enum AggregateType {
-        SCRAPER, FEEDER;
+        SCRAPER("SCRAPE"), FEEDER("RSS");
+        
+        private String value;
+
+        private AggregateType(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
+        }
     }
 }
