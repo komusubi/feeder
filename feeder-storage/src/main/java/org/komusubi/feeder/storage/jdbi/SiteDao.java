@@ -18,7 +18,10 @@
  */
 package org.komusubi.feeder.storage.jdbi;
 
+import java.util.List;
+
 import org.komusubi.feeder.model.WebSite;
+import org.komusubi.feeder.storage.mapper.AggregateTypeBinder;
 import org.komusubi.feeder.storage.mapper.WebSiteMapper;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -44,8 +47,9 @@ public interface SiteDao {
                     + "where s.id = :id and s.channel = c.id and s.feed = f.id")
     WebSite findById(@Bind("id") Integer id);
 
-    @SqlQuery("select id, name, feed, channel, category, url from sites where feed = :feed")
-    WebSite findByFeed(@Bind("feed") AggregateType type);
+    @SqlQuery("select s.name, c.name, s.feed, s.url from sites s, channels c where feed = "
+                    + "(select id from feeds where name = :feed) and s.channel = c.id")
+    List<WebSite> findByFeed(@AggregateTypeBinder AggregateType type);
 
     void close();
 }
