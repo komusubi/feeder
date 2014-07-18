@@ -25,7 +25,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 public interface FeedDao {
 
     @SqlUpdate("create table feeds ( id int, name varchar(64), primary key(id))")
-    void createFeedTable();
+    void createTable();
 
     @SqlQuery("select id, name from feeds")
     Feed findAll();

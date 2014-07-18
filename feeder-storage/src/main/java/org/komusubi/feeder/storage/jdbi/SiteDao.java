@@ -43,7 +43,7 @@ public interface SiteDao {
                                   + "foreign key (feed) references feeds(id),"
                                   + "foreign key (channel) references channels(id),"
                                   + "foreign key (category) references categories(id)")
-    void createSiteTable();
+    void createTable();
 
     @SqlQuery("select s.id, s.name, f.name, c.name, s.category, s.url from sites s, channels c, feeds f "
                     + "where s.id = :id and s.channel = c.id and s.feed = f.id")
