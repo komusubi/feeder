@@ -39,12 +39,12 @@ public class SiteDaoTest {
     @Ignore
     @BeforeClass
     public static void beforeClass() {
-        DBI dbi = new DBI("jdbc:mysql://localhost:3306/development", "root", "");
-        SiteDao siteDao = dbi.open(SiteDao.class);
-        FeedDao feedDao = dbi.open(FeedDao.class);
-        siteDao.createTable(); 
-        feedDao.createTable();
-        Handle handle = dbi.open();
+        // DBI dbi = new DBI("jdbc:mysql://localhost:3306/development", "root", "");
+        // SiteDao siteDao = dbi.open(SiteDao.class);
+        // FeedDao feedDao = dbi.open(FeedDao.class);
+        // siteDao.createTable(); 
+        // feedDao.createTable();
+        // Handle handle = dbi.open();
         // TODO insert initial load data.
 //        handle.execute("");
     }
