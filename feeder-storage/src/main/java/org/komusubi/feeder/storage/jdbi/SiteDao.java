@@ -22,8 +22,10 @@ import java.util.List;
 
 import org.komusubi.feeder.model.WebSite;
 import org.komusubi.feeder.storage.mapper.AggregateTypeBinder;
+import org.komusubi.feeder.storage.mapper.ScrapeTypeBinder;
 import org.komusubi.feeder.storage.mapper.WebSiteMapper;
 import org.komusubi.feeder.utils.Types.AggregateType;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
@@ -50,6 +52,17 @@ public interface SiteDao {
     @SqlQuery("select s.name, c.name, s.feed, s.url from sites s, channels c where feed = "
                     + "(select id from feeds where name = :feed) and s.channel = c.id")
     List<WebSite> findByFeed(@AggregateTypeBinder AggregateType type);
+
+    @SqlQuery("select s.name, c.name, s.feed, s.url from sites s, channels c where channel = "
+                    + "(select id from channels where name = :channel) and s.channel = c.id")
+    List<WebSite> findByChannel(@ScrapeTypeBinder ScrapeType type);
+    
+    @SqlQuery("select s.name, c.name, s.feed, s.url from sites s, channels c, feeds f where feed = "
+                    + "(select id from feeds where name = :feed) and "
+                    + "(select id from channels where name = :channel) and "
+                    + "s.channel = c.id and s.feed = f.id")
+    WebSite readByFeedAndChannel(@AggregateTypeBinder AggregateType aggregate,
+                                 @ScrapeTypeBinder ScrapeType scrape);
 
     void close();
 }
