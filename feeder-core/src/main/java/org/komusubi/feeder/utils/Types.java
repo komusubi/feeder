@@ -18,13 +18,36 @@
  */
 package org.komusubi.feeder.utils;
 
+
 /**
  * @author jun.ozeki
  */
 public class Types {
 
     public static enum ScrapeType {
-        KOMUSUBI, JAL5971, JAL5931;
+        KOMUSUBI("komusubi"), 
+        JAL5971("5971"), 
+        JAL5931("5931"), 
+        JMB("jmb"), 
+        JAL("jal");
+
+        private String value;
+
+        private ScrapeType(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
+        }
+
+        public static ScrapeType find(String value) {
+            for (ScrapeType type: values()) {
+                if (type.value().equals(value))
+                    return type;
+            }
+            throw new IllegalArgumentException("wrong value: " + value);
+        }
     }
 
     public static enum AggregateType {

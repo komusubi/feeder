@@ -51,7 +51,7 @@ public class WebSiteMapper implements ResultSetMapper<WebSite> {
      */
     @Override
     public WebSite map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        UrlShortening shortening = new BitlyUrlShortening(ScrapeType.valueOf(r.getString("c.name")));
+        UrlShortening shortening = new BitlyUrlShortening(ScrapeType.find(r.getString("c.name")));
         Url url = new Url(r.getString("s.url"), shortening);
         return new WebSite(url, tags);
     }

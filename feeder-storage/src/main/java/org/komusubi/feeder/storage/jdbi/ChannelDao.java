@@ -18,18 +18,13 @@
  */
 package org.komusubi.feeder.storage.jdbi;
 
-import org.komusubi.feeder.storage.table.Feed;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
-public interface FeedDao {
-
-    @SqlUpdate("create table feeds ( id int, name varchar(64), primary key(id))")
+public interface ChannelDao {
+    @SqlUpdate("create table channels ( id int, name varchar(64), primary key(id))")
     void createTable();
 
-    @SqlQuery("select id, name from feeds")
-    Feed findAll();
-
-    
-    void close();
+    @SqlQuery("select id, name from channels")
+    Object findAll();
 }
