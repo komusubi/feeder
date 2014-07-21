@@ -17,7 +17,7 @@ create table channels (
     primary key(id)
 );
 
-create table categories(
+create table categories (
     id int,
     name varchar(64),
     primary key(id)

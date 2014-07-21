@@ -35,6 +35,7 @@ import org.komusubi.feeder.utils.Types.ScrapeType;
 public class SiteDaoTest {
 
     private static final String EXPECT_DOM_WEATHER_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
+    private static final String EXPECT_DOM_INFO_URL = "http://rss.jal.co.jp/f4746/index.rdf";
     private static ExternalStorageResource storage;
     private SiteDao siteDao;
 
@@ -65,7 +66,7 @@ public class SiteDaoTest {
         storage.execute("insert into sites values (null, '運行の見通し(国内線)', 1, 1, 1, '" + EXPECT_DOM_WEATHER_URL + "')");
         storage.execute("insert into sites values (null, '運行の見通し(国際線)', 1, 2, 1, 'http://www.jal.co.jp/cms/other/ja/weather_info_int.html')");
         storage.execute("insert into sites values (null, 'JALからのお知らせ', 2, 0, 2, 'http://rss.jal.co.jp/f4728/index.rdf')");
-        storage.execute("insert into sites values (null, '国内線のお知らせ', 2, 1, 2, 'http://rss.jal.co.jp/f4746/index.rdf')");
+        storage.execute("insert into sites values (null, '国内線のお知らせ', 2, 1, 2, '" + EXPECT_DOM_INFO_URL + "')");
         storage.execute("insert into sites values (null, '国際線のお知らせ', 2, 2, 2, 'http://rss.jal.co.jp/f4747/index.rdf')");
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
     }
@@ -98,6 +99,6 @@ public class SiteDaoTest {
         WebSite site = siteDao.findByFeedAndChannel(AggregateType.FEEDER, ScrapeType.JAL5971);
 
         // verify 
-        assertThat(site.url().toExternalForm(), is("http://rss.jal.co.jp/f4746/index.rdf"));
+        assertThat(site.url().toExternalForm(), is(EXPECT_DOM_INFO_URL));
     }
 }
