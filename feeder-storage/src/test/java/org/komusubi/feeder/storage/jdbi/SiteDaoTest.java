@@ -18,57 +18,86 @@
  */
 package org.komusubi.feeder.storage.jdbi;
 
-import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-import javax.sql.DataSource;
-
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.komusubi.feeder.model.WebSite;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.komusubi.feeder.utils.Types.ScrapeType;
-import org.skife.jdbi.v2.DBI;
-import org.skife.jdbi.v2.Handle;
 
 /**
  * @author jun.ozeki
  */
 public class SiteDaoTest {
 
-    @Ignore
+    private static final String EXPECT_DOM_WEATHER_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
+    private static ExternalStorageResource storage;
+    private SiteDao siteDao;
+
     @BeforeClass
     public static void beforeClass() {
-        // DBI dbi = new DBI("jdbc:mysql://localhost:3306/development", "root", "");
-        // SiteDao siteDao = dbi.open(SiteDao.class);
-        // FeedDao feedDao = dbi.open(FeedDao.class);
-        // siteDao.createTable(); 
-        // feedDao.createTable();
-        // Handle handle = dbi.open();
-        // TODO insert initial load data.
-//        handle.execute("");
+        storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
+        storage.before();
+        FeedDao feedDao = storage.open(FeedDao.class);
+        feedDao.createTable();
+        ChannelDao channelDao = storage.open(ChannelDao.class);
+        channelDao.createTable();
+        CategoryDao categoryDao = storage.open(CategoryDao.class);
+        categoryDao.createTable();
+        SiteDao siteDao = storage.open(SiteDao.class);
+        siteDao.createTable();
+        storage.execute("insert into feeds values (1, 'SCRAPE')");
+        storage.execute("insert into feeds values (2, 'RSS')");
+        storage.execute("insert into channels values (0, 'jal')");
+        storage.execute("insert into channels values (1, '5971')");
+        storage.execute("insert into channels values (2, '5931')");
+        storage.execute("insert into channels values (3, 'jmb')");
+        storage.execute("insert into categories values (1, 'WEATHER')");
+        storage.execute("insert into categories values (2, 'INFORMATION')");
+        storage.execute("insert into categories values (3, 'TOUR')");
+        storage.execute("insert into categories values (4, 'INVESTER RELATIONS')");
+        storage.execute("insert into categories values (5, 'PRESS RELEASE')");
+        storage.execute("insert into categories values (6, 'FLIGHT STATUS')");
+        storage.execute("insert into sites values (null, '運行の見通し(国内線)', 1, 1, 1, '" + EXPECT_DOM_WEATHER_URL + "')");
+        storage.execute("insert into sites values (null, '運行の見通し(国際線)', 1, 2, 1, 'http://www.jal.co.jp/cms/other/ja/weather_info_int.html')");
+        storage.execute("insert into sites values (null, 'JALからのお知らせ', 2, 0, 2, 'http://rss.jal.co.jp/f4728/index.rdf')");
+        storage.execute("insert into sites values (null, '国内線のお知らせ', 2, 1, 2, 'http://rss.jal.co.jp/f4746/index.rdf')");
+        storage.execute("insert into sites values (null, '国際線のお知らせ', 2, 2, 2, 'http://rss.jal.co.jp/f4747/index.rdf')");
+        storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
     }
 
-    @Ignore
+    @AfterClass
+    public static void afterClass() {
+        storage.after();
+    } 
+
+    @Before
+    public void before() {
+        siteDao = storage.open(SiteDao.class); 
+    }
+
     @Test
-    public void test() {
-        DataSource ds = null;
-        DBI dbi = new DBI("jdbc:mysql://localhost:3306/development", "root", "");
-        SiteDao dao = dbi.open(SiteDao.class);
-//        WebSite site = dao.findByFeed(AggregateType.FEEDER);
-        WebSite site = dao.findById(new Integer(1));
-        System.out.printf("site: %s%n", site.url());
-        List<WebSite> list = dao.findByFeed(AggregateType.FEEDER);
-        for (WebSite s: list) {
-            System.out.printf("s: %s%n", s.url());
-        }
-        List<WebSite> sites = dao.findByChannel(ScrapeType.JAL5971);
-        for (WebSite s: sites) {
-            System.out.printf("channel from: %s%n", s.url());
-        }
-        WebSite s = dao.readByFeedAndChannel(AggregateType.SCRAPER, ScrapeType.JAL5931);
-        System.out.printf("exec: %s:%s is %s%n", AggregateType.SCRAPER, ScrapeType.JAL5931, s.url());
-        dao.close();
+    public void findByPrimaryKey() {
+        // setup
+        
+        // exercise
+        WebSite site = siteDao.findById(new Integer(1));
+
+        // verify
+        assertThat(site.url().toExternalForm(), is(EXPECT_DOM_WEATHER_URL));
     }
 
+    @Test
+    public void findByFeedAndChannel() {
+        // setup
+        // exercise
+        WebSite site = siteDao.findByFeedAndChannel(AggregateType.FEEDER, ScrapeType.JAL5971);
+
+        // verify 
+        assertThat(site.url().toExternalForm(), is("http://rss.jal.co.jp/f4746/index.rdf"));
+    }
 }

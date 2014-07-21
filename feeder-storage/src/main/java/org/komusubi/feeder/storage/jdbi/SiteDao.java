@@ -33,7 +33,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 @RegisterMapper(WebSiteMapper.class)
 public interface SiteDao {
-    @SqlUpdate("create table sites ( id int auto_increment," 
+    @SqlUpdate("create table sites (id int auto_increment," 
                                   + "name varchar(255),"
                                   + "feed int,"
                                   + "channel int,"
@@ -42,10 +42,10 @@ public interface SiteDao {
                                   + "primary key (id),"
                                   + "foreign key (feed) references feeds(id),"
                                   + "foreign key (channel) references channels(id),"
-                                  + "foreign key (category) references categories(id)")
+                                  + "foreign key (category) references categories(id))")
     void createTable();
 
-    @SqlQuery("select s.id, s.name, f.name, c.name, s.category, s.url from sites s, channels c, feeds f "
+    @SqlQuery("select s.id, s.name, f.name, c.name as c_name, s.category, s.url as s_url from sites s, channels c, feeds f "
                     + "where s.id = :id and s.channel = c.id and s.feed = f.id")
     WebSite findById(@Bind("id") Integer id);
 
@@ -57,11 +57,11 @@ public interface SiteDao {
                     + "(select id from channels where name = :channel) and s.channel = c.id")
     List<WebSite> findByChannel(@ScrapeTypeBinder ScrapeType type);
     
-    @SqlQuery("select s.name, c.name, s.feed, s.url from sites s, channels c, feeds f where feed = "
-                    + "(select id from feeds where name = :feed) and "
-                    + "(select id from channels where name = :channel) and "
+    @SqlQuery("select s.name, c.name as c_name, s.feed, s.url as s_url from sites s, channels c, feeds f where "
+                    + "feed = (select id from feeds where name = :feed) and "
+                    + "channel = (select id from channels where name = :channel) and "
                     + "s.channel = c.id and s.feed = f.id")
-    WebSite readByFeedAndChannel(@AggregateTypeBinder AggregateType aggregate,
+    WebSite findByFeedAndChannel(@AggregateTypeBinder AggregateType aggregate,
                                  @ScrapeTypeBinder ScrapeType scrape);
 
     void close();

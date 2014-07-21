@@ -23,17 +23,15 @@ import java.util.List;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
-/**
- *
- * @author jun.ozeki
- */
-public interface FeedDao {
+public interface CategoryDao {
 
-    @SqlUpdate("create table feeds (id int, name varchar(64), primary key(id))")
+    @SqlUpdate("create table categories (id int, name varchar(64), primary key(id))")
     void createTable();
 
-    @SqlQuery("select name from feeds")
+    @SqlQuery("select name from categories")
     List<String> findAll();
 
     void close();
-}
+} 
+
+
