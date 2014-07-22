@@ -20,7 +20,6 @@ package org.komusubi.feeder.storage.cache;
 
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.spi.PageCache;
-import org.komusubi.feeder.storage.jdbi.MessageDao;
 
 /**
  * 
@@ -28,11 +27,11 @@ import org.komusubi.feeder.storage.jdbi.MessageDao;
  */
 public class StoragePageCache implements PageCache {
 
-    private MessageDao messageDao;
+//    private MessageDao messageDao;
 
-    public StoragePageCache(MessageDao messageDao) {
-        this.messageDao = messageDao;
-    }
+//    public StoragePageCache(MessageDao messageDao) {
+//        this.messageDao = messageDao;
+//    }
 
     @Override
     public void refresh() {
