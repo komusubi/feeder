@@ -73,6 +73,10 @@ public class SiteDaoTest {
 
     @AfterClass
     public static void afterClass() {
+        storage.execute("drop table sites");
+        storage.execute("drop table categories");
+        storage.execute("drop table channels");
+        storage.execute("drop table feeds");
         storage.after();
     } 
 

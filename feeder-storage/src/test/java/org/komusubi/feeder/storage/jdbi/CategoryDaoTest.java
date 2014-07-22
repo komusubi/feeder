@@ -63,6 +63,7 @@ public class CategoryDaoTest {
     
     @AfterClass
     public static void afterClass() {
+        storage.execute("drop table categories");
         storage.after();
     }
     

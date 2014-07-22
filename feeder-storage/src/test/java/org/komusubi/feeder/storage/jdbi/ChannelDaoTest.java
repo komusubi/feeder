@@ -49,6 +49,7 @@ public class ChannelDaoTest {
 
     @AfterClass
     public static void afterClass() {
+        storage.execute("drop table channels");
         storage.after();
     }
 
