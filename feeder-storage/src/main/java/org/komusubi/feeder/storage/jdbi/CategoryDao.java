@@ -29,7 +29,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
  */
 public interface CategoryDao {
 
-    @SqlUpdate("create table categories (id int, name varchar(64), primary key(id))")
+    @SqlUpdate("create table if not exists categories (id int, name varchar(64), primary key(id))")
     void createTable();
 
     @SqlQuery("select name from categories")

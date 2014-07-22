@@ -28,7 +28,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
  * @author jun.ozeki
  */
 public interface ChannelDao {
-    @SqlUpdate("create table channels ( id int, name varchar(64), primary key(id))")
+    @SqlUpdate("create table if not exists channels ( id int, name varchar(64), primary key(id))")
     void createTable();
 
     @SqlQuery("select name from channels")
