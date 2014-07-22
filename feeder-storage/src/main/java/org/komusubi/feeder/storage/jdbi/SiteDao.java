@@ -33,7 +33,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 @RegisterMapper(WebSiteMapper.class)
 public interface SiteDao {
-    @SqlUpdate("create table sites (id int auto_increment," 
+    @SqlUpdate("create table if not exists sites (id int auto_increment," 
                                   + "name varchar(255),"
                                   + "feed int,"
                                   + "channel int,"

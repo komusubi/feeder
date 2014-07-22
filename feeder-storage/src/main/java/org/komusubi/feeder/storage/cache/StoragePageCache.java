@@ -21,23 +21,27 @@ package org.komusubi.feeder.storage.cache;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.spi.PageCache;
 
+/**
+ * 
+ * @author jun.ozeki
+ */
 public class StoragePageCache implements PageCache {
 
-//    private MessageMapper messageMapper;
+//    private MessageDao messageDao;
 
-//    public StoragePageCache(MessageMapper messageMapper) {
-//        this.messageMapper = messageMapper;
+//    public StoragePageCache(MessageDao messageDao) {
+//        this.messageDao = messageDao;
 //    }
 
     @Override
     public void refresh() {
-        // TODO Auto-generated method stub
-
+        // nothing to do.
     }
 
     @Override
     public boolean exists(Message message) {
-        // TODO Auto-generated method stub
+        // TODO MessageDao#exist(String) boolean method with calculate hash code.
+//        messageDao.
         return false;
     }
 

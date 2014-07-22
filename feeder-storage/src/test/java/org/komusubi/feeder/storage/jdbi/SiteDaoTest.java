@@ -34,10 +34,10 @@ import org.komusubi.feeder.utils.Types.ScrapeType;
  */
 public class SiteDaoTest {
 
-    private static final String EXPECT_DOM_WEATHER_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
-    private static final String EXPECT_DOM_INFO_URL = "http://rss.jal.co.jp/f4746/index.rdf";
+    private static final String EXPECTED_DOM_WEATHER_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
+    private static final String EXPECTED_DOM_INFO_URL = "http://rss.jal.co.jp/f4746/index.rdf";
     private static ExternalStorageResource storage;
-    private SiteDao siteDao;
+    private SiteDao target;
 
     @BeforeClass
     public static void beforeClass() {
@@ -63,10 +63,10 @@ public class SiteDaoTest {
         storage.execute("insert into categories values (4, 'INVESTER RELATIONS')");
         storage.execute("insert into categories values (5, 'PRESS RELEASE')");
         storage.execute("insert into categories values (6, 'FLIGHT STATUS')");
-        storage.execute("insert into sites values (null, '運行の見通し(国内線)', 1, 1, 1, '" + EXPECT_DOM_WEATHER_URL + "')");
+        storage.execute("insert into sites values (null, '運行の見通し(国内線)', 1, 1, 1, '" + EXPECTED_DOM_WEATHER_URL + "')");
         storage.execute("insert into sites values (null, '運行の見通し(国際線)', 1, 2, 1, 'http://www.jal.co.jp/cms/other/ja/weather_info_int.html')");
         storage.execute("insert into sites values (null, 'JALからのお知らせ', 2, 0, 2, 'http://rss.jal.co.jp/f4728/index.rdf')");
-        storage.execute("insert into sites values (null, '国内線のお知らせ', 2, 1, 2, '" + EXPECT_DOM_INFO_URL + "')");
+        storage.execute("insert into sites values (null, '国内線のお知らせ', 2, 1, 2, '" + EXPECTED_DOM_INFO_URL + "')");
         storage.execute("insert into sites values (null, '国際線のお知らせ', 2, 2, 2, 'http://rss.jal.co.jp/f4747/index.rdf')");
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
     }
@@ -78,7 +78,7 @@ public class SiteDaoTest {
 
     @Before
     public void before() {
-        siteDao = storage.open(SiteDao.class); 
+        target = storage.open(SiteDao.class); 
     }
 
     @Test
@@ -86,19 +86,19 @@ public class SiteDaoTest {
         // setup
         
         // exercise
-        WebSite site = siteDao.findById(new Integer(1));
+        WebSite site = target.findById(new Integer(1));
 
         // verify
-        assertThat(site.url().toExternalForm(), is(EXPECT_DOM_WEATHER_URL));
+        assertThat(site.url().toExternalForm(), is(EXPECTED_DOM_WEATHER_URL));
     }
 
     @Test
     public void findByFeedAndChannel() {
         // setup
         // exercise
-        WebSite site = siteDao.findByFeedAndChannel(AggregateType.FEEDER, ScrapeType.JAL5971);
+        WebSite site = target.findByFeedAndChannel(AggregateType.FEEDER, ScrapeType.JAL5971);
 
         // verify 
-        assertThat(site.url().toExternalForm(), is(EXPECT_DOM_INFO_URL));
+        assertThat(site.url().toExternalForm(), is(EXPECTED_DOM_INFO_URL));
     }
 }

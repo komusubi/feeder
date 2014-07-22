@@ -51,7 +51,7 @@ public class ExternalStorageResource extends ExternalResource {
 
     @Override
     public void before() {
-        logger.info("before test open resource.");
+        logger.info("before: test open resource.");
         dbi = new DBI(ds); 
         handle = dbi.open();
     }
@@ -59,7 +59,7 @@ public class ExternalStorageResource extends ExternalResource {
     @Override
     public void after() {
         handle.close();
-        logger.info("after test resource closed.");
+        logger.info("after: test resource closed.");
     }
 
     public void execute(String sql, Object... args) {
