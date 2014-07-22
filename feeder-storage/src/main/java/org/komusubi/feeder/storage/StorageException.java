@@ -20,6 +20,10 @@ package org.komusubi.feeder.storage;
 
 import org.komusubi.feeder.FeederException;
 
+/**
+ * 
+ * @author jun.ozeki
+ */
 public class StorageException extends FeederException {
     private static final long serialVersionUID = 1L;
 
