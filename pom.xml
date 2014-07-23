@@ -20,6 +20,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <compileSource>1.7</compileSource>
+    <dropwizard-version>0.7.1</dropwizard-version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -135,6 +136,11 @@
         <groupId>com.twitter</groupId>
         <artifactId>twitter-text</artifactId>
         <version>1.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>io.dropwizard</groupId>
+        <artifactId>dropwizard-migrations</artifactId>
+        <version>${dropwizard-version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
