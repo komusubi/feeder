@@ -30,9 +30,10 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 @RegisterMapper(WebSiteMapper.class)
-public interface SiteDao {
+public interface SiteDao extends Transactional<SiteDao> {
     @SqlUpdate("create table if not exists sites (id int auto_increment," 
                                   + "name varchar(255),"
                                   + "feed int,"

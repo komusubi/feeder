@@ -24,12 +24,13 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
  * @author jun.ozeki
  */
 @RegisterMapper(ScriptMapper.class)
-public interface TweetDao {
+public interface TweetDao extends Transactional<TweetDao> {
 
     @SqlUpdate("create table tweets (url varchar(255) unique,"
                                     + "message_id int,"
@@ -41,5 +42,8 @@ public interface TweetDao {
     Script findById(@Bind("id") Integer id);
 
     void close();
+
+    @SqlUpdate("")
+    void persist(Object o);
 }
 

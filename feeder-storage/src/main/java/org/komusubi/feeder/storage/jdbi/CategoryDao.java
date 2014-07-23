@@ -22,12 +22,13 @@ import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
  * 
  * @author jun.ozeki
  */
-public interface CategoryDao {
+public interface CategoryDao extends Transactional<CategoryDao> {
 
     @SqlUpdate("create table if not exists categories (id int, name varchar(64), primary key(id))")
     void createTable();
