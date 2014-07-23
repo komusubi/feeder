@@ -20,6 +20,7 @@ package org.komusubi.feeder.storage.cache;
 
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.spi.PageCache;
+import org.komusubi.feeder.storage.jdbi.MessageDao;
 
 /**
  * 
@@ -27,11 +28,11 @@ import org.komusubi.feeder.spi.PageCache;
  */
 public class StoragePageCache implements PageCache {
 
-//    private MessageDao messageDao;
+    private MessageDao messageDao;
 
-//    public StoragePageCache(MessageDao messageDao) {
-//        this.messageDao = messageDao;
-//    }
+    public StoragePageCache(MessageDao messageDao) {
+        this.messageDao = messageDao;
+    }
 
     @Override
     public void refresh() {
@@ -40,14 +41,14 @@ public class StoragePageCache implements PageCache {
 
     @Override
     public boolean exists(Message message) {
-        // TODO MessageDao#exist(String) boolean method with calculate hash code.
-//        messageDao.
-        return false;
+        return messageDao.exists(message);
     }
 
     @Override
     public void store(Message message) {
-//        messageMapper.persist(message);
+        messageDao.begin();
+        messageDao.persist(message);
+        messageDao.commit();
     }
 
 }
