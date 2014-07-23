@@ -9,7 +9,6 @@
   <artifactId>feeder-storage</artifactId>
   <name>feeder-storage</name>
   <properties>
-    <hibernate-version>4.3.0.CR1</hibernate-version>
     <jdbi-version>2.55</jdbi-version>
   </properties>
   <dependencies>
@@ -37,16 +36,6 @@
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
         <version>1.1.7</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-jpamodelgen</artifactId>
-        <version>${hibernate-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-entitymanager</artifactId>
-        <version>${hibernate-version}</version>
       </dependency>
       <dependency>
         <groupId>org.jdbi</groupId>

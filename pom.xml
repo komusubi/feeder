@@ -75,7 +75,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.5</version>
+        <version>1.7.6</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -141,6 +141,11 @@
       <dependency>
         <groupId>io.dropwizard</groupId>
         <artifactId>dropwizard-migrations</artifactId>
+        <version>${dropwizard-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.dropwizard</groupId>
+        <artifactId>dropwizard-jdbi</artifactId>
         <version>${dropwizard-version}</version>
       </dependency>
     </dependencies>
@@ -527,6 +532,5 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
     </dependency>
-
   </dependencies>
 </project>
