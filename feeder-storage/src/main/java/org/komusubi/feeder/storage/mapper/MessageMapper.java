@@ -21,25 +21,24 @@ package org.komusubi.feeder.storage.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.komusubi.feeder.bind.BitlyUrlShortening;
-import org.komusubi.feeder.model.Message.Script;
-import org.komusubi.feeder.model.Url;
-import org.komusubi.feeder.storage.table.StorageScript;
+import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-public class ScriptMapper implements ResultSetMapper<Script> {
+/**
+ * @author jun.ozeki
+ */
+public class MessageMapper implements ResultSetMapper<Message> {
 
     /**
      * @see org.skife.jdbi.v2.tweak.ResultSetMapper#map(int, java.sql.ResultSet, org.skife.jdbi.v2.StatementContext)
      */
     @Override
-    public Script map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-//        r.getInt("message_id");
-        // TODO BitlyUrlShortening argument type
-        StorageScript script = new StorageScript(new Url(r.getURL("url"), new BitlyUrlShortening()));
-        return script;
+    public Message map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+        StorageMessage message = new StorageMessage(r.getInt("id"));
+//        ctx.
+        return message;
     }
 
 }
-

@@ -18,6 +18,8 @@
  */
 package org.komusubi.feeder.storage.jdbi;
 
+import java.util.List;
+
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.storage.mapper.ScriptMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -38,8 +40,8 @@ public interface TweetDao extends Transactional<TweetDao> {
                                     + "create index tweet_idx on tweets(message_id)")
     void createTable();
 
-    @SqlQuery("select url, message_id from tweets")
-    Script findById(@Bind("id") Integer id);
+    @SqlQuery("select url, message_id from tweets where message_id = :id")
+    List<Script> findByMessageId(@Bind("id") Integer id);
 
     void close();
 
