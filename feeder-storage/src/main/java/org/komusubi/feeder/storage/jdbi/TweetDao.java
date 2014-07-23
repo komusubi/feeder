@@ -18,18 +18,21 @@
  */
 package org.komusubi.feeder.storage.jdbi;
 
+import java.util.List;
+
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.storage.mapper.ScriptMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
  * @author jun.ozeki
  */
 @RegisterMapper(ScriptMapper.class)
-public interface TweetDao {
+public interface TweetDao extends Transactional<TweetDao> {
 
     @SqlUpdate("create table tweets (url varchar(255) unique,"
                                     + "message_id int,"
@@ -37,9 +40,12 @@ public interface TweetDao {
                                     + "create index tweet_idx on tweets(message_id)")
     void createTable();
 
-    @SqlQuery("select url, message_id from tweets")
-    Script findById(@Bind("id") Integer id);
+    @SqlQuery("select url, message_id from tweets where message_id = :id")
+    List<Script> findByMessageId(@Bind("id") Integer id);
 
     void close();
+
+    @SqlUpdate("")
+    void persist(Object o);
 }
 

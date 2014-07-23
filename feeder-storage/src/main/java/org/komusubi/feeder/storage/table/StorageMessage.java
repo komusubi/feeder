@@ -16,39 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.storage.cache;
+package org.komusubi.feeder.storage.table;
 
-import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.spi.PageCache;
-import org.komusubi.feeder.storage.jdbi.MessageDao;
+import org.komusubi.feeder.bind.FeederMessage;
 
 /**
- * 
  * @author jun.ozeki
  */
-public class StoragePageCache implements PageCache {
+public class StorageMessage extends FeederMessage {
 
-    private MessageDao messageDao;
+    private static final long serialVersionUID = 1L;
+    private Integer id;
 
-    public StoragePageCache(MessageDao messageDao) {
-        this.messageDao = messageDao;
+    public StorageMessage(Integer id) {
+        super();
+        this.id = id;
     }
 
-    @Override
-    public void refresh() {
-        // nothing to do.
+    public Integer id() {
+        return id;
     }
-
-    @Override
-    public boolean exists(Message message) {
-        return messageDao.exists(message);
-    }
-
-    @Override
-    public void store(Message message) {
-        messageDao.begin();
-        messageDao.persist(message);
-        messageDao.commit();
-    }
-
 }

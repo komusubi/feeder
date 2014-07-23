@@ -16,39 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.storage.cache;
+package org.komusubi.feeder.storage.mapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.spi.PageCache;
-import org.komusubi.feeder.storage.jdbi.MessageDao;
+import org.komusubi.feeder.storage.table.StorageMessage;
+import org.skife.jdbi.v2.StatementContext;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 /**
- * 
  * @author jun.ozeki
  */
-public class StoragePageCache implements PageCache {
+public class MessageMapper implements ResultSetMapper<Message> {
 
-    private MessageDao messageDao;
-
-    public StoragePageCache(MessageDao messageDao) {
-        this.messageDao = messageDao;
-    }
-
+    /**
+     * @see org.skife.jdbi.v2.tweak.ResultSetMapper#map(int, java.sql.ResultSet, org.skife.jdbi.v2.StatementContext)
+     */
     @Override
-    public void refresh() {
-        // nothing to do.
-    }
-
-    @Override
-    public boolean exists(Message message) {
-        return messageDao.exists(message);
-    }
-
-    @Override
-    public void store(Message message) {
-        messageDao.begin();
-        messageDao.persist(message);
-        messageDao.commit();
+    public Message map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+        StorageMessage message = new StorageMessage(r.getInt("id"));
+//        ctx.
+        return message;
     }
 
 }
