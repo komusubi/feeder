@@ -24,6 +24,8 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import org.komusubi.feeder.web.resource.FeederResource;
+
 /**
  *
  * @author jun.ozeki
@@ -62,7 +64,7 @@ public class FeederApplication extends Application<FeederConfiguration> {
      */
     @Override
     public void run(FeederConfiguration configuration, Environment environment) throws Exception {
-         
+        environment.jersey().register(new FeederResource());
     }
 }
 
