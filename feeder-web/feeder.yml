@@ -7,6 +7,10 @@ database:
   password: 
   url: jdbc:mysql://localhost:3306/feeder 
 
+# database health check
+query: select name from feeds where id = 1
+expect: SCRAPE
+
 # server settings
 server:
   applicationConnectors:

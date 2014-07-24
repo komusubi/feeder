@@ -18,7 +18,6 @@
  */
 package org.komusubi.feeder.web.health;
 
-import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.setup.Environment;
 
@@ -26,6 +25,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.komusubi.feeder.web.FeederConfiguration;
 
 import com.codahale.metrics.health.HealthCheck;
 
@@ -35,14 +36,18 @@ import com.codahale.metrics.health.HealthCheck;
 public class DatabaseHealth extends HealthCheck {
 
     private ManagedDataSource dataSource;
+    private String expect;
+    private String query;
 
     /**
-     * @param dataSourceFactory
+     * @param configuration
      * @param environment
      * @throws ClassNotFoundException 
      */
-    public DatabaseHealth(DataSourceFactory dataSourceFactory, Environment environment) throws ClassNotFoundException {
-        dataSource = dataSourceFactory.build(environment.metrics(), "database");
+    public DatabaseHealth(FeederConfiguration configuration, Environment environment) throws ClassNotFoundException {
+        this.dataSource = configuration.getDataSourceFactory().build(environment.metrics(), "database-health");
+        this.query = configuration.getQuery();
+        this.expect = configuration.getExpect();
     }
 
     /**
@@ -52,20 +57,23 @@ public class DatabaseHealth extends HealthCheck {
     protected Result check() throws Exception {
         try (Connection connection = dataSource.getConnection()) {
             connection.setReadOnly(true);
-            PreparedStatement statement = connection.prepareStatement("");
-            try (ResultSet result = statement.executeQuery()) {
-                String value = "";
-                if (result.next())
-                    value = result.getString(1);
-                if ("".equals(value))
-                    return Result.healthy("");
-                else
-                    return Result.unhealthy("");
-            } catch (SQLException e) {
-                throw e;
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                try (ResultSet result = statement.executeQuery()) {
+                    String value = "";
+                    if (result.next())
+                        value = result.getString(1);
+                    if (value.equals(expect))
+                        return Result.healthy("success query: " + query);
+                    else
+                        return Result.unhealthy("failuer query: " + query);
+                } catch (SQLException e) {
+                    throw e;
+                }
+            } catch (SQLException ex) {
+                throw ex; 
             }
-        } catch (SQLException ex) {
-            throw ex;
+        } catch (SQLException exn) {
+            throw exn;
         } 
     }
 

@@ -35,6 +35,10 @@ public class FeederConfiguration extends Configuration {
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
+    @NotNull
+    private String expect;
+    @NotNull
+    private String query;
 
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
@@ -46,4 +50,23 @@ public class FeederConfiguration extends Configuration {
         this.database = dataSourceFactory;
     }
 
+    @JsonProperty
+    public void setQuery(String query) {
+        this.query = query; 
+    }
+
+    @JsonProperty
+    public String getQuery() {
+        return query;
+    }
+
+    @JsonProperty
+    public void setExpect(String expect) {
+        this.expect = expect; 
+    }
+
+    @JsonProperty
+    public String getExpect() {
+        return expect;
+    }
 }

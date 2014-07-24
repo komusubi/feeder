@@ -66,7 +66,7 @@ public class FeederApplication extends Application<FeederConfiguration> {
     @Override
     public void run(FeederConfiguration configuration, Environment environment) throws Exception {
         environment.jersey().register(new FeederResource());
-        environment.healthChecks().register("database", new DatabaseHealth(configuration.getDataSourceFactory(), environment));
+        environment.healthChecks().register("database-run", new DatabaseHealth(configuration, environment));
     }
 }
 
