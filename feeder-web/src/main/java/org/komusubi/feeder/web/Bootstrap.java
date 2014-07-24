@@ -18,9 +18,6 @@
  */
 package org.komusubi.feeder.web;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Singleton;
 
 import org.komusubi.feeder.aggregator.scraper.HtmlScraper;
@@ -47,21 +44,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 /**
  * bootstrap.
  * @author jun.ozeki
  */
-public class Bootstrap extends GuiceServletContextListener {
+public class Bootstrap /* extends GuiceServletContextListener */ {
 
     /**
      * @see com.google.inject.servlet.GuiceServletContextListener#getInjector()
      */
-    @Override
+//    @Override
     protected Injector getInjector() {
         return buildInjector();
     }
@@ -71,7 +64,7 @@ public class Bootstrap extends GuiceServletContextListener {
      * @return
      */
     public Injector buildInjector() {
-        return Guice.createInjector(new WebModule(),
+        return Guice.createInjector(/*new WebModule(),*/
                                     new Jal5971Module(),
                                     new QuartzModule());
     }
@@ -80,19 +73,19 @@ public class Bootstrap extends GuiceServletContextListener {
      * servlet module.
      * @author jun.ozeki
      */
-    public static class WebModule extends JerseyServletModule {
-        
-        /**
-         * @see com.google.inject.servlet.ServletModule#configureServlets()
-         */
-        @Override
-        protected void configureServlets() {
-            Map<String, String> param = new HashMap<String, String>();
-            param.put(PackagesResourceConfig.PROPERTY_PACKAGES, Jal5971Resource.class.getPackage().getName());
-            serve("/*").with(GuiceContainer.class, param);
-            bind(Jal5971Resource.class);
-        }
-    }
+//    public static class WebModule extends JerseyServletModule {
+//        
+//        /**
+//         * @see com.google.inject.servlet.ServletModule#configureServlets()
+//         */
+//        @Override
+//        protected void configureServlets() {
+//            Map<String, String> param = new HashMap<String, String>();
+//            param.put(PackagesResourceConfig.PROPERTY_PACKAGES, Jal5971Resource.class.getPackage().getName());
+//            serve("/*").with(GuiceContainer.class, param);
+//            bind(Jal5971Resource.class);
+//        }
+//    }
     
     /**
      * jal5971 module.
