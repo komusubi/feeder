@@ -24,6 +24,7 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import org.komusubi.feeder.web.health.DatabaseHealth;
 import org.komusubi.feeder.web.resource.FeederResource;
 
 /**
@@ -65,6 +66,7 @@ public class FeederApplication extends Application<FeederConfiguration> {
     @Override
     public void run(FeederConfiguration configuration, Environment environment) throws Exception {
         environment.jersey().register(new FeederResource());
+        environment.healthChecks().register("database", new DatabaseHealth(configuration.getDataSourceFactory(), environment));
     }
 }
 
