@@ -18,13 +18,14 @@
  */
 package org.komusubi.feeder.web.health;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.setup.Environment;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.codahale.metrics.health.HealthCheck;
 
@@ -60,8 +61,12 @@ public class DatabaseHealth extends HealthCheck {
                     return Result.healthy("");
                 else
                     return Result.unhealthy("");
+            } catch (SQLException e) {
+                throw e;
             }
-        }
+        } catch (SQLException ex) {
+            throw ex;
+        } 
     }
 
 }
