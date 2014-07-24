@@ -34,12 +34,16 @@
       <version>1.0</version>
       <exclusions>
         <exclusion>
-          <artifactId>commons-logging</artifactId>
           <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
         </exclusion>
         <exclusion>
-          <artifactId>commons-logging-api</artifactId>
           <groupId>commons-logging</groupId>
+          <artifactId>commons-logging-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
