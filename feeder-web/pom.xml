@@ -37,12 +37,6 @@
       <artifactId>quartz</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty.aggregate</groupId>
-      <artifactId>jetty-all</artifactId>
-      <version>9.0.4.v20130625</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
