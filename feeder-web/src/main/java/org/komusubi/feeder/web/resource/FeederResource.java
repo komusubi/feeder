@@ -19,12 +19,17 @@
 package org.komusubi.feeder.web.resource;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.codahale.metrics.annotation.Timed;
 
 /**
  * @author jun.ozeki
@@ -37,5 +42,12 @@ public class FeederResource {
     @GET
     public String get() {
         return "hell world";
+    }
+    
+    @POST
+    @Path("/{channel:5971|5931}/{feed:rss|scrape}")
+    @Timed
+    public Response post(@PathParam("channel") String channel, @PathParam("feed") String feed) {
+        return Response.noContent().build();
     }
 }
