@@ -50,7 +50,8 @@ public @interface MessageBinder {
                 public void bind(SQLStatement<?> q, MessageBinder bind, Message arg) {
                     // q.bind("hash", arg.text());
                     q.bind("text", arg.text());
-                    // q.bind("created", arg.c
+                    q.bind("created", arg.createdAt());
+                    // TODO how to get "site_id" from Message object.
                     // q.bind("site_id", arg.)
                 }
             };
