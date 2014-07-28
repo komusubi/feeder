@@ -36,8 +36,9 @@ public class MessageMapper implements ResultSetMapper<Message> {
      */
     @Override
     public Message map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+        // TODO how to set "site_id" to StorageMessage.
         StorageMessage message = new StorageMessage(r.getInt("id"));
-//        ctx.
+        message.append(r.getString("text"));
         return message;
     }
 

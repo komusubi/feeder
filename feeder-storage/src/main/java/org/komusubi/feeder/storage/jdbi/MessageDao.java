@@ -45,11 +45,11 @@ public interface MessageDao extends Transactional<MessageDao> {
 
     boolean exists(@MessageBinder Message message);
 
-    @SqlUpdate("select id, text, hash, created, site_id from messages where id = :id")
+    @SqlQuery("select id, text, hash, created, site_id from messages where id = :id")
     @Mapper(MessageMapper.class)
     Message findById(@Bind("id") Integer id);
     
-    @SqlQuery("")
+    @SqlQuery("insert into messages (text, created, site_id) values (:text, :created, :site_id)")
     void persist(Message message);
 }
 

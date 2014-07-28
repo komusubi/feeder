@@ -48,7 +48,10 @@ public @interface MessageBinder {
             return new Binder<MessageBinder, Message>() {
                 @Override
                 public void bind(SQLStatement<?> q, MessageBinder bind, Message arg) {
-                    q.bind("hash", arg.text());
+                    // q.bind("hash", arg.text());
+                    q.bind("text", arg.text());
+                    // q.bind("created", arg.c
+                    // q.bind("site_id", arg.)
                 }
             };
         }
