@@ -35,6 +35,7 @@ create table sites (
 create table messages (
     id int auto_increment,
     text varchar(1024),
+    hash varchar(64),
     created timestamp,  
     site_id int,
     primary key (id),
