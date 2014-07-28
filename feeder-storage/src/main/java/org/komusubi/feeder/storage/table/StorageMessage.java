@@ -18,6 +18,8 @@
  */
 package org.komusubi.feeder.storage.table;
 
+import java.util.Date;
+
 import org.komusubi.feeder.bind.FeederMessage;
 
 /**
@@ -28,12 +30,14 @@ public class StorageMessage extends FeederMessage {
     private static final long serialVersionUID = 1L;
     private Integer id;
 
-    public StorageMessage(Integer id) {
+    public StorageMessage(Integer id, Date created) {
         super();
         this.id = id;
+        super.initialize(created);
     }
 
     public Integer id() {
         return id;
     }
+
 }

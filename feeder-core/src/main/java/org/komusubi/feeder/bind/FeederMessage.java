@@ -40,7 +40,7 @@ public class FeederMessage extends ArrayList<Script> implements Message {
      */
     public FeederMessage() {
         super();
-        created = new Date();
+        initialize();
     }
 
     /**
@@ -49,6 +49,7 @@ public class FeederMessage extends ArrayList<Script> implements Message {
      */
     public FeederMessage(Collection<? extends Script> c) {
         super(c);
+        initialize();
     }
 
     /**
@@ -57,6 +58,15 @@ public class FeederMessage extends ArrayList<Script> implements Message {
      */
     public FeederMessage(int initialCapacity) {
         super(initialCapacity);
+        initialize();
+    }
+
+    private void initialize() {
+        initialize(new Date());
+    }
+
+    protected void initialize(Date date) {
+        this.created = date;
     }
 
     /**

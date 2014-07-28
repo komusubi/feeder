@@ -36,8 +36,8 @@ public class MessageMapper implements ResultSetMapper<Message> {
      */
     @Override
     public Message map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        StorageMessage message = new StorageMessage(r.getInt("id"));
-//        ctx.
+        StorageMessage message = new StorageMessage(r.getInt("id"), r.getDate("created"));
+        message.append(r.getString("text"));
         return message;
     }
 
