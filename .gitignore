@@ -3,6 +3,7 @@
 .gitignore
 .classpath
 .settings
+*.swp
 target
 dependency-reduced-pom.xml
 rpmbuild/RPMS

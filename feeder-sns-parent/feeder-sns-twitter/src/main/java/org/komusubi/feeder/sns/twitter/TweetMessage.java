@@ -35,7 +35,6 @@ import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.ScriptLine;
-import org.komusubi.feeder.model.Topic;
 
 import com.twitter.Extractor;
 import com.twitter.Extractor.Entity;
@@ -232,7 +231,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
 
     private static final long serialVersionUID = 1L;
     private Fragment fragment;
-    private Topic topic;
+    private Date created;
 
     /**
      * create new instance.
@@ -247,6 +246,12 @@ public class TweetMessage extends ArrayList<Script> implements Message {
     @Inject
     public TweetMessage(Fragment fragment) {
         this.fragment = fragment;
+        this.created = new Date();
+    }
+
+    @Override
+    public Date createdAt() {
+        return created;
     }
 
     /**
@@ -345,16 +350,6 @@ public class TweetMessage extends ArrayList<Script> implements Message {
         }
         return builder.toString();
     }
-
-//    @Override
-//    public Topic topic() {
-//        return this.topic;
-//    }
-//
-//    @Override
-//    public void setTopic(Topic topic) {
-//        this.topic = topic;
-//    }
 
     @Override
     public String toString() {
