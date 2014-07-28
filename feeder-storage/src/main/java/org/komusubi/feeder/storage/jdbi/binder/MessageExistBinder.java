@@ -33,10 +33,10 @@ import org.skife.jdbi.v2.sqlobject.BindingAnnotation;
 /**
  * @author jun.ozeki
  */
-@BindingAnnotation(MessageBinder.MessageBinderFactory.class)
+@BindingAnnotation(MessageExistBinder.MessageBinderFactory.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
-public @interface MessageBinder {
+public @interface MessageExistBinder {
 
     public static class MessageBinderFactory implements BinderFactory {
 

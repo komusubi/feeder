@@ -19,10 +19,10 @@
 package org.komusubi.feeder.storage.jdbi;
 
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.storage.mapper.MessageBinder;
+import org.komusubi.feeder.storage.jdbi.binder.MessageBinder;
+import org.komusubi.feeder.storage.jdbi.binder.MessageExistBinder;
 import org.komusubi.feeder.storage.mapper.MessageMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
@@ -43,13 +43,14 @@ public interface MessageDao extends Transactional<MessageDao> {
 
     void close();
 
-    boolean exists(@MessageBinder Message message);
+    boolean exists(@MessageExistBinder Message message);
 
     @SqlUpdate("select id, text, hash, created, site_id from messages where id = :id")
     @Mapper(MessageMapper.class)
     Message findById(@Bind("id") Integer id);
     
-    @SqlQuery("")
-    void persist(Message message);
+    @SqlUpdate("insert into message (text, created, site_id, hash) values "
+             + "(:text, :created, :site_id, :hash)")
+    void persist(@MessageBinder Message message);
 }
 

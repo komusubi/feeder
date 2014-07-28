@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.storage.mapper;
+package org.komusubi.feeder.storage.jdbi.binder;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
