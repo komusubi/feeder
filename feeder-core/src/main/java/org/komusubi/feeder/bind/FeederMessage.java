@@ -20,10 +20,11 @@ package org.komusubi.feeder.bind;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.ScriptLine;
 
 /**
  * @author jun.ozeki
@@ -31,6 +32,7 @@ import org.komusubi.feeder.model.Message.Script;
 public class FeederMessage extends ArrayList<Script> implements Message {
 
     private static final long serialVersionUID = 1L;
+    private Date created;
 
     /**
      * create new instance.
@@ -38,6 +40,7 @@ public class FeederMessage extends ArrayList<Script> implements Message {
      */
     public FeederMessage() {
         super();
+        created = new Date();
     }
 
     /**
@@ -65,6 +68,11 @@ public class FeederMessage extends ArrayList<Script> implements Message {
             builder.append(script.line());
         }
         return builder.toString();
+    }
+
+    @Override
+    public Date createdAt() {
+        return created;
     }
 
     /**

@@ -19,6 +19,7 @@
 package org.komusubi.feeder.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.komusubi.feeder.model.Message.Script;
@@ -29,8 +30,7 @@ import org.komusubi.feeder.model.Message.Script;
 public interface Message extends List<Script>, Serializable {
 
     String text();
-//    Topic topic();
-//    void setTopic(Topic topic);
+    Date createdAt();
     Message append(Script script);
     Message append(String line);
     
