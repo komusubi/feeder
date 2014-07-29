@@ -33,7 +33,6 @@ import org.komusubi.feeder.aggregator.scraper.WeatherContentScraper.Content;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper;
 import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
-import org.komusubi.feeder.bind.FeederMessagesProvider;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.model.Tag;
@@ -55,9 +54,10 @@ public class WeatherTopic implements Topic {
 
     /**
      * create new instance.
+     * @param provider
      */
-    public WeatherTopic() {
-        this(new WeatherTopicSite(), new HtmlScraper(), new FeederMessagesProvider());
+    public WeatherTopic(Provider<Messages<Message>> provider) {
+        this(new WeatherTopicSite(), new HtmlScraper(), provider);
     }
     
     /**
@@ -157,7 +157,7 @@ public class WeatherTopic implements Topic {
     @Override
     public Messages<Message> messages() {
         if (!messages.isEmpty())
-        	return messages;
+            return messages;
         Message message = messages.newInstance();
 
         for (Announcement announcement: announceScraper.scrape()) {
@@ -197,15 +197,15 @@ public class WeatherTopic implements Topic {
     }
 
     @Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("WeatherTopic [created=").append(created)
-				.append(", messages=").append(messages)
-				.append(", announceScraper=").append(announceScraper)
-				.append(", titleScraper=").append(titleScraper)
-				.append(", contentScraper=").append(contentScraper)
-				.append(", tags=").append(tags).append("]");
-		return builder.toString();
-	}
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("WeatherTopic [created=").append(created)
+                .append(", messages=").append(messages)
+                .append(", announceScraper=").append(announceScraper)
+                .append(", titleScraper=").append(titleScraper)
+                .append(", contentScraper=").append(contentScraper)
+                .append(", tags=").append(tags).append("]");
+        return builder.toString();
+    }
 
 }
