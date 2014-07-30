@@ -29,15 +29,24 @@ public class StorageMessage extends FeederMessage {
 
     private static final long serialVersionUID = 1L;
     private Integer id;
+    private String hash;
 
-    public StorageMessage(Integer id, Date created) {
+    public StorageMessage(Integer id, Date created, String hash) {
         super();
         this.id = id;
+        this.hash = hash;
         super.initialize(created);
     }
 
     public Integer id() {
         return id;
+    }
+
+    /**
+     * @return the hash
+     */
+    public String hash() {
+        return hash;
     }
 
 }

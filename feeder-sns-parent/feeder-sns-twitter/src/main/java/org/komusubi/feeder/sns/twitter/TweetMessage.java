@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,6 +36,7 @@ import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.ScriptLine;
+import org.komusubi.feeder.model.Site;
 
 import com.twitter.Extractor;
 import com.twitter.Extractor.Entity;
@@ -232,6 +234,7 @@ public class TweetMessage extends ArrayList<Script> implements Message {
     private static final long serialVersionUID = 1L;
     private Fragment fragment;
     private Date created;
+    private Site site;
 
     /**
      * create new instance.
@@ -349,6 +352,16 @@ public class TweetMessage extends ArrayList<Script> implements Message {
             builder.append(script.line());
         }
         return builder.toString();
+    }
+
+    @Override
+    public Site site() {
+        return this.site;
+    }
+
+    @Override
+    public void setSite(Site site) {
+        this.site = site; 
     }
 
     @Override

@@ -54,8 +54,7 @@ public @interface MessageBinder {
                     q.bind("hash", hex(sha1(arg.text())));
                     q.bind("text", arg.text());
                     q.bind("created", arg.createdAt());
-                    // TODO how to get "site_id" from Message object.
-                    // q.bind("site_id", arg.)
+                    q.bind("url", arg.site().url().toExternalForm());
                 }
             };
         }
