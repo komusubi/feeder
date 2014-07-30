@@ -45,9 +45,9 @@ public @interface MessageExistBinder {
          */
         @Override
         public Binder<? extends Annotation, Message> build(Annotation annotation) {
-            return new Binder<MessageBinder, Message>() {
+            return new Binder<MessageExistBinder, Message>() {
                 @Override
-                public void bind(SQLStatement<?> q, MessageBinder bind, Message arg) {
+                public void bind(SQLStatement<?> q, MessageExistBinder bind, Message arg) {
                     q.bind("hash", arg.text());
                 }
             };
