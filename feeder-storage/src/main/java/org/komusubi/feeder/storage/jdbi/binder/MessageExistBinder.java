@@ -18,6 +18,9 @@
  */
 package org.komusubi.feeder.storage.jdbi.binder;
 
+import static org.komusubi.feeder.storage.jdbi.binder.Digester.hex;
+import static org.komusubi.feeder.storage.jdbi.binder.Digester.sha1;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,7 +51,7 @@ public @interface MessageExistBinder {
             return new Binder<MessageExistBinder, Message>() {
                 @Override
                 public void bind(SQLStatement<?> q, MessageExistBinder bind, Message arg) {
-                    q.bind("hash", arg.text());
+                    q.bind("hash", hex(sha1(arg.text())));
                 }
             };
         }

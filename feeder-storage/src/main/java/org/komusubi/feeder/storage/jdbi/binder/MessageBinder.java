@@ -18,6 +18,9 @@
  */
 package org.komusubi.feeder.storage.jdbi.binder;
 
+import static org.komusubi.feeder.storage.jdbi.binder.Digester.hex;
+import static org.komusubi.feeder.storage.jdbi.binder.Digester.sha1;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,7 +51,7 @@ public @interface MessageBinder {
             return new Binder<MessageBinder, Message>() {
                 @Override
                 public void bind(SQLStatement<?> q, MessageBinder bind, Message arg) {
-                    // q.bind("hash", arg.text());
+                    q.bind("hash", hex(sha1(arg.text())));
                     q.bind("text", arg.text());
                     q.bind("created", arg.createdAt());
                     // TODO how to get "site_id" from Message object.
