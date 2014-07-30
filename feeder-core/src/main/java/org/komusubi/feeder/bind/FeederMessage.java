@@ -25,6 +25,7 @@ import java.util.Date;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.ScriptLine;
+import org.komusubi.feeder.model.Site;
 
 /**
  * @author jun.ozeki
@@ -33,6 +34,7 @@ public class FeederMessage extends ArrayList<Script> implements Message {
 
     private static final long serialVersionUID = 1L;
     private Date created;
+    private Site site;
 
     /**
      * create new instance.
@@ -107,6 +109,16 @@ public class FeederMessage extends ArrayList<Script> implements Message {
         StringBuilder builder = new StringBuilder();
         builder.append("FeederMessage [text()=").append(text()).append("]");
         return builder.toString();
+    }
+
+    @Override
+    public Site site() {
+        return this.site;
+    }
+
+    @Override
+    public void setSite(Site site) {
+        this.site = site;
     }
     
 } 

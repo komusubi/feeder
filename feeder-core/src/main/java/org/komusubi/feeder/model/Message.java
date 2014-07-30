@@ -30,6 +30,8 @@ import org.komusubi.feeder.model.Message.Script;
 public interface Message extends List<Script>, Serializable {
 
     String text();
+    Site site();
+    void setSite(Site site);
     Date createdAt();
     Message append(Script script);
     Message append(String line);

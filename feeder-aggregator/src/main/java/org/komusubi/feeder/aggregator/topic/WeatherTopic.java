@@ -51,6 +51,7 @@ public class WeatherTopic implements Topic {
     private transient WeatherTitleScraper titleScraper;
     private transient WeatherContentScraper contentScraper;
     private Tags tags;
+    private WeatherTopicSite site;
 
     /**
      * create new instance.
@@ -89,6 +90,7 @@ public class WeatherTopic implements Topic {
              new WeatherTitleScraper(site, scraper), 
              new WeatherAnnouncementScraper(site, scraper),
              provider);
+        this.site = site;
     }
 
     /**
@@ -159,6 +161,7 @@ public class WeatherTopic implements Topic {
         if (!messages.isEmpty())
             return messages;
         Message message = messages.newInstance();
+        message.setSite(site);
 
         for (Announcement announcement: announceScraper.scrape()) {
             message.append(announcement)
