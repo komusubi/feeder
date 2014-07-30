@@ -16,30 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.storage.mapper;
+package org.komusubi.feeder.storage.jdbi.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.komusubi.feeder.bind.BitlyUrlShortening;
-import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Tag;
 import org.komusubi.feeder.model.Url;
-import org.komusubi.feeder.storage.table.StorageScript;
+import org.komusubi.feeder.model.WebSite;
+import org.komusubi.feeder.spi.UrlShortening;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-public class ScriptMapper implements ResultSetMapper<Script> {
+/**
+ * @author jun.ozeki
+ */
+public class WebSiteMapper implements ResultSetMapper<WebSite> {
+
+
+    private Tag[] tags;
+
+    public WebSiteMapper(Tag... tags) {
+        this.tags = tags;
+    }
+
+    public WebSiteMapper() {
+        this((Tag)null);
+    }
 
     /**
      * @see org.skife.jdbi.v2.tweak.ResultSetMapper#map(int, java.sql.ResultSet, org.skife.jdbi.v2.StatementContext)
      */
     @Override
-    public Script map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-//        r.getInt("message_id");
-        // TODO BitlyUrlShortening argument type
-        StorageScript script = new StorageScript(new Url(r.getURL("url"), new BitlyUrlShortening()));
-        return script;
+    public WebSite map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+        UrlShortening shortening = new BitlyUrlShortening(ScrapeType.find(r.getString("c_name")));
+        Url url = new Url(r.getString("s_url"), shortening);
+        return new WebSite(url, tags);
     }
 
 }
-

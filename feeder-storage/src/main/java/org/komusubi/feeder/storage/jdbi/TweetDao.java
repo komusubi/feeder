@@ -21,7 +21,7 @@ package org.komusubi.feeder.storage.jdbi;
 import java.util.List;
 
 import org.komusubi.feeder.model.Message.Script;
-import org.komusubi.feeder.storage.mapper.ScriptMapper;
+import org.komusubi.feeder.storage.jdbi.mapper.ScriptMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;

@@ -23,7 +23,7 @@ import java.util.List;
 import org.komusubi.feeder.model.WebSite;
 import org.komusubi.feeder.storage.jdbi.binder.AggregateTypeBinder;
 import org.komusubi.feeder.storage.jdbi.binder.ScrapeTypeBinder;
-import org.komusubi.feeder.storage.mapper.WebSiteMapper;
+import org.komusubi.feeder.storage.jdbi.mapper.WebSiteMapper;
 import org.komusubi.feeder.utils.Types.AggregateType;
 import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.skife.jdbi.v2.sqlobject.Bind;
