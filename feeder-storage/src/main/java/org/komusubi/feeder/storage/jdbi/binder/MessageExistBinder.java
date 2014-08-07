@@ -28,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.SQLStatement;
 import org.skife.jdbi.v2.sqlobject.Binder;
 import org.skife.jdbi.v2.sqlobject.BinderFactory;
@@ -51,7 +52,12 @@ public @interface MessageExistBinder {
             return new Binder<MessageExistBinder, Message>() {
                 @Override
                 public void bind(SQLStatement<?> q, MessageExistBinder bind, Message arg) {
-                    q.bind("hash", hex(sha1(arg.text())));
+                    String value;
+                    if (arg instanceof StorageMessage)
+                        value = ((StorageMessage) arg).hash();
+                    else
+                        value = hex(sha1(arg.text()));
+                    q.bind("hash", value);
                 }
             };
         }
