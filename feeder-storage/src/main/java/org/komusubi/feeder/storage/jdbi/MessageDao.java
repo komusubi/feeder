@@ -46,7 +46,7 @@ public interface MessageDao extends Transactional<MessageDao> {
 
     boolean exists(@MessageExistBinder Message message);
 
-    @SqlQuery("select id, text, hash, created from messages where id = :id")
+    @SqlQuery("select text, hash, created, site_id from messages where id = :id")
     @Mapper(MessageMapper.class)
     Message findById(@Bind("id") Integer id);
     
