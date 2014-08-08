@@ -27,6 +27,11 @@ import java.util.HashSet;
 public class Tags extends HashSet<Tag> {
 
     private static final long serialVersionUID = 1L;
+    private static Tags EMPTY = new Tags();
+
+    public static Tags emptyTags() {
+        return EMPTY;
+    }
 
     /**
      * create new instance.
