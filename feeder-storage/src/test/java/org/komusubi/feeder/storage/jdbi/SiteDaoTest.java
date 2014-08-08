@@ -21,9 +21,9 @@ package org.komusubi.feeder.storage.jdbi;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.komusubi.feeder.model.WebSite;
 import org.komusubi.feeder.utils.Types.AggregateType;
@@ -34,23 +34,22 @@ import org.komusubi.feeder.utils.Types.ScrapeType;
  */
 public class SiteDaoTest {
 
+    @Rule
+    public ExternalStorageResource storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
     private static final String EXPECTED_DOM_WEATHER_URL = "http://www.jal.co.jp/cms/other/ja/weather_info_dom.html";
     private static final String EXPECTED_DOM_INFO_URL = "http://rss.jal.co.jp/f4746/index.rdf";
-    private static ExternalStorageResource storage;
     private SiteDao target;
 
-    @BeforeClass
-    public static void beforeClass() {
-        storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
-        storage.before();
+    @Before
+    public void before() {
         FeedDao feedDao = storage.open(FeedDao.class);
         feedDao.createTable();
         ChannelDao channelDao = storage.open(ChannelDao.class);
         channelDao.createTable();
         CategoryDao categoryDao = storage.open(CategoryDao.class);
         categoryDao.createTable();
-        SiteDao siteDao = storage.open(SiteDao.class);
-        siteDao.createTable();
+        target = storage.open(SiteDao.class);
+        target.createTable();
         storage.execute("insert into feeds values (1, 'SCRAPE')");
         storage.execute("insert into feeds values (2, 'RSS')");
         storage.execute("insert into channels values (0, 'jal')");
@@ -71,19 +70,13 @@ public class SiteDaoTest {
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
     }
 
-    @AfterClass
-    public static void afterClass() {
+    @After
+    public void after() {
         storage.execute("drop table sites");
         storage.execute("drop table categories");
         storage.execute("drop table channels");
         storage.execute("drop table feeds");
-        storage.after();
     } 
-
-    @Before
-    public void before() {
-        target = storage.open(SiteDao.class); 
-    }
 
     @Test
     public void findByPrimaryKey() {

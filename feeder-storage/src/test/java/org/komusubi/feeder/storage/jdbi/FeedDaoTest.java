@@ -22,38 +22,31 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.util.List;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 public class FeedDaoTest {
 
-    private static ExternalStorageResource storage;
+    @Rule
+    public ExternalStorageResource storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
     private static String EXPECTED_SCRAPE = "SCRAPE";
     private static String EXPECTED_RSS = "RSS";
     private static String[] EXPECTED_FEEDS = { EXPECTED_SCRAPE, EXPECTED_RSS };
     private FeedDao target;
 
-    @BeforeClass
-    public static void beforeClass() {
-        storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", ""); 
-        storage.before();
-        FeedDao feedDao = storage.open(FeedDao.class);
-        feedDao.createTable();
+    @Before
+    public void before() {
+        target = storage.open(FeedDao.class); 
+        target.createTable();
         storage.execute("insert into feeds values (1, 'SCRAPE')");
         storage.execute("insert into feeds values (2, 'RSS')");
     }
 
-    @AfterClass
-    public static void afterClass() {
+    @After
+    public void after() {
         storage.execute("drop table feeds");
-        storage.after();
-    }
-
-    @Before
-    public void before() {
-        target = storage.open(FeedDao.class); 
     }
 
     @Test

@@ -22,9 +22,9 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.util.List;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -32,30 +32,23 @@ import org.junit.Test;
  */
 public class ChannelDaoTest {
 
-    private static ExternalStorageResource storage;
+    @Rule
+    public ExternalStorageResource storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
     private static String[] EXPECT_CHANNEL_NAMES = {"5971", "5931", "jmb" };
     private ChannelDao target;
 
-    @BeforeClass
-    public static void beforeClass() {
-        storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
-        storage.before();
-        ChannelDao channelDao = storage.open(ChannelDao.class);
-        channelDao.createTable();
+    @Before
+    public void before() {
+        target = storage.open(ChannelDao.class);
+        target.createTable();
         storage.execute("insert into channels values (1, '5971')");
         storage.execute("insert into channels values (2, '5931')");
         storage.execute("insert into channels values (3, 'jmb')");
     }
 
-    @AfterClass
-    public static void afterClass() {
+    @After
+    public void after() {
         storage.execute("drop table channels");
-        storage.after();
-    }
-
-    @Before
-    public void before() {
-        target = storage.open(ChannelDao.class);
     }
 
     @Test
@@ -67,4 +60,5 @@ public class ChannelDaoTest {
         //verify
         assertArrayEquals(list.toArray(new String[0]), EXPECT_CHANNEL_NAMES);
     }
+    
 }

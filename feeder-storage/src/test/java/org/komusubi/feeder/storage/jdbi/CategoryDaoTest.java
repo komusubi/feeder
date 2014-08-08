@@ -22,15 +22,18 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.util.List;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
  * @author jun.ozeki
  */
 public class CategoryDaoTest {
+
+    @Rule
+    public ExternalStorageResource storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
     private static final String EXPECTED_WEATHER = "WEATHER";
     private static final String EXPECTED_INFORMATION = "INFORMATION";
     private static final String EXPECTED_TOUR = "TOUR";
@@ -44,15 +47,12 @@ public class CategoryDaoTest {
                                                               EXPECTED_INVESTER,
                                                               EXPECTED_PRESS,
                                                               EXPECTED_FLIGHT };
-    private static ExternalStorageResource storage;
     private CategoryDao target;
     
-    @BeforeClass
-    public static void beforeClass() {
-        storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
-        storage.before();
-        CategoryDao categoryDao = storage.open(CategoryDao.class);
-        categoryDao.createTable();
+    @Before
+    public void before() {
+        target = storage.open(CategoryDao.class);
+        target.createTable();
         storage.execute("insert into categories values (1, '" + EXPECTED_WEATHER + "')");
         storage.execute("insert into categories values (2, '" + EXPECTED_INFORMATION + "')");
         storage.execute("insert into categories values (3, '" + EXPECTED_TOUR + "')");
@@ -61,15 +61,9 @@ public class CategoryDaoTest {
         storage.execute("insert into categories values (6, '" + EXPECTED_FLIGHT + "')");
     }
     
-    @AfterClass
-    public static void afterClass() {
+    @After
+    public void after() {
         storage.execute("drop table categories");
-        storage.after();
-    }
-    
-    @Before
-    public void before() {
-        target = storage.open(CategoryDao.class);
     }
     
     @Test
