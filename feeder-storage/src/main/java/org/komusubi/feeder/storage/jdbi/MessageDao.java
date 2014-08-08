@@ -21,7 +21,7 @@ package org.komusubi.feeder.storage.jdbi;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.storage.jdbi.binder.MessageBinder;
 import org.komusubi.feeder.storage.jdbi.binder.MessageExistBinder;
-import org.komusubi.feeder.storage.jdbi.mapper.MessageMapper;
+import org.komusubi.feeder.storage.mapper.MessageMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
