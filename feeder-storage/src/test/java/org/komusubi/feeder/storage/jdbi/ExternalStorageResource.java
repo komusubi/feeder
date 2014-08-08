@@ -36,13 +36,19 @@ public class ExternalStorageResource extends ExternalResource {
     private DBI dbi;
     private DataSource ds;
     private Handle handle;
-
+    private JdbcConnectionPool jcp;
+    
     /**
      * create instance from DataSource.
      * @param ds
      */
     public ExternalStorageResource(DataSource ds) {
         this.ds = ds; 
+    }
+
+    public ExternalStorageResource(JdbcConnectionPool jcp) {
+        this((DataSource) jcp);
+        this.jcp = jcp;
     }
 
     public ExternalStorageResource(String jdbcUrl, String user, String password) {
@@ -59,6 +65,8 @@ public class ExternalStorageResource extends ExternalResource {
     @Override
     public void after() {
         handle.close();
+        if (jcp != null)
+            jcp.dispose();
         logger.info("after: test resource closed.");
     }
 
