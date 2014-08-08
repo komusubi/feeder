@@ -21,6 +21,8 @@ package org.komusubi.feeder.storage.jdbi;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -97,5 +99,17 @@ public class SiteDaoTest {
 
         // verify 
         assertThat(site.url().toExternalForm(), is(EXPECTED_DOM_INFO_URL));
+    }
+    
+    @Test
+    public void findByChannel() {
+        // setup
+        // exercise
+        List<WebSite> sites = target.findByChannel(ScrapeType.JAL5971);
+
+        // verify
+        assertThat(sites.size(), is(2));
+        assertThat(sites.get(0).url().toExternalForm(), is("http://www.jal.co.jp/cms/other/ja/weather_info_dom.html"));
+        assertThat(sites.get(1).url().toExternalForm(), is("http://rss.jal.co.jp/f4746/index.rdf"));
     }
 }

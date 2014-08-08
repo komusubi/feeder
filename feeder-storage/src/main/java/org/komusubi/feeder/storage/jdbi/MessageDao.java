@@ -22,15 +22,17 @@ import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.storage.jdbi.binder.MessageBinder;
 import org.komusubi.feeder.storage.jdbi.binder.MessageExistBinder;
 import org.komusubi.feeder.storage.mapper.MessageMapper;
+import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
  * @author jun.ozeki
  */
+@RegisterMapper(MessageMapper.class)
 public interface MessageDao extends Transactional<MessageDao> {
 
     @SqlUpdate("create table messages (id int auto_increment,"
@@ -39,16 +41,15 @@ public interface MessageDao extends Transactional<MessageDao> {
                                     + "created timestamp,"
                                     + "site_id int,"
                                     + "primary key (id),"
-                                    + "foreign key (site_id) references sites(id)")
+                                    + "foreign key (site_id) references sites(id))")
     void createTable();
 
     void close();
 
     boolean exists(@MessageExistBinder Message message);
 
-    @SqlQuery("select text, hash, created, site_id from messages where id = :id")
-    @Mapper(MessageMapper.class)
-    Message findById(@Bind("id") Integer id);
+    @SqlQuery("select id, text, hash, created, site_id from messages where id = :id")
+    StorageMessage findById(@Bind("id") Integer id);
     
     @SqlUpdate("insert into message (text, created, site_id, hash) values "
              + "(:text, :created, (select id from sites where url = :url), :hash)")

@@ -25,17 +25,19 @@ import org.komusubi.feeder.bind.FeederMessage;
 /**
  * @author jun.ozeki
  */
-public class StorageMessage extends FeederMessage {
+public class StorageMessage  extends FeederMessage {
 
     private static final long serialVersionUID = 1L;
     private Integer id;
     private String hash;
-
+    private StringBuilder builder;
+    
     public StorageMessage(Integer id, Date created, String hash) {
         super();
         this.id = id;
         this.hash = hash;
         super.initialize(created);
+//        builder = new StringBuilder();
     }
 
     public Integer id() {
@@ -49,4 +51,8 @@ public class StorageMessage extends FeederMessage {
         return hash;
     }
 
+//    public StorageMessage append(String line) {
+//        builder.append(line);
+//        return this;
+//    }
 }

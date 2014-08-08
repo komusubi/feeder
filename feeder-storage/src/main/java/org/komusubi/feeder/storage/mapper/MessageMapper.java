@@ -21,9 +21,6 @@ package org.komusubi.feeder.storage.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.WebSite;
-import org.komusubi.feeder.storage.jdbi.SiteDao;
 import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -31,19 +28,19 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 /**
  * @author jun.ozeki
  */
-public abstract class MessageMapper implements ResultSetMapper<Message>, SiteDao {
+public class MessageMapper implements ResultSetMapper<StorageMessage> {//, SiteDao {
 
     /**
      * @see org.skife.jdbi.v2.tweak.ResultSetMapper#map(int, java.sql.ResultSet, org.skife.jdbi.v2.StatementContext)
      */
     @Override
-    public Message map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+    public StorageMessage map(int index, ResultSet r, StatementContext ctx) throws SQLException {
         StorageMessage message = new StorageMessage(r.getInt("id"), 
                                                     r.getDate("created"),
                                                     r.getString("hash"));
 
-        WebSite site = findById(r.getInt("site_id"));
-        message.setSite(site);
+//        WebSite site = findById(r.getInt("site_id"));
+//        message.setSite(site);
         message.append(r.getString("text"));
         return message;
     }

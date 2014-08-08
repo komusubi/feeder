@@ -54,7 +54,7 @@ public interface SiteDao extends Transactional<SiteDao> {
                     + "(select id from feeds where name = :feed) and s.channel = c.id")
     List<WebSite> findByFeed(@AggregateTypeBinder AggregateType type);
 
-    @SqlQuery("select s.name, c.name, s.feed, s.url from sites s, channels c where channel = "
+    @SqlQuery("select s.name, c.name as c_name, s.feed, s.url as s_url from sites s, channels c where channel = "
                     + "(select id from channels where name = :channel) and s.channel = c.id")
     List<WebSite> findByChannel(@ScrapeTypeBinder ScrapeType type);
     
