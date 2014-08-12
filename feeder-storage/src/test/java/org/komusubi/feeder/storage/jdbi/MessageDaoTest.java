@@ -23,6 +23,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.komusubi.feeder.bind.BitlyUrlShortening;
+import org.komusubi.feeder.bind.FeederMessage;
+import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.model.WebSite;
+import org.komusubi.feeder.storage.table.StorageMessage;
 
 /**
  * @author jun.ozeki
@@ -80,5 +85,17 @@ public class MessageDaoTest {
     @Test
     public void findSimple() {
         target.findById(new Integer(1));
+    }
+    
+    @Ignore
+    @Test
+    public void simplePersist() {
+        FeederMessage message = new FeederMessage();
+        message.append("フィードメッセージ");
+        message.setSite(new WebSite(new Url("http://unknown.com", new BitlyUrlShortening())));
+        // FIXME why success to persist in wrong foreign key by Url value?
+        target.persist(message);
+//        StorageMessage result = target.findById(new Integer(1));
+//        System.out.printf("result = %s%n", result);
     }
 }

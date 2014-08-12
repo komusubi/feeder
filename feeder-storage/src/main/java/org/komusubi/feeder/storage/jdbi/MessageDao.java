@@ -51,7 +51,7 @@ public interface MessageDao extends Transactional<MessageDao> {
     @SqlQuery("select id, text, hash, created, site_id from messages where id = :id")
     StorageMessage findById(@Bind("id") Integer id);
     
-    @SqlUpdate("insert into message (text, created, site_id, hash) values "
+    @SqlUpdate("insert into messages (text, created, site_id, hash) values "
              + "(:text, :created, (select id from sites where url = :url), :hash)")
     void persist(@MessageBinder Message message);
 }
