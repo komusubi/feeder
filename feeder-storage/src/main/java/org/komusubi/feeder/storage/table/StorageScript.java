@@ -27,7 +27,7 @@ import org.komusubi.feeder.model.Url;
 public class StorageScript implements Script {
 
     private static final long serialVersionUID = 1L;
-    private Url url;
+    private Url url; // TODO refer to tweeted url.
 
     public StorageScript(Url referUrl) {
         this.url = referUrl;

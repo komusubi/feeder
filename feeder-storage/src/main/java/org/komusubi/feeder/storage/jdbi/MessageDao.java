@@ -26,13 +26,12 @@ import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
  * @author jun.ozeki
  */
-@RegisterMapper(MessageMapper.class)
 public interface MessageDao extends Transactional<MessageDao> {
 
     @SqlUpdate("create table messages (id int auto_increment,"
@@ -48,6 +47,7 @@ public interface MessageDao extends Transactional<MessageDao> {
 
     boolean exists(@MessageExistBinder Message message);
 
+    @Mapper(MessageMapper.class)
     @SqlQuery("select id, text, hash, created, site_id from messages where id = :id")
     StorageMessage findById(@Bind("id") Integer id);
     

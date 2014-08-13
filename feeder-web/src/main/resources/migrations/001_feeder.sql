@@ -30,11 +30,16 @@ create table sites (
 
 create table messages (
     id int auto_increment primary key,
-    text varchar(1024),
-    hash varchar(64) unique,
-    created timestamp,  
     site_id int,
-    foreign key (site_id) references sites(id)
+    created timestamp,  
+    foreign key (site_id) references sites(id),
+);
+
+create table scripts (
+	hash varchar(64) primary key,
+	text varchar(1024),
+    message_id int,
+	foreign key (message_id) references messages(id)
 );
 
 create table tweets (
@@ -43,4 +48,6 @@ create table tweets (
     unique (url, message_id),
     foreign key (message_id) references messages(id)
 );
+
+
 

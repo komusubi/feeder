@@ -24,6 +24,9 @@ import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.rules.ExternalResource;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.ResultSetMapperFactory;
+import org.skife.jdbi.v2.tweak.ContainerFactory;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +79,18 @@ public class ExternalStorageResource extends ExternalResource {
 
     public <T> T open(Class<T> dao) {
         return dbi.open(dao);
+    }
+
+    public void registerContainerFactory(ContainerFactory<?> factory) {
+        dbi.registerContainerFactory(factory);
+    }
+    
+    public void registerMapper(ResultSetMapper<?> mapper) {
+        dbi.registerMapper(mapper);
+    }
+    
+    public void registerMapperFactory(ResultSetMapperFactory factory) {
+        dbi.registerMapper(factory);
     }
 }
 
