@@ -27,6 +27,7 @@ import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Url;
 import org.komusubi.feeder.model.WebSite;
+import org.komusubi.feeder.storage.jdbi.binder.MessageContainerFactory;
 import org.komusubi.feeder.storage.table.StorageMessage;
 
 /**
@@ -40,6 +41,11 @@ public class MessageDaoTest {
     
     @Before
     public void before() {
+        // add container factory
+        storage.registerContainerFactory(new MessageContainerFactory());
+//        storage.registerMapper(new MessageMapper());
+//        storage.registerMapper(new ScriptMapper());
+
         FeedDao feedDao = storage.open(FeedDao.class);
         feedDao.createTable();
         ChannelDao channelDao = storage.open(ChannelDao.class);
@@ -70,6 +76,7 @@ public class MessageDaoTest {
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
        
         storage.execute("insert into messages values (null, '本日天気晴朗なれども波高し', '', CURRENT_TIMESTAMP, 1)");
+
     }
     
     @After
@@ -95,7 +102,7 @@ public class MessageDaoTest {
         message.setSite(new WebSite(new Url("http://unknown.com", new BitlyUrlShortening())));
         // FIXME why success to persist in wrong foreign key by Url value?
         target.persist(message);
-//        StorageMessage result = target.findById(new Integer(1));
-//        System.out.printf("result = %s%n", result);
+        StorageMessage result = target.findById(new Integer(1));
+        System.out.printf("result = %s%n", result);
     }
 }
