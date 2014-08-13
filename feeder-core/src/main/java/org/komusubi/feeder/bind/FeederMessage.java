@@ -105,13 +105,6 @@ public class FeederMessage extends ArrayList<Script> implements Message {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("FeederMessage [text()=").append(text()).append("]");
-        return builder.toString();
-    }
-
-    @Override
     public Site site() {
         return this.site;
     }
@@ -120,5 +113,12 @@ public class FeederMessage extends ArrayList<Script> implements Message {
     public void setSite(Site site) {
         this.site = site;
     }
-    
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(super.toString());
+        builder.append(", FeederMessage [created=").append(created).append(", site=").append(site).append("]");
+        return builder.toString();
+    }
+   
 } 
