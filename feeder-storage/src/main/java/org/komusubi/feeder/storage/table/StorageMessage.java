@@ -29,12 +29,12 @@ public class StorageMessage extends FeederMessage {
 
     private static final long serialVersionUID = 1L;
     private Integer id;
-    private String hash;
+    private Integer siteId;
     
-    public StorageMessage(Integer id, Date created, String hash) {
+    public StorageMessage(Integer id, Date created, Integer siteId) {
         super();
         this.id = id;
-        this.hash = hash;
+        this.siteId = siteId;
         super.initialize(created);
     }
 
@@ -42,17 +42,14 @@ public class StorageMessage extends FeederMessage {
         return id;
     }
 
-    /**
-     * @return the hash
-     */
-    public String hash() {
-        return hash;
+    public Integer siteId() {
+        return siteId;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(super.toString());
-        builder.append(", StorageMessage [id=").append(id).append(", hash=").append(hash).append("]");
+        builder.append(", StorageMessage [id=").append(id).append(", siteId=").append(siteId).append("]");
         return builder.toString();
     }
 }

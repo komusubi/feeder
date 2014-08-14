@@ -19,9 +19,9 @@ create table categories (
 create table sites (
     id int auto_increment primary key,
     name varchar(255),
-    feed int,
-    channel int,
-    category int,
+    feed int not null,
+    channel int not null,
+    category int not null,
     url varchar(255),
     foreign key (feed) references feeds(id),
     foreign key (channel) references channels(id),
@@ -30,7 +30,7 @@ create table sites (
 
 create table messages (
     id int auto_increment primary key,
-    site_id int,
+    site_id int not null,
     created timestamp,  
     foreign key (site_id) references sites(id),
 );
@@ -38,15 +38,9 @@ create table messages (
 create table scripts (
 	hash varchar(64) primary key,
 	text varchar(1024),
-    message_id int,
+	url varchar(255) unique,
+    message_id int not null,
 	foreign key (message_id) references messages(id)
-);
-
-create table tweets (
-    url varchar(255) primary key,
-    message_id int,
-    unique (url, message_id),
-    foreign key (message_id) references messages(id)
 );
 
 

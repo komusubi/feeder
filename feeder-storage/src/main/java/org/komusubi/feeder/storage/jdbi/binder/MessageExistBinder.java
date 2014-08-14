@@ -18,9 +18,6 @@
  */
 package org.komusubi.feeder.storage.jdbi.binder;
 
-import static org.komusubi.feeder.storage.jdbi.binder.Digester.hex;
-import static org.komusubi.feeder.storage.jdbi.binder.Digester.sha1;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,7 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.SQLStatement;
 import org.skife.jdbi.v2.sqlobject.Binder;
 import org.skife.jdbi.v2.sqlobject.BinderFactory;
@@ -53,11 +49,12 @@ public @interface MessageExistBinder {
                 @Override
                 public void bind(SQLStatement<?> q, MessageExistBinder bind, Message arg) {
                     String value;
-                    if (arg instanceof StorageMessage)
-                        value = ((StorageMessage) arg).hash();
-                    else
-                        value = hex(sha1(arg.text()));
-                    q.bind("hash", value);
+                    // FIXME fixed Message class already!
+//                    if (arg instanceof StorageMessage)
+//                        value = ((StorageMessage) arg).hash();
+//                    else
+//                        value = hex(sha1(arg.text()));
+//                    q.bind("hash", value);
                 }
             };
         }

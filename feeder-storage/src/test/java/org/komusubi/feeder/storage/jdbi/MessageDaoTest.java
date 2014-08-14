@@ -18,6 +18,9 @@
  */
 package org.komusubi.feeder.storage.jdbi;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,10 +28,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.bind.FeederMessage;
+import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Url;
 import org.komusubi.feeder.model.WebSite;
 import org.komusubi.feeder.storage.jdbi.binder.MessageContainerFactory;
-import org.komusubi.feeder.storage.table.StorageMessage;
 
 /**
  * @author jun.ozeki
@@ -43,8 +46,7 @@ public class MessageDaoTest {
     public void before() {
         // add container factory
         storage.registerContainerFactory(new MessageContainerFactory());
-//        storage.registerMapper(new MessageMapper());
-//        storage.registerMapper(new ScriptMapper());
+//        storage.registerContainerFactory(new UnwrapBuilderFactory());
 
         FeedDao feedDao = storage.open(FeedDao.class);
         feedDao.createTable();
@@ -75,7 +77,7 @@ public class MessageDaoTest {
         storage.execute("insert into sites values (null, '国際線のお知らせ', 2, 2, 2, 'http://rss.jal.co.jp/f4747/index.rdf')");
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
        
-        storage.execute("insert into messages values (null, '本日天気晴朗なれども波高し', '', CURRENT_TIMESTAMP, 1)");
+        storage.execute("insert into messages values (null, 1, CURRENT_TIMESTAMP)");
 
     }
     
@@ -88,10 +90,14 @@ public class MessageDaoTest {
         storage.execute("drop table messages");
     }
     
-    @Ignore
     @Test
     public void findSimple() {
-        target.findById(new Integer(1));
+        // setup
+        // exercise
+        Message message = target.findById(new Integer(1));
+
+        // verify
+        assertThat(message.site().url().toExternalForm(), is("http://www.jal.co.jp/cms/other/ja/weather_info_dom.html"));
     }
     
     @Ignore
@@ -101,8 +107,8 @@ public class MessageDaoTest {
         message.append("フィードメッセージ");
         message.setSite(new WebSite(new Url("http://unknown.com", new BitlyUrlShortening())));
         // FIXME why success to persist in wrong foreign key by Url value?
-        target.persist(message);
-        StorageMessage result = target.findById(new Integer(1));
-        System.out.printf("result = %s%n", result);
+        Integer id = target.persist(message);
+        Message result = target.findById(id);
+        System.out.printf("result(%d) = %s%n", id, result);
     }
 }

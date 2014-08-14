@@ -24,35 +24,50 @@ import org.komusubi.feeder.storage.jdbi.binder.MessageExistBinder;
 import org.komusubi.feeder.storage.mapper.MessageMapper;
 import org.komusubi.feeder.storage.table.StorageMessage;
 import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 /**
  * @author jun.ozeki
  */
-public interface MessageDao extends Transactional<MessageDao> {
+public abstract class MessageDao implements Transactional<MessageDao> {
 
-    @SqlUpdate("create table messages (id int auto_increment,"
-                                    + "text varchar(1024),"
-                                    + "hash varchar(128),"
+    @SqlUpdate("create table messages (id int auto_increment primary key,"
+                                    + "site_id int not null,"
                                     + "created timestamp,"
-                                    + "site_id int,"
-                                    + "primary key (id),"
                                     + "foreign key (site_id) references sites(id))")
-    void createTable();
+    public abstract void createTable();
 
-    void close();
+    public abstract void close();
 
-    boolean exists(@MessageExistBinder Message message);
+    public abstract boolean exists(@MessageExistBinder Message message);
 
     @Mapper(MessageMapper.class)
-    @SqlQuery("select id, text, hash, created, site_id from messages where id = :id")
-    StorageMessage findById(@Bind("id") Integer id);
+    @SqlQuery("select id, created, site_id from messages where id = :id")
+    protected abstract Message _findById(@Bind("id") Integer id);
     
-    @SqlUpdate("insert into messages (text, created, site_id, hash) values "
-             + "(:text, :created, (select id from sites where url = :url), :hash)")
-    void persist(@MessageBinder Message message);
+    @CreateSqlObject
+    protected abstract ScriptDao getScriptDao();
+    
+    @CreateSqlObject
+    protected abstract SiteDao getSiteDao();
+
+    public Message findById(Integer id) {
+        StorageMessage message = (StorageMessage) _findById(id);
+//        message.addAll(getScriptDao().findByMessageId(id));
+        message.setSite(getSiteDao().findById(message.siteId()));
+        return message;
+    }
+
+    @GetGeneratedKeys
+    @Transaction
+    @SqlUpdate("insert into messages (id, site_id, created) values "
+             + "(null, (select id from sites where url = :url), :created)")
+    public abstract Integer persist(@MessageBinder Message message);
 }
 

@@ -29,7 +29,8 @@ public class WebSite implements Site, Serializable {
     private static final long serialVersionUID = 1L;
     private Url url;
     private Tags tags;
-    
+
+
     /**
      * 
      * @param url
@@ -49,5 +50,11 @@ public class WebSite implements Site, Serializable {
     public Tags tags() {
         return tags;
     }
-
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("WebSite [url=").append(url).append(", tags=").append(tags).append("]");
+        return builder.toString();
+    }
 }

@@ -28,7 +28,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 /**
  * @author jun.ozeki
  */
-public class MessageMapper implements ResultSetMapper<StorageMessage> {//, SiteDao {
+public class MessageMapper implements ResultSetMapper<StorageMessage> {
 
     /**
      * @see org.skife.jdbi.v2.tweak.ResultSetMapper#map(int, java.sql.ResultSet, org.skife.jdbi.v2.StatementContext)
@@ -37,11 +37,7 @@ public class MessageMapper implements ResultSetMapper<StorageMessage> {//, SiteD
     public StorageMessage map(int index, ResultSet r, StatementContext ctx) throws SQLException {
         StorageMessage message = new StorageMessage(r.getInt("id"), 
                                                     r.getDate("created"),
-                                                    r.getString("hash"));
-
-//        WebSite site = findById(r.getInt("site_id"));
-//        message.setSite(site);
-        message.append(r.getString("text"));
+                                                    r.getInt("site_id"));
         return message;
     }
 

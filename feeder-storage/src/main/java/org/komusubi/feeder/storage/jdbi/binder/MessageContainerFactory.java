@@ -32,8 +32,7 @@ public class MessageContainerFactory implements ContainerFactory<Message> {
      */
     @Override
     public boolean accepts(Class<?> type) {
-//        return StorageMessage.class.equals(type);
-        return Message.class.isInterface();
+        return Message.class.isAssignableFrom(type);
     }
 
     /**
@@ -46,6 +45,7 @@ public class MessageContainerFactory implements ContainerFactory<Message> {
 
     private static class MessageBuilder implements ContainerBuilder<Message> {
         private Message m;
+
         /**
          * @see org.skife.jdbi.v2.ContainerBuilder#add(java.lang.Object)
          */
