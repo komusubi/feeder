@@ -18,6 +18,9 @@
  */
 package org.komusubi.feeder.storage.jdbi.binder;
 
+import static org.komusubi.feeder.storage.jdbi.binder.Digester.hex;
+import static org.komusubi.feeder.storage.jdbi.binder.Digester.sha1;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,8 +32,6 @@ import org.skife.jdbi.v2.SQLStatement;
 import org.skife.jdbi.v2.sqlobject.Binder;
 import org.skife.jdbi.v2.sqlobject.BinderFactory;
 import org.skife.jdbi.v2.sqlobject.BindingAnnotation;
-
-import static org.komusubi.feeder.storage.jdbi.binder.Digester.*;
 
 /**
  * @author jun.ozeki
@@ -53,6 +54,7 @@ public @interface ScriptBinder {
                 public void bind(SQLStatement<?> q, ScriptBinder bind, Script arg) {
                     q.bind("hash", hex(sha1(arg.line())));
                     q.bind("text", arg.line());
+                    q.bind("url", "");
                 }
                 
             };

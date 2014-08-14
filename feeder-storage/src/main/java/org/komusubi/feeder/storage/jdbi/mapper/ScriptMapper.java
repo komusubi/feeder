@@ -33,6 +33,7 @@ public class ScriptMapper implements ResultSetMapper<Script> {
      */
     @Override
     public Script map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+        // FIXME use StorageScript
         ScriptLine line = new ScriptLine(r.getString("text"));
         return line;
     }

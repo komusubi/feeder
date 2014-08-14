@@ -48,6 +48,6 @@ public interface ScriptDao extends Transactional<ScriptDao> {
     @Mapper(ScriptMapper.class)
     List<Script> findByMessageId(@Bind("mid") Integer id);
     
-    @SqlUpdate("insert into scripts (hash, text, message_id) values (:hash, :text, :message_id)")
+    @SqlUpdate("insert into scripts (hash, text, url, message_id) values (:hash, :text, :url, :message_id)")
     void persist(@ScriptBinder Script script, @Bind("message_id") Integer mid);
 }

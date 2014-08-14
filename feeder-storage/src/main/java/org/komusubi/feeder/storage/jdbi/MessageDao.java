@@ -19,6 +19,7 @@
 package org.komusubi.feeder.storage.jdbi;
 
 import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.storage.jdbi.binder.MessageBinder;
 import org.komusubi.feeder.storage.jdbi.binder.MessageExistBinder;
 import org.komusubi.feeder.storage.mapper.MessageMapper;
@@ -68,6 +69,13 @@ public abstract class MessageDao implements Transactional<MessageDao> {
     @Transaction
     @SqlUpdate("insert into messages (id, site_id, created) values "
              + "(null, (select id from sites where url = :url), :created)")
-    public abstract Integer persist(@MessageBinder Message message);
+    protected abstract Integer _persist(@MessageBinder Message message);
+    
+    public Integer persist(Message message) {
+        Integer id = _persist(message);
+        for (Script s: message)
+            getScriptDao().persist(s, id);
+        return id;
+    }
 }
 

@@ -23,7 +23,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.komusubi.feeder.bind.BitlyUrlShortening;
@@ -90,6 +89,7 @@ public class MessageDaoTest {
         storage.execute("drop table channels");
         storage.execute("drop table feeds");
         storage.execute("drop table messages");
+        storage.execute("drop table scripts");
     }
     
     @Test
@@ -103,15 +103,21 @@ public class MessageDaoTest {
         assertThat(message.text(), is("script1script2"));
     }
     
-    @Ignore
     @Test
     public void simplePersist() {
+        // setup
         FeederMessage message = new FeederMessage();
-        message.append("フィードメッセージ");
-        message.setSite(new WebSite(new Url("http://unknown.com", new BitlyUrlShortening())));
-        // FIXME why success to persist in wrong foreign key by Url value?
+        String feedMessage = "フィードメッセージ";
+        String url = "http://rss.jal.co.jp/f4728/index.rdf";
+        message.append(feedMessage);
+        message.setSite(new WebSite(new Url(url, new BitlyUrlShortening())));
+
+        // exercise
         Integer id = target.persist(message);
-        Message result = target.findById(id);
-        System.out.printf("result(%d) = %s%n", id, result);
+        Message actual = target.findById(id);
+
+        // verify
+        assertThat(actual.text(), is(feedMessage));
+        assertThat(actual.site().url().toExternalForm(), is(url));
     }
 }
