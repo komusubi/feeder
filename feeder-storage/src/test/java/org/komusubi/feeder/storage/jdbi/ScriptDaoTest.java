@@ -21,32 +21,25 @@ package org.komusubi.feeder.storage.jdbi;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.komusubi.feeder.bind.BitlyUrlShortening;
-import org.komusubi.feeder.bind.FeederMessage;
-import org.komusubi.feeder.model.Message;
-import org.komusubi.feeder.model.Url;
-import org.komusubi.feeder.model.WebSite;
-import org.komusubi.feeder.storage.jdbi.binder.MessageContainerFactory;
+import org.komusubi.feeder.model.Message.Script;
 
 /**
  * @author jun.ozeki
  */
-public class MessageDaoTest {
-
+public class ScriptDaoTest {
+    
     @Rule
     public ExternalStorageResource storage = new ExternalStorageResource("jdbc:h2:mem:feeder", "user", "");
-    private MessageDao target;
+    private ScriptDao target;
     
     @Before
     public void before() {
-        // add container factory
-        storage.registerContainerFactory(new MessageContainerFactory());
-
         FeedDao feedDao = storage.open(FeedDao.class);
         feedDao.createTable();
         ChannelDao channelDao = storage.open(ChannelDao.class);
@@ -55,8 +48,11 @@ public class MessageDaoTest {
         categoryDao.createTable();
         SiteDao siteDao = storage.open(SiteDao.class);
         siteDao.createTable();
-        target = storage.open(MessageDao.class);
+        MessageDao messageDao = storage.open(MessageDao.class);
+        messageDao.createTable();
+        target = storage.open(ScriptDao.class);
         target.createTable();
+        
         storage.execute("insert into feeds values (1, 'SCRAPE')");
         storage.execute("insert into feeds values (2, 'RSS')");
         storage.execute("insert into channels values (0, 'jal')");
@@ -75,9 +71,9 @@ public class MessageDaoTest {
         storage.execute("insert into sites values (null, '国内線のお知らせ', 2, 1, 2, 'http://rss.jal.co.jp/f4746/index.rdf')");
         storage.execute("insert into sites values (null, '国際線のお知らせ', 2, 2, 2, 'http://rss.jal.co.jp/f4747/index.rdf')");
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
-       
-        storage.execute("insert into messages values (null, 1, CURRENT_TIMESTAMP)");
 
+        storage.execute("insert into messages values (null, 1, CURRENT_TIMESTAMP)");
+        storage.execute("insert into scripts values ('hashed-string', 'dummy text', null, 1)");
     }
     
     @After
@@ -87,27 +83,17 @@ public class MessageDaoTest {
         storage.execute("drop table channels");
         storage.execute("drop table feeds");
         storage.execute("drop table messages");
+        storage.execute("drop table scripts");
     }
     
     @Test
-    public void findSimple() {
+    public void simpleFindByMessageId() {
         // setup
         // exercise
-        Message message = target.findById(new Integer(1));
-
+        List<Script> scripts = target.findByMessageId(new Integer(1));
+        
         // verify
-        assertThat(message.site().url().toExternalForm(), is("http://www.jal.co.jp/cms/other/ja/weather_info_dom.html"));
-    }
-    
-    @Ignore
-    @Test
-    public void simplePersist() {
-        FeederMessage message = new FeederMessage();
-        message.append("フィードメッセージ");
-        message.setSite(new WebSite(new Url("http://unknown.com", new BitlyUrlShortening())));
-        // FIXME why success to persist in wrong foreign key by Url value?
-        Integer id = target.persist(message);
-        Message result = target.findById(id);
-        System.out.printf("result(%d) = %s%n", id, result);
+        assertThat(scripts.size(), is(1));
+        assertThat(scripts.get(0).line(), is("dummy text"));
     }
 }

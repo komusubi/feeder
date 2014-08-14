@@ -34,6 +34,13 @@ import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
  */
 public interface ScriptDao extends Transactional<ScriptDao> {
 
+    @SqlUpdate("create table scripts (hash varchar(64) primary key,"
+                                   + "text varchar(1024),"
+                                   + "url varchar(255) unique,"
+                                   + "message_id int not null,"
+                                   + "foreign key (message_id) references messages(id))")
+    void createTable();
+    
       // TODO how to return boolean ?
 //    boolean exists(@ScriptExistBinder Script script);
 
