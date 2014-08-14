@@ -59,7 +59,7 @@ public abstract class MessageDao implements Transactional<MessageDao> {
 
     public Message findById(Integer id) {
         StorageMessage message = (StorageMessage) _findById(id);
-//        message.addAll(getScriptDao().findByMessageId(id));
+        message.addAll(getScriptDao().findByMessageId(id));
         message.setSite(getSiteDao().findById(message.siteId()));
         return message;
     }

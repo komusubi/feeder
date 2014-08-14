@@ -57,6 +57,8 @@ public class MessageDaoTest {
         siteDao.createTable();
         target = storage.open(MessageDao.class);
         target.createTable();
+        ScriptDao scriptDao = storage.open(ScriptDao.class);
+        scriptDao.createTable();
         storage.execute("insert into feeds values (1, 'SCRAPE')");
         storage.execute("insert into feeds values (2, 'RSS')");
         storage.execute("insert into channels values (0, 'jal')");
@@ -77,7 +79,8 @@ public class MessageDaoTest {
         storage.execute("insert into sites values (null, 'JALマイレージバンクのお知らせ', 2, 3, 2, 'http://rss.jal.co.jp/f4749/index.rdf')");
        
         storage.execute("insert into messages values (null, 1, CURRENT_TIMESTAMP)");
-
+        storage.execute("insert into scripts values ('hashed-string1', 'script1', null, 1)");
+        storage.execute("insert into scripts values ('hashed-string2', 'script2', null, 1)");
     }
     
     @After
@@ -97,6 +100,7 @@ public class MessageDaoTest {
 
         // verify
         assertThat(message.site().url().toExternalForm(), is("http://www.jal.co.jp/cms/other/ja/weather_info_dom.html"));
+        assertThat(message.text(), is("script1script2"));
     }
     
     @Ignore
