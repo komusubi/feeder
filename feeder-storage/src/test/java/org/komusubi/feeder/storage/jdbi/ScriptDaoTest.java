@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.ScriptLine;
 
 /**
  * @author jun.ozeki
@@ -95,5 +96,17 @@ public class ScriptDaoTest {
         // verify
         assertThat(scripts.size(), is(1));
         assertThat(scripts.get(0).line(), is("dummy text"));
+    }
+
+    @Test
+    public void simplePersist() {
+        // setup
+        // exercise
+        target.persist(new ScriptLine("script text"), new Integer(1));
+
+        // verify
+        List<Script> scripts = target.findByMessageId(new Integer(1));
+        assertThat(scripts.size(), is(2));
+        assertThat(scripts.get(1).line(), is("script text"));
     }
 }

@@ -54,7 +54,8 @@ public @interface ScriptBinder {
                 public void bind(SQLStatement<?> q, ScriptBinder bind, Script arg) {
                     q.bind("hash", hex(sha1(arg.line())));
                     q.bind("text", arg.line());
-                    q.bind("url", "");
+                    // FIXME if tweeted script has url which is persisted.
+                    q.bind("url", (String) null);
                 }
                 
             };

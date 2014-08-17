@@ -40,11 +40,13 @@ public interface ScriptDao extends Transactional<ScriptDao> {
                                    + "message_id int not null,"
                                    + "foreign key (message_id) references messages(id))")
     void createTable();
+
+    void close();
     
       // TODO how to return boolean ?
-//    boolean exists(@ScriptExistBinder Script script);
+   // boolean exists(@ScriptExistBinder Script script);
 
-    @SqlQuery("select text from scripts where message_id = :mid")
+    @SqlQuery("select text, url from scripts where message_id = :mid")
     @Mapper(ScriptMapper.class)
     List<Script> findByMessageId(@Bind("mid") Integer id);
     

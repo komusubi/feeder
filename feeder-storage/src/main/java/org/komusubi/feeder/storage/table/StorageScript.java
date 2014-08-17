@@ -27,10 +27,14 @@ import org.komusubi.feeder.model.Url;
 public class StorageScript implements Script {
 
     private static final long serialVersionUID = 1L;
-    private Url url; // TODO refer to tweeted url.
-
-    public StorageScript(Url referUrl) {
-        this.url = referUrl;
+    private Url url; // refer to tweeted url.
+    private String text;
+    
+    public StorageScript(String line, Url url) {
+        if (line == null && url == null)
+            throw new IllegalArgumentException("argument must NOT be null");
+        this.text = line;
+        this.url = url;
     }
 
     /**
@@ -38,7 +42,9 @@ public class StorageScript implements Script {
      */
     @Override
     public String line() {
-        // TODO get message from twitter url.
+        if (text != null)
+            return text;
+        // FIXME url open and get reference.
         return null;
     }
 

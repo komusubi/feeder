@@ -66,11 +66,11 @@ public abstract class MessageDao implements Transactional<MessageDao> {
     }
 
     @GetGeneratedKeys
-    @Transaction
     @SqlUpdate("insert into messages (id, site_id, created) values "
              + "(null, (select id from sites where url = :url), :created)")
     protected abstract Integer _persist(@MessageBinder Message message);
     
+    @Transaction
     public Integer persist(Message message) {
         Integer id = _persist(message);
         for (Script s: message)
