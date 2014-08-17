@@ -41,7 +41,7 @@ public class DigesterTest {
     public void hexString() {
         // setup
         byte[] bytes = "バイト配列".getBytes();
-        String expected = "836f83438367947a97f1";
+        String expected = "e38390e382a4e38388e9858de58897";
         // exercise
         String actual = Digester.hex(bytes);
         // verify
@@ -52,12 +52,12 @@ public class DigesterTest {
     public void sha1ToHex() {
         // setup
         String value = "メッセージダイジェスト実施前テキスト";
-        String expected = "b848a26687221a47291864ff82dad7d067f084";
+        String expected = "b32a125f1ab9f589309830e47fbed4c6f95c49c5";
         // exercise
         String actual = Digester.hex(Digester.sha1(value));
         // verify
         assertThat(actual, is(expected));
-        assertThat(actual.length(), is(38));
+        assertThat(actual.length(), is(40));
     }
 }
 
