@@ -31,10 +31,11 @@ import org.komusubi.feeder.model.Message.Script;
 import org.skife.jdbi.v2.SQLStatement;
 import org.skife.jdbi.v2.sqlobject.Binder;
 import org.skife.jdbi.v2.sqlobject.BinderFactory;
+import org.skife.jdbi.v2.sqlobject.BindingAnnotation;
 /**
  * @author jun.ozeki
  */
-//@BindingAnnotation(ScriptBinder.ScriptExistBinderFactory.class)
+@BindingAnnotation(ScriptExistBinder.ScriptExistBinderFactory.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER})
 public @interface ScriptExistBinder {
@@ -51,6 +52,9 @@ public @interface ScriptExistBinder {
                 @Override
                 public void bind(SQLStatement<?> q, ScriptExistBinder bind, Script arg) {
                     q.bind("hash", hex(sha1(arg.line())));
+                    // if (arg instanceof )
+                    q.bind("url", (String) null);
+
                 }
                 
             };

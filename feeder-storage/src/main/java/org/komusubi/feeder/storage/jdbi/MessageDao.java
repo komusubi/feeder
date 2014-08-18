@@ -46,7 +46,20 @@ public abstract class MessageDao implements Transactional<MessageDao> {
 
     public abstract void close();
 
-    public abstract boolean exists(@MessageExistBinder Message message);
+    @SqlQuery("select * from messages where site_id = (select id from sites where url = :url) and "
+            + "created = :created")
+    protected abstract boolean _exists(@MessageExistBinder Message message);
+
+    public boolean exists(Message message) {
+        if (!_exists(message)) {
+            return false;
+        }
+        for (Script s: message) {
+            if (!getScriptDao().exists(s))
+                return false;
+        }
+        return true;
+    }
 
     @Mapper(MessageMapper.class)
     @SqlQuery("select id, created, site_id from messages where id = :id")

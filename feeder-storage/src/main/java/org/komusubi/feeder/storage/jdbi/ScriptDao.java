@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.storage.jdbi.binder.ScriptBinder;
+import org.komusubi.feeder.storage.jdbi.binder.ScriptExistBinder;
 import org.komusubi.feeder.storage.jdbi.mapper.ScriptMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -43,8 +44,8 @@ public interface ScriptDao extends Transactional<ScriptDao> {
 
     void close();
     
-      // TODO how to return boolean ?
-   // boolean exists(@ScriptExistBinder Script script);
+    @SqlQuery("select * from scripts where hash = :hash and url = :url") 
+    boolean exists(@ScriptExistBinder Script script);
 
     @SqlQuery("select text, url from scripts where message_id = :mid")
     @Mapper(ScriptMapper.class)

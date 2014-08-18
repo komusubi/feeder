@@ -46,9 +46,7 @@ public class StoragePageCache implements PageCache {
 
     @Override
     public void store(Message message) {
-        messageDao.begin();
         messageDao.persist(message);
-        messageDao.commit();
     }
 
 }
