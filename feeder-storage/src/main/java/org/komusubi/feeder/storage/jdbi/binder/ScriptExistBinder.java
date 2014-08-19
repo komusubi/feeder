@@ -28,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.ScriptLine;
 import org.skife.jdbi.v2.SQLStatement;
 import org.skife.jdbi.v2.sqlobject.Binder;
 import org.skife.jdbi.v2.sqlobject.BinderFactory;
@@ -52,9 +53,16 @@ public @interface ScriptExistBinder {
                 @Override
                 public void bind(SQLStatement<?> q, ScriptExistBinder bind, Script arg) {
                     q.bind("hash", hex(sha1(arg.line())));
-                    // if (arg instanceof )
-                    q.bind("url", (String) null);
-
+                    if (arg instanceof ScriptLine) {
+                        ScriptLine scriptLine = (ScriptLine) arg;
+                        if (scriptLine.isUrlResource()) {
+                            q.bind("url", scriptLine.getUrl().toExternalForm());
+                        } else {
+                            q.bind("url", (String) null);
+                        }
+                    } else {
+                        q.bind("url", (String) null);
+                    }
                 }
                 
             };
