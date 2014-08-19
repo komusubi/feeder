@@ -32,8 +32,9 @@ public class ScriptStatus extends ScriptLine {
     private Status status;
     
     public ScriptStatus(Status status) {
+        // FIXME set teeded url. how to get from twitter4j's Status object ?
+//        status.getURLEntities()
         super(status.getText(), null);
-//        super(null, statuk
         this.status = status;
     }
 }
