@@ -26,12 +26,12 @@ import twitter4j.Status;
 /**
  * @author jun.ozeki
  */
-public class ScriptTweetStatus extends ScriptLine {
+public class ScriptStatus extends ScriptLine {
 
     private static final long serialVersionUID = 1L;
     private Status status;
     
-    public ScriptTweetStatus(Status status) {
+    public ScriptStatus(Status status) {
         super(status.getText(), null);
 //        super(null, statuk
         this.status = status;
