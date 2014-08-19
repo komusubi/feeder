@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.komusubi.feeder.storage.mapper;
+package org.komusubi.feeder.storage.jdbi.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
