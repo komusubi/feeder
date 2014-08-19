@@ -18,10 +18,22 @@
  */
 package org.komusubi.feeder.sns.twitter;
 
+import org.komusubi.feeder.model.ScriptLine;
+
+import twitter4j.Status;
+
 
 /**
  * @author jun.ozeki
  */
-public class StatusScript {
+public class ScriptTweetStatus extends ScriptLine {
 
+    private static final long serialVersionUID = 1L;
+    private Status status;
+    
+    public ScriptTweetStatus(Status status) {
+        super(status.getText(), null);
+//        super(null, statuk
+        this.status = status;
+    }
 }

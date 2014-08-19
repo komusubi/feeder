@@ -27,7 +27,7 @@ import org.komusubi.feeder.model.Topics;
 import org.komusubi.feeder.sns.History;
 import org.komusubi.feeder.sns.SocialNetwork;
 import org.komusubi.feeder.sns.twitter.TweetMessage.TweetScript;
-import org.komusubi.feeder.storage.jdbi.TweetDao;
+import org.komusubi.feeder.storage.jdbi.MessageDao;
 import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class Twitter4j implements SocialNetwork {
     private static final Logger logger = LoggerFactory.getLogger(Twitter4j.class);
     private Twitter twitter;
     private boolean outputConsole = Boolean.getBoolean("tweet.console");
-    private TweetDao tweetDao;
+    private MessageDao messageDao;
 
     /**
      * create new instance.
@@ -63,9 +63,9 @@ public class Twitter4j implements SocialNetwork {
         this(new TwitterFactory(scrapeType.name().toLowerCase()).getInstance());
     }
 
-    public Twitter4j(ScrapeType scrapeType, TweetDao tweetDao) {
+    public Twitter4j(ScrapeType scrapeType, MessageDao messageDao) {
         this(scrapeType);
-        this.tweetDao = tweetDao;
+        this.messageDao = messageDao;
     }
 
     /**
