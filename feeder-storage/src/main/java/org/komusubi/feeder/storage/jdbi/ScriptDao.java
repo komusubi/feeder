@@ -29,13 +29,14 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
+import org.skife.jdbi.v2.util.BooleanMapper;
 
 /**
  * @author jun.ozeki
  */
 public interface ScriptDao extends Transactional<ScriptDao> {
 
-    @SqlUpdate("create table scripts (hash varchar(64) primary key,"
+    @SqlUpdate("create table if not exists scripts (hash varchar(64) primary key,"
                                    + "text varchar(1024),"
                                    + "url varchar(255) unique,"
                                    + "message_id int not null,"
@@ -44,8 +45,9 @@ public interface ScriptDao extends Transactional<ScriptDao> {
 
     void close();
     
-    @SqlQuery("select * from scripts where hash = :hash and url = :url") 
-    boolean exists(@ScriptExistBinder Script script);
+    @SqlQuery("select exists(select 1 from scripts where hash = :hash and url = :url)") 
+    @Mapper(BooleanMapper.class)
+    Boolean exists(@ScriptExistBinder Script script);
 
     @SqlQuery("select text, url from scripts where message_id = :mid")
     @Mapper(ScriptMapper.class)

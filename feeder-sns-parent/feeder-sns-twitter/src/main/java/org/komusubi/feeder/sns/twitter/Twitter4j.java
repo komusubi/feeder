@@ -18,6 +18,7 @@
  */
 package org.komusubi.feeder.sns.twitter;
 
+import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.Messages;
@@ -116,9 +117,10 @@ public class Twitter4j implements SocialNetwork {
      * @param message
      */
     public void tweet(Message message) {
-        Script current = new ScriptLine("");
+        Script current = new ScriptLine("", null);
         try {
             Status result = null;
+            FeederMessage feederMessage = new FeederMessage();
             for (Script script: message) {
                 current = script; // mark current script for when exception occurred.
                 if (outputConsole) {
@@ -132,8 +134,12 @@ public class Twitter4j implements SocialNetwork {
                     logger.info("tweet(length:{}): {}", TweetScript.lengthAfterTweeted(status.getStatus()),
                                                         status.getStatus());
                     result = twitter.updateStatus(status);
+                    feederMessage.add(new ScriptStatus(result));
                 }
             }
+            // persist all scripts with tweeted url.
+            if (messageDao != null)
+                messageDao.persist(feederMessage);
         } catch (TwitterException e) {
             throw new Twitter4jException(String.format("tweet(length:%d): %s",  
                                             TweetScript.lengthAfterTweeted(current.trimedLine()),

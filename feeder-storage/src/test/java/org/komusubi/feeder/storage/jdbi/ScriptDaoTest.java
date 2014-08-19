@@ -20,6 +20,7 @@ package org.komusubi.feeder.storage.jdbi;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -102,11 +103,23 @@ public class ScriptDaoTest {
     public void simplePersist() {
         // setup
         // exercise
-        target.persist(new ScriptLine("script text"), new Integer(1));
+        target.persist(new ScriptLine("script text", null), new Integer(1));
 
         // verify
         List<Script> scripts = target.findByMessageId(new Integer(1));
         assertThat(scripts.size(), is(2));
         assertThat(scripts.get(1).line(), is("script text"));
+    }
+    
+    @Test
+    public void simpleExists() {
+        // setup
+        String line = "unit test message";
+        target.persist(new ScriptLine(line, null), new Integer(1));
+        // exercise
+        Boolean exist = target.exists(new ScriptLine(line, null));
+        
+        // verify
+        assertTrue(exist);
     }
 }

@@ -25,6 +25,7 @@ import org.junit.rules.ExternalResource;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.ResultSetMapperFactory;
+import org.skife.jdbi.v2.logging.PrintStreamLog;
 import org.skife.jdbi.v2.tweak.ContainerFactory;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import org.slf4j.Logger;
@@ -63,6 +64,8 @@ public class ExternalStorageResource extends ExternalResource {
         logger.info("before: test open resource.");
         dbi = new DBI(ds); 
         handle = dbi.open();
+        PrintStreamLog log = new PrintStreamLog();
+        dbi.setSQLLog(log);
     }
 
     @Override

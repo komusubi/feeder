@@ -32,13 +32,14 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
+import org.skife.jdbi.v2.util.BooleanMapper;
 
 /**
  * @author jun.ozeki
  */
 public abstract class MessageDao implements Transactional<MessageDao> {
 
-    @SqlUpdate("create table messages (id int auto_increment primary key,"
+    @SqlUpdate("create table if not exists messages (id int auto_increment primary key,"
                                     + "site_id int not null,"
                                     + "created timestamp,"
                                     + "foreign key (site_id) references sites(id))")
@@ -46,19 +47,20 @@ public abstract class MessageDao implements Transactional<MessageDao> {
 
     public abstract void close();
 
-    @SqlQuery("select * from messages where site_id = (select id from sites where url = :url) and "
-            + "created = :created")
-    protected abstract boolean _exists(@MessageExistBinder Message message);
+    @SqlQuery("select exists(select 1 from messages where site_id = (select id from sites where url = :url) and "
+            + "created = :created)")
+    @Mapper(BooleanMapper.class)
+    protected abstract Boolean _exists(@MessageExistBinder Message message);
 
-    public boolean exists(Message message) {
-        if (!_exists(message)) {
-            return false;
+    public Boolean exists(Message message) {
+        if (!_exists(message)) { 
+            return Boolean.FALSE;
         }
         for (Script s: message) {
             if (!getScriptDao().exists(s))
-                return false;
+                return Boolean.FALSE;
         }
-        return true;
+        return Boolean.TRUE;
     }
 
     @Mapper(MessageMapper.class)

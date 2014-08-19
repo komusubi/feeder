@@ -53,17 +53,22 @@ public @interface ScriptBinder {
 
                 @Override
                 public void bind(SQLStatement<?> q, ScriptBinder bind, Script arg) {
-                    q.bind("hash", hex(sha1(arg.line())));
-                    q.bind("text", arg.line());
                     if (arg instanceof ScriptLine) {
                         ScriptLine scriptLine = (ScriptLine) arg;
+                        // if script has Url which persist only url with hashed url text.
                         if (scriptLine.isUrlResource()) {
                             q.bind("url", scriptLine.getUrl().toExternalForm());
+                            q.bind("text", "");
+                            q.bind("hash", hex(sha1(scriptLine.getUrl().toExternalForm())));
                         } else {
-                            q.bind("url", (String) null);
+                            q.bind("url", "");
+                            q.bind("text", scriptLine.line());
+                            q.bind("hash", hex(sha1(scriptLine.line())));
                         }
                     } else {
-                        q.bind("url", (String) null);
+                        q.bind("url", "");
+                        q.bind("text", arg.line());
+                        q.bind("hash", hex(sha1(arg.line())));
                     }
                 }
                 

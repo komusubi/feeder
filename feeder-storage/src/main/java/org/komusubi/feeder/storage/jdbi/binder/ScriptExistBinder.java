@@ -52,16 +52,18 @@ public @interface ScriptExistBinder {
 
                 @Override
                 public void bind(SQLStatement<?> q, ScriptExistBinder bind, Script arg) {
-                    q.bind("hash", hex(sha1(arg.line())));
                     if (arg instanceof ScriptLine) {
                         ScriptLine scriptLine = (ScriptLine) arg;
                         if (scriptLine.isUrlResource()) {
                             q.bind("url", scriptLine.getUrl().toExternalForm());
+                            q.bind("hash", hex(sha1(scriptLine.getUrl().toExternalForm())));
                         } else {
-                            q.bind("url", (String) null);
+                            q.bind("url", "");
+                            q.bind("hash", hex(sha1(scriptLine.line())));
                         }
                     } else {
-                        q.bind("url", (String) null);
+                        q.bind("url", "");
+                        q.bind("hash", hex(sha1(arg.line())));
                     }
                 }
                 
