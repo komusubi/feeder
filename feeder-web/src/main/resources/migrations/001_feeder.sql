@@ -32,7 +32,7 @@ create table messages (
     id int auto_increment primary key,
     site_id int not null,
     created timestamp,  
-    foreign key (site_id) references sites(id),
+    foreign key (site_id) references sites(id)
 );
 
 create table scripts (
