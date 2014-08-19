@@ -23,8 +23,8 @@ import java.sql.SQLException;
 
 import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.model.Url;
-import org.komusubi.feeder.storage.table.StorageScript;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
@@ -39,7 +39,7 @@ public class ScriptMapper implements ResultSetMapper<Script> {
         Url url = null;
         if (r.getString("url") != null)
             url = new Url(r.getString("url"), new BitlyUrlShortening());
-        StorageScript script = new StorageScript(r.getString("text"), url);
+        ScriptLine script = new ScriptLine(r.getString("text"), url);
         return script;
     }
 
