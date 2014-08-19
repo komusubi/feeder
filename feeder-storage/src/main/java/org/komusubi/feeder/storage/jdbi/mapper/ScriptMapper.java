@@ -37,8 +37,9 @@ public class ScriptMapper implements ResultSetMapper<Script> {
     public Script map(int index, ResultSet r, StatementContext ctx) throws SQLException {
         // FIXME UrlShortening Factory need ?
         Url url = null;
-        if (r.getString("url") != null)
-            url = new Url(r.getString("url"), new BitlyUrlShortening());
+        String value = r.getString("url");
+        if (value != null && !value.equals(""))
+            url = new Url(value, new BitlyUrlShortening());
         ScriptLine script = new ScriptLine(r.getString("text"), url);
         return script;
     }
