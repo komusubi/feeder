@@ -40,6 +40,7 @@ import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Region;
+import org.komusubi.feeder.model.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,7 +224,7 @@ public class WeatherContentScraper extends AbstractWeatherScraper implements Ite
      * @param scraper
      */
     @Inject
-    public WeatherContentScraper(WeatherTopicSite site, HtmlScraper scraper) {
+    public WeatherContentScraper(Site site, HtmlScraper scraper) {
         super(site, scraper);
     }
 

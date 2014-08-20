@@ -47,6 +47,7 @@ import org.komusubi.feeder.aggregator.scraper.WeatherTitleScraper.Title;
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
+import org.komusubi.feeder.model.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,7 +196,7 @@ public class WeatherTitleScraper extends AbstractWeatherScraper implements Itera
      * @param scraper
      */
     @Inject
-    public WeatherTitleScraper(WeatherTopicSite site, HtmlScraper scraper) {
+    public WeatherTitleScraper(Site site, HtmlScraper scraper) {
         super(site, scraper);
     }
 

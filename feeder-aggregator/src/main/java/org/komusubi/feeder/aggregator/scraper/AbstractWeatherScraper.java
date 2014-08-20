@@ -26,7 +26,7 @@ import org.komusubi.feeder.model.Site;
  */
 public class AbstractWeatherScraper {
 
-    private WeatherTopicSite site;
+    private Site site;
     private HtmlScraper scraper;
     protected static final String ATTR_VALUE_WEATHER_BOX = "weather_info_txtBox mgt20";
     protected static final String ATTR_NAME_CLASS = "class";
@@ -43,7 +43,7 @@ public class AbstractWeatherScraper {
      * @param site
      * @param scraper
      */
-    public AbstractWeatherScraper(WeatherTopicSite site, HtmlScraper scraper) {
+    public AbstractWeatherScraper(Site site, HtmlScraper scraper) {
         this.site = site;
         this.scraper = scraper;
     }

@@ -20,12 +20,14 @@ package org.komusubi.feeder.web;
 
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 import org.komusubi.feeder.web.health.DatabaseHealth;
 import org.komusubi.feeder.web.resource.FeederResource;
+import org.skife.jdbi.v2.DBI;
 
 /**
  *
@@ -65,7 +67,9 @@ public class FeederApplication extends Application<FeederConfiguration> {
      */
     @Override
     public void run(FeederConfiguration configuration, Environment environment) throws Exception {
-        environment.jersey().register(new FeederResource());
+        DBIFactory factory = new DBIFactory();
+        DBI dbi = factory.build(environment, configuration.getDataSourceFactory(), "mariadb");
+        environment.jersey().register(new FeederResource(dbi));
         environment.healthChecks().register("database-run", new DatabaseHealth(configuration, environment));
     }
 }

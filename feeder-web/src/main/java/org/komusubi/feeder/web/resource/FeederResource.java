@@ -23,9 +23,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
+import org.komusubi.feeder.utils.Types.AggregateType;
+import org.komusubi.feeder.utils.Types.ScrapeType;
+import org.komusubi.feeder.web.module.Module;
+import org.komusubi.feeder.web.module.TopicsBuilder;
+import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +45,15 @@ import com.codahale.metrics.annotation.Timed;
 @Produces(MediaType.APPLICATION_JSON)
 public class FeederResource {
     private static final Logger logger = LoggerFactory.getLogger(FeederResource.class);
+    private DBI dbi;
+    @Context private UriInfo uriInfo;
+    
+    /**
+     * @param dbi
+     */
+    public FeederResource(DBI dbi) {
+        this.dbi = dbi;
+    }
 
     @GET
     public String get() {
@@ -48,6 +64,13 @@ public class FeederResource {
     @Path("/{channel:5971|5931}/{feed:rss|scrape}")
     @Timed
     public Response post(@PathParam("channel") String channel, @PathParam("feed") String feed) {
+        logger.info("post url: {}", uriInfo.getAbsolutePath().toASCIIString());
+        TopicsBuilder builder = new TopicsBuilder(dbi,
+                                                AggregateType.valueOf(feed.toUpperCase()), 
+                                                ScrapeType.valueOf(channel));
+        Module module = builder.build();
+        // TODO implements return object will be able to parse json format.
+        module.run();
         return Response.noContent().build();
     }
 }

@@ -35,6 +35,7 @@ import org.komusubi.feeder.aggregator.scraper.WeatherAnnouncementScraper.Announc
 import org.komusubi.feeder.aggregator.site.WeatherTopicSite;
 import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
+import org.komusubi.feeder.model.Site;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,7 +142,7 @@ public class WeatherAnnouncementScraper extends AbstractWeatherScraper implement
      * @param scraper
      */
     @Inject
-    public WeatherAnnouncementScraper(WeatherTopicSite site, HtmlScraper scraper) {
+    public WeatherAnnouncementScraper(Site site, HtmlScraper scraper) {
         super(site, scraper);
     }
 

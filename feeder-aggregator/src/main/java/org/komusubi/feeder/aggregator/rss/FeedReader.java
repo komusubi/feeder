@@ -33,6 +33,7 @@ import org.komusubi.feeder.aggregator.site.RssSite;
 import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.AbstractScript;
 import org.komusubi.feeder.model.Message.Script;
+import org.komusubi.feeder.model.Site;
 import org.komusubi.feeder.model.Tags;
 import org.komusubi.feeder.spi.UrlShortening;
 import org.komusubi.feeder.utils.Types.ScrapeType;
@@ -162,7 +163,7 @@ public class FeedReader implements Iterable<EntryScript> {
         }
     }
 
-    private RssSite site;
+    private Site site;
     private FeedFetcherCache feedInfoCache;
     private static final String CACHEABLE_PROPERTY = "feeder.history";
     // cacheable default is true
@@ -181,7 +182,7 @@ public class FeedReader implements Iterable<EntryScript> {
      * @param site
      * @param urlShorten
      */
-    public FeedReader(RssSite site, UrlShortening urlShorten) {
+    public FeedReader(Site site, UrlShortening urlShorten) {
     	this(site, urlShorten, new File(System.getProperty("java.io.tmpdir")));
     }
 
@@ -200,7 +201,7 @@ public class FeedReader implements Iterable<EntryScript> {
      * @param urlShorten
      * @param cacheDir
      */
-    public FeedReader(RssSite site, UrlShortening urlShorten, File cacheDir) {
+    public FeedReader(Site site, UrlShortening urlShorten, File cacheDir) {
     	if (site == null)
     		throw new IllegalArgumentException("site must NOT be null");
     	if (urlShorten == null)
