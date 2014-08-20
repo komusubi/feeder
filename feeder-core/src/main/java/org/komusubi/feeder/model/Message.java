@@ -24,13 +24,15 @@ import java.util.List;
 
 import org.komusubi.feeder.model.Message.Script;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author jun.ozeki
  */
 public interface Message extends List<Script>, Serializable {
 
-    String text();
-    Site site();
+    @JsonProperty String text();
+    @JsonProperty Site site();
     void setSite(Site site);
     Date createdAt();
     Message append(Script script);

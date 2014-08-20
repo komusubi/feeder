@@ -18,9 +18,12 @@
  */
 package org.komusubi.feeder.web.module;
 
+import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
+
 /**
  * @author jun.ozeki
  */
 public interface Module {
-    void run();
+    Messages<? extends Message> run();
 }

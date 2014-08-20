@@ -18,6 +18,8 @@
  */
 package org.komusubi.feeder.web.module;
 
+import org.komusubi.feeder.model.Message;
+import org.komusubi.feeder.model.Messages;
 import org.komusubi.feeder.sns.Speaker;
 import org.komusubi.feeder.sns.twitter.Twitter4j;
 import org.komusubi.feeder.sns.twitter.strategy.SleepStrategy;
@@ -39,13 +41,14 @@ public class FeederModule implements Module {
      * @see org.komusubi.feeder.web.module.Module#run()
      */
     @Override
-    public void run() {
+    public Messages<? extends Message> run() {
         MessageDao messageDao = builder.dbi().onDemand(MessageDao.class);
         Speaker speaker = new Speaker(new Twitter4j(builder.scrapeType(), messageDao), 
                                         new SleepStrategy(new StoragePageCache(messageDao)));
         speaker.talk(builder.topics());
         // TODO close is necessary when use with onDemand method ?
         messageDao.close();
+        return null;
     }
 
 }
