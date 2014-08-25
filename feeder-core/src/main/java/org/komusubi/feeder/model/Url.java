@@ -39,9 +39,9 @@ import org.komusubi.feeder.spi.UrlShortening;
 public class Url implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private URL url;
     private UrlShortening shortening;
-    private boolean shortened;
+    private URL url;
+	private URL original;
 
     public Url(URL url, UrlShortening shortening) {
         this.url = url;
@@ -118,7 +118,7 @@ public class Url implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (shortened ? 1231 : 1237);
+        result = prime * result + ((original == null) ? 0 : original.hashCode());
         result = prime * result + ((shortening == null) ? 0 : shortening.hashCode());
         try {
             // fix findbug report, URL#equals/hashCode blocking domain name resolution.(too slow)
@@ -166,7 +166,7 @@ public class Url implements Serializable {
     }
 
     public boolean isShortened() {
-        return shortened;
+        return original != null;
     }
 
     /**
@@ -175,8 +175,8 @@ public class Url implements Serializable {
     public Url shorten() {
         if (isShortened())
             return this;
+        this.original = this.url;
         this.url = shortening.shorten(this.url);
-        shortened = true;
         return this;
     }
 
@@ -187,4 +187,11 @@ public class Url implements Serializable {
         return url;
     }
     
+    public URL getOrigin() {
+    	if (isShortened())
+            return original;
+    	else
+    		return url;
+    }
+
 }

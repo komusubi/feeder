@@ -73,6 +73,7 @@ public class UrlTest {
         // verify
         assertThat(shorten.toExternalForm(), equalTo(once.toExternalForm()));
         assertThat(shorten.toExternalForm(), equalTo(twice.toExternalForm()));
+        assertThat(shorten.getOrigin().toExternalForm(), equalTo(url));
         // call Url#shorten twice but UrlShorten#shorten called only once.
         verify(urlShortening, times(1)).shorten(in);
     }
