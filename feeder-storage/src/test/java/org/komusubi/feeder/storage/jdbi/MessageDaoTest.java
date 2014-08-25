@@ -30,7 +30,6 @@ import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Url;
 import org.komusubi.feeder.model.WebSite;
-import org.komusubi.feeder.storage.jdbi.binder.MessageContainerFactory;
 
 /**
  * @author jun.ozeki
@@ -43,9 +42,6 @@ public class MessageDaoTest {
     
     @Before
     public void before() {
-        // add container factory
-        storage.registerContainerFactory(new MessageContainerFactory());
-
         FeedDao feedDao = storage.open(FeedDao.class);
         feedDao.createTable();
         ChannelDao channelDao = storage.open(ChannelDao.class);

@@ -21,6 +21,7 @@ package org.komusubi.feeder.storage.jdbi;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.storage.jdbi.binder.MessageBinder;
+import org.komusubi.feeder.storage.jdbi.binder.MessageContainerFactory;
 import org.komusubi.feeder.storage.jdbi.binder.MessageExistBinder;
 import org.komusubi.feeder.storage.jdbi.mapper.MessageMapper;
 import org.komusubi.feeder.storage.table.StorageMessage;
@@ -31,6 +32,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterContainerMapper;
 import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 import org.skife.jdbi.v2.util.BooleanMapper;
 
@@ -63,6 +65,7 @@ public abstract class MessageDao implements Transactional<MessageDao> {
         return Boolean.TRUE;
     }
 
+    @RegisterContainerMapper(MessageContainerFactory.class)
     @Mapper(MessageMapper.class)
     @SqlQuery("select id, created, site_id from messages where id = :id")
     protected abstract Message _findById(@Bind("id") Integer id);
