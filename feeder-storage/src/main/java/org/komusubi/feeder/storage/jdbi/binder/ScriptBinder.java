@@ -58,8 +58,7 @@ public @interface ScriptBinder {
                     if (arg instanceof ScriptLine) {
                         ScriptLine scriptLine = (ScriptLine) arg;
                         if (scriptLine.isUrlResource()) {
-                            // TODO if url was shorten already, how to handle it ?
-                            q.bind("url", scriptLine.getUrl().toExternalForm());
+                            q.bind("url", scriptLine.getUrl().getOrigin().toExternalForm());
                         } else {
                             q.bind("url", "");
                         }
