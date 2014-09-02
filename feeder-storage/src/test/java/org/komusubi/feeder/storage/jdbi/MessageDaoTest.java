@@ -30,6 +30,7 @@ import org.komusubi.feeder.bind.FeederMessage;
 import org.komusubi.feeder.model.Message;
 import org.komusubi.feeder.model.Url;
 import org.komusubi.feeder.model.WebSite;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 
 /**
  * @author jun.ozeki
@@ -106,7 +107,7 @@ public class MessageDaoTest {
         String feedMessage = "フィードメッセージ";
         String url = "http://rss.jal.co.jp/f4728/index.rdf";
         message.append(feedMessage);
-        message.setSite(new WebSite(new Url(url, new BitlyUrlShortening())));
+        message.setSite(new WebSite(new Url(url, new BitlyUrlShortening(ScrapeType.JAL5931))));
 
         // exercise
         Integer id = target.persist(message);
