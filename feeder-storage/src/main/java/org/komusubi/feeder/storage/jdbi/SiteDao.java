@@ -34,13 +34,12 @@ import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
 
 @RegisterMapper(WebSiteMapper.class)
 public interface SiteDao extends Transactional<SiteDao> {
-    @SqlUpdate("create table if not exists sites (id int auto_increment," 
+    @SqlUpdate("create table if not exists sites (id int auto_increment primary key," 
                                   + "name varchar(255),"
                                   + "feed int,"
                                   + "channel int,"
                                   + "category int,"
                                   + "url varchar(255),"
-                                  + "primary key (id),"
                                   + "foreign key (feed) references feeds(id),"
                                   + "foreign key (channel) references channels(id),"
                                   + "foreign key (category) references categories(id))")
