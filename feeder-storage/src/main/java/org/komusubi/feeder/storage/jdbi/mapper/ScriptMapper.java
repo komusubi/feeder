@@ -25,6 +25,7 @@ import org.komusubi.feeder.bind.BitlyUrlShortening;
 import org.komusubi.feeder.model.Message.Script;
 import org.komusubi.feeder.model.ScriptLine;
 import org.komusubi.feeder.model.Url;
+import org.komusubi.feeder.utils.Types.ScrapeType;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
@@ -35,11 +36,11 @@ public class ScriptMapper implements ResultSetMapper<Script> {
      */
     @Override
     public Script map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        // FIXME UrlShortening Factory need ?
+        ScrapeType scrapeType = ScrapeType.find(r.getString("c_name"));
         Url url = null;
         String value = r.getString("url");
         if (value != null && !value.equals(""))
-            url = new Url(value, new BitlyUrlShortening());
+            url = new Url(value, new BitlyUrlShortening(scrapeType));
         ScriptLine script = new ScriptLine(r.getString("text"), url);
         return script;
     }

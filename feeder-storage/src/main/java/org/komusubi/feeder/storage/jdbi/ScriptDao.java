@@ -49,7 +49,8 @@ public interface ScriptDao extends Transactional<ScriptDao> {
     @Mapper(BooleanMapper.class)
     Boolean exists(@ScriptExistBinder Script script);
 
-    @SqlQuery("select text, url from scripts where message_id = :mid")
+    @SqlQuery("select text, url, (select name from channels where id = (select channel from sites where id = "
+            + "(select site_id from messages where message_id = :mid))) as c_name from scripts where message_id = :mid")
     @Mapper(ScriptMapper.class)
     List<Script> findByMessageId(@Bind("mid") Integer id);
     
