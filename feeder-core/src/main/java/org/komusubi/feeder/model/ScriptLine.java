@@ -41,9 +41,8 @@ public class ScriptLine extends AbstractScript {
     /**
      * create new instance.
      */
-    @Deprecated
     public ScriptLine(String line) {
-        this.line = line;
+        this(line, null);
     }
     
     /**
