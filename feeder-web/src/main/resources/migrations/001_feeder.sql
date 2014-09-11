@@ -38,8 +38,8 @@ create table messages (
 create table scripts (
 	hash varchar(64) primary key,
 	text varchar(1024),
-	url varchar(255) unique,
-    message_id int not null,
+	url varchar(255),
+  message_id int not null,
 	foreign key (message_id) references messages(id)
 );
 

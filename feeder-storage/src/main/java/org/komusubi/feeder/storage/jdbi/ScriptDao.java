@@ -38,7 +38,7 @@ public interface ScriptDao extends Transactional<ScriptDao> {
 
     @SqlUpdate("create table if not exists scripts (hash varchar(64) primary key,"
                                    + "text varchar(1024),"
-                                   + "url varchar(255) unique,"
+                                   + "url varchar(255),"
                                    + "message_id int not null,"
                                    + "foreign key (message_id) references messages(id))")
     void createTable();
