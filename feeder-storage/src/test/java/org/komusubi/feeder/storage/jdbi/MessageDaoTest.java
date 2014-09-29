@@ -19,7 +19,9 @@
 package org.komusubi.feeder.storage.jdbi;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -116,5 +118,43 @@ public class MessageDaoTest {
         // verify
         assertThat(actual.text(), is(feedMessage));
         assertThat(actual.site().url().toExternalForm(), is(url));
+    }
+
+    @Test
+    public void simpleExists() {
+        // setup
+        FeederMessage message = new FeederMessage();
+        message.append("テスト用メッセージ");
+        message.append("追加メッセージテスト");
+        String url = "http://rss.jal.co.jp/f4747/index.rdf";
+        message.setSite(new WebSite(new Url(url, new BitlyUrlShortening(ScrapeType.JAL5931))));
+        
+        // exercise
+        target.persist(message);
+        Boolean actual = target.exists(message);
+        
+        // verify
+        assertTrue(actual);
+    }   
+
+    @Test
+    public void notExists() {
+        // setup 
+        FeederMessage message1 = new FeederMessage();
+        message1.append("存在確認メッセージ用");
+        message1.append("追加メッセージその１");
+        String url = "http://rss.jal.co.jp/f4747/index.rdf";
+        message1.setSite(new WebSite(new Url(url, new BitlyUrlShortening(ScrapeType.JAL5971))));
+
+        FeederMessage message2 = new FeederMessage();
+        message2.append("未永続化メッセージ");
+        message2.setSite(new WebSite(new Url(url, new BitlyUrlShortening(ScrapeType.JAL5931))));
+
+        // exercise
+        target.persist(message1);
+        Boolean actual = target.exists(message2);
+
+        // verify
+        assertFalse(actual);
     }
 }

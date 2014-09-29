@@ -49,8 +49,8 @@ public abstract class MessageDao implements Transactional<MessageDao> {
 
     public abstract void close();
 
-    @SqlQuery("select exists(select 1 from messages where site_id = (select id from sites where url = :url) and "
-            + "created = :created)")
+    // it does NOT need to compare with "created" timestamp 
+    @SqlQuery("select exists(select 1 from messages where site_id = (select id from sites where url = :url))")
     @Mapper(BooleanMapper.class)
     protected abstract Boolean _exists(@MessageExistBinder Message message);
 

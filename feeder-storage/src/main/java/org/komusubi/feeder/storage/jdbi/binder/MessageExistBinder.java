@@ -48,9 +48,8 @@ public @interface MessageExistBinder {
             return new Binder<MessageExistBinder, Message>() {
                 @Override
                 public void bind(SQLStatement<?> q, MessageExistBinder bind, Message arg) {
+                    // it does NOT need to compare with "created" timestamp 
                     q.bind("url", arg.site().url().toExternalForm());
-                    // TODO compare to created timestamp which is necessary ?
-                    q.bind("created", arg.createdAt());
                 }
             };
         }
