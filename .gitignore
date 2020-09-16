@@ -11,3 +11,4 @@ rpmbuild/SRPMS
 rpmbuild/BUILDROOT
 /bin
 feeder-sns-parent/feeder-sns-twitter/src/main/resources/twitter4j.properties
+
